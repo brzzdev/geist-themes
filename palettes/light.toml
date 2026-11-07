@@ -12,8 +12,6 @@ element = "#ebebeb"
 find = "#ffb20040"
 foreground = "#24292f"
 highlight = "#ebeef2"
-# Translucent, compositing to `highlight` over `hover`.
-highlight_overlay = "#dfe7f260"
 hover = "#f2f2f2"
 indent = "#ebebeb"
 indent_active = "#a8a8a8"

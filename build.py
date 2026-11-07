@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parent
 AUTHOR = "brzzdev"
 FAMILY = "Geist"
 REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
+# A translucent selection never takes syntax contrast below the selection's own.
+RANGE_HIGHLIGHT_ALPHA = "60"
 SCROLLBAR_ALPHA = "50"
 SCROLLBAR_HOVER_ALPHA = "80"
 TRANSPARENT = "#00000000"
@@ -711,7 +713,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.foreground": ui["foreground"],
         "editor.lineHighlightBackground": ui["hover"],
-        "editor.rangeHighlightBackground": ui["highlight_overlay"],
+        "editor.rangeHighlightBackground": ui["selection"] + RANGE_HIGHLIGHT_ALPHA,
         "editor.selectionBackground": ui["selection"],
         "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
