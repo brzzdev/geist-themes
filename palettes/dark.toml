@@ -19,7 +19,7 @@ muted = "#a0a0a0"
 panel = "#0a0a0a"
 quiet = "#8f8f8f"
 selection = "#454545"
-# `selection` when composited over the black background.
+# Translucent, compositing to `selection` over the black background.
 selection_overlay = "#c8c8c858"
 accents = ["#52a9ff", "#bf7af0", "#f1a10d", "#0ac5b3", "#63c174", "#e5484d"]
 

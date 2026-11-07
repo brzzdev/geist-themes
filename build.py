@@ -696,7 +696,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.foreground": ui["foreground"],
         "editor.lineHighlightBackground": ui["hover"],
         "editor.selectionBackground": ui["selection"],
-        "editorBracketMatch.background": ui["selection"],
+        "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
         "editorCursor.foreground": ui["cursor"],
         "editorError.foreground": status["error"],
