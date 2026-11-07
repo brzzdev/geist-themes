@@ -18,7 +18,7 @@ herdr can't load a separate theme file, so paste the contents of `herdr/geist.to
 herdr server reload-config
 ```
 
-The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. In Ghostty, use the conditional `theme = light:geist-light,dark:geist-dark` from the [Ghostty](#ghostty) section: with a fixed `theme = geist-dark`, Ghostty reports light, so herdr picks Geist Light. To keep herdr on Geist Dark instead, pick a theme in herdr's settings: that turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. With a fixed `theme = geist-dark`, Ghostty reports light and herdr picks Geist Light, so in Ghostty use the conditional `theme = light:geist-light,dark:geist-dark` from the [Ghostty](#ghostty) section. To keep herdr on Geist Dark instead, pick a theme in herdr's settings, which turns `auto_switch` off and leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
 
 ### JetBrains IDEs
 
