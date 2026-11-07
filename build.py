@@ -20,6 +20,9 @@ OKLCH_DECIMALS = 6
 
 type Palette = dict[str, Any]
 
+# Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
+HERDR_TABLES = {"dark": "theme.custom", "light": "theme.custom.light"}
+
 ZED_SYNTAX = {
     "attribute": ("attribute", None),
     "boolean": ("constant", None),
@@ -244,6 +247,45 @@ def ghostty(palette: Palette) -> str:
     return "\n".join(lines) + "\n"
 
 
+def herdr_colours(palette: Palette) -> dict[str, str]:
+    ui, status = palette["ui"], palette["status"]
+    normal = dict(zip(ANSI_NAMES, palette["ansi"]["normal"]))
+    bright = dict(zip(ANSI_NAMES, palette["ansi"]["bright"]))
+    return {
+        "accent": ui["accent"],
+        "active_row_bg": ui["element"],
+        "blue": status["info"],
+        "green": status["success"],
+        "mauve": normal["magenta"],
+        "overlay0": ui["quiet"],
+        "overlay1": ui["muted"],
+        "panel_bg": ui["panel"],
+        "peach": bright["yellow"],
+        "red": status["error"],
+        "selection_bg": ui["selection"],
+        "sidebar_bg": ui["background"],
+        "subtext0": ui["muted"],
+        "surface0": ui["element"],
+        "surface1": ui["selection"],
+        "surface_dim": ui["hover"],
+        "teal": normal["cyan"],
+        "text": ui["foreground"],
+        "yellow": status["warning"],
+    }
+
+
+def herdr_table(header: str, colours: dict[str, str]) -> str:
+    rows = [f'{token} = "{colour}"' for token, colour in colours.items()]
+    return "\n".join([f"[{header}]", *rows]) + "\n"
+
+
+def herdr(palettes: list[Palette]) -> str:
+    tables = [
+        herdr_table(HERDR_TABLES[p["appearance"]], herdr_colours(p)) for p in palettes
+    ]
+    return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
+
+
 def oklch(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
@@ -351,6 +393,7 @@ def main() -> None:
     palettes = [
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
+    write(ROOT / "herdr" / "geist.toml", herdr(palettes))
     bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
     write(bundle / "Info.plist", netnewswire_info())
     write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
