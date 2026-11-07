@@ -355,7 +355,7 @@
         "scrollbar.thumb.hover_background": "#4f535980",
         "scrollbar.track.background": "#00000000",
         "scrollbar.track.border": "#00000000",
-        "search.active_match_background": "#ffb20040",
+        "search.active_match_background": "#fce9bb",
         "search.match_background": "#ffb20040",
         "status_bar.background": "#ffffff",
         "success": "#18703a",
