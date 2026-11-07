@@ -18,6 +18,8 @@ muted = "#a0a0a0"
 panel = "#0a0a0a"
 quiet = "#8f8f8f"
 selection = "#454545"
+# `selection` over the black background, translucent for editors that paint it over indent guides.
+selection_overlay = "#ffffff45"
 accents = ["#52a9ff", "#bf7af0", "#f1a10d", "#0ac5b3", "#63c174", "#e5484d"]
 
 [status]

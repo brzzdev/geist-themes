@@ -469,7 +469,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
             {
                 "background": ui["cursor"],
                 "cursor": ui["cursor"],
-                "selection": ui["selection"],
+                "selection": ui["selection_overlay"],
             },
         ],
         "scrollbar.thumb.background": ui["indent_active"] + SCROLLBAR_ALPHA,
