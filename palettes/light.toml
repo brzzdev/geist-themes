@@ -1,0 +1,65 @@
+name = "Geist Light"
+appearance = "light"
+
+[ui]
+accent = "#1a5fb4"
+accent_bright = "#124a8c"
+background = "#fbfbfa"
+border = "#ebebeb"
+border_variant = "#f2f2f2"
+cursor = "#24292f"
+element = "#ebebeb"
+find = "#ffb20040"
+foreground = "#24292f"
+hover = "#f2f2f2"
+indent_active = "#a8a8a8"
+invisible = "#c9c9c9"
+muted = "#4f5359"
+panel = "#ffffff"
+quiet = "#656a70"
+selection = "#dce3ec"
+accents = ["#1a5fb4", "#7e3ab8", "#8a5300", "#0b7268", "#18703a", "#cf2f36"]
+
+[status]
+conflict = "#8a5300"
+created = "#18703a"
+deleted = "#cf2f36"
+error = "#cf2f36"
+hidden = "#656a70"
+hint = "#656a70"
+ignored = "#656a70"
+info = "#1a5fb4"
+modified = "#1a5fb4"
+predictive = "#656a70"
+renamed = "#1a5fb4"
+success = "#18703a"
+unreachable = "#656a70"
+warning = "#8a5300"
+
+# black, red, green, yellow, blue, magenta, cyan, white
+[ansi]
+normal = ["#24292f", "#cf2f36", "#18703a", "#8a5300", "#1a5fb4", "#7e3ab8", "#0b7268", "#4f5359"]
+bright = ["#656a70", "#a8242b", "#0f5a2c", "#6b3f00", "#124a8c", "#622a92", "#085a52", "#171717"]
+
+# `_system` roles colour symbols from outside the project, where an editor tells them apart.
+[syntax]
+attribute = "#6b3f00"
+comment = "#656a70"
+comment_emphasized = "#4f5359"
+constant = "#8a5300"
+function = "#1a5fb4"
+function_system = "#124a8c"
+keyword = "#7e3ab8"
+link = "#124a8c"
+literal = "#4f5359"
+namespace = "#622a92"
+number = "#8a5300"
+plain = "#24292f"
+punctuation = "#4f5359"
+regex = "#a8242b"
+string = "#18703a"
+tag = "#a8242b"
+type = "#0b7268"
+type_parameter = "#085a52"
+type_system = "#085a52"
+variable = "#24292f"
