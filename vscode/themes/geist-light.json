@@ -20,6 +20,7 @@
     "dropdown.border": "#ebebeb",
     "editor.background": "#fbfbfa",
     "editor.findMatchBackground": "#ffb20040",
+    "editor.findMatchBorder": "#ffb200",
     "editor.findMatchHighlightBackground": "#ffb20040",
     "editor.foreground": "#24292f",
     "editor.lineHighlightBackground": "#f2f2f2",
