@@ -244,6 +244,48 @@ def ghostty(palette: Palette) -> str:
     return "\n".join(lines) + "\n"
 
 
+def herdr_colours(palette: Palette) -> dict[str, str]:
+    ui, status = palette["ui"], palette["status"]
+    normal = dict(zip(ANSI_NAMES, palette["ansi"]["normal"]))
+    bright = dict(zip(ANSI_NAMES, palette["ansi"]["bright"]))
+    return {
+        "accent": ui["accent"],
+        "active_row_bg": ui["element"],
+        "blue": status["info"],
+        "green": status["success"],
+        "mauve": normal["magenta"],
+        "overlay0": ui["quiet"],
+        "overlay1": ui["muted"],
+        "panel_bg": ui["panel"],
+        "peach": bright["yellow"],
+        "red": status["error"],
+        "selection_bg": ui["selection"],
+        "sidebar_bg": ui["background"],
+        "subtext0": ui["muted"],
+        "surface0": ui["element"],
+        "surface1": ui["selection"],
+        "surface_dim": ui["border_variant"],
+        "teal": normal["cyan"],
+        "text": ui["foreground"],
+        "yellow": status["warning"],
+    }
+
+
+def herdr_table(header: str, colours: dict[str, str]) -> str:
+    rows = [f'{token} = "{colour}"' for token, colour in colours.items()]
+    return "\n".join([f"[{header}]", *rows]) + "\n"
+
+
+def herdr(palettes: list[Palette]) -> str:
+    if len(palettes) == 1:
+        return herdr_table("theme.custom", herdr_colours(palettes[0]))
+    tables = [
+        herdr_table(f"theme.custom.{p['appearance']}", herdr_colours(p))
+        for p in palettes
+    ]
+    return "\n".join(["[theme]\nauto_switch = true\n", *tables])
+
+
 def oklch(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
@@ -357,6 +399,7 @@ def main() -> None:
     write(
         ROOT / "zed" / "geist.json", json.dumps(zed_family(palettes), indent=2) + "\n"
     )
+    write(ROOT / "herdr" / "geist.toml", herdr(palettes))
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / name, ghostty(palette))
