@@ -89,7 +89,7 @@
           {
             "background": "#ededed",
             "cursor": "#ededed",
-            "selection": "#ffffff45"
+            "selection": "#8a8a8a80"
           }
         ],
         "predictive": "#8f8f8f",
