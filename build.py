@@ -277,13 +277,11 @@ def herdr_table(header: str, colours: dict[str, str]) -> str:
 
 
 def herdr(palettes: list[Palette]) -> str:
-    if len(palettes) == 1:
-        return herdr_table("theme.custom", herdr_colours(palettes[0]))
     tables = [
         herdr_table(f"theme.custom.{p['appearance']}", herdr_colours(p))
         for p in palettes
     ]
-    return "\n".join(["[theme]\nauto_switch = true\n", *tables])
+    return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 
 
 def oklch(hex_colour: str) -> tuple[float, float, float]:
@@ -393,13 +391,13 @@ def main() -> None:
     palettes = [
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
+    write(ROOT / "herdr" / "geist.toml", herdr(palettes))
     bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
     write(bundle / "Info.plist", netnewswire_info())
     write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
     write(
         ROOT / "zed" / "geist.json", json.dumps(zed_family(palettes), indent=2) + "\n"
     )
-    write(ROOT / "herdr" / "geist.toml", herdr(palettes))
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / name, ghostty(palette))
