@@ -22,13 +22,13 @@ The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to m
 
 ### JetBrains IDEs
 
-For Rider, IntelliJ IDEA, WebStorm and the other JetBrains IDEs, 2026.1 or later. From the repository root, build the plugin:
+For Rider, IntelliJ IDEA, WebStorm and the other JetBrains IDEs, 2026.1 or later. Download `geist-themes-<version>.jar` from the [latest release](https://github.com/brzzdev/geist-themes/releases/latest), or build the plugin from the repository root, which reports its version as `0.0.0-dev`:
 
 ```sh
 python3 -m zipfile -c geist-themes.jar jetbrains/*
 ```
 
-Then install `geist-themes.jar` with Settings → Plugins → ⚙ → **Install Plugin from Disk…**, and pick **Geist Dark** or **Geist Light** under Appearance & Behavior → Appearance → Theme. Each theme switches the editor to its matching colour scheme.
+Then install the jar with Settings → Plugins → ⚙ → **Install Plugin from Disk…**, and pick **Geist Dark** or **Geist Light** under Appearance & Behavior → Appearance → Theme. Each theme switches the editor to its matching colour scheme.
 
 ### NetNewsWire
 

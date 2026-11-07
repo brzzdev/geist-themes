@@ -71,7 +71,13 @@ jobs:
           archive="geist-themes-$tag"
           git archive --format=zip --prefix="$archive/" -o "$archive.zip" HEAD \
             "${shipped[@]}" LICENSE README.md
-          gh release create "$tag" "$archive.zip" \
+          plugin="$(mktemp -d)"
+          cp -R jetbrains/. "$plugin"
+          sed -i "s|<version>[^<]*</version>|<version>${tag#v}</version>|" \
+            "$plugin/META-INF/plugin.xml"
+          grep -qF "<version>${tag#v}</version>" "$plugin/META-INF/plugin.xml"
+          python3 -m zipfile -c "$archive.jar" "$plugin"/*
+          gh release create "$tag" "$archive.zip" "$archive.jar" \
             --generate-notes \
             --target "$GITHUB_SHA" \
             --title "$tag"

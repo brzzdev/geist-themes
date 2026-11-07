@@ -1,6 +1,7 @@
 <idea-plugin>
   <id>dev.brzz.geist-themes</id>
   <name>Geist Themes</name>
+  <version>0.0.0-dev</version>
   <vendor url="https://github.com/brzzdev/geist-themes">brzzdev</vendor>
   <description>Geist Dark and Geist Light, built from the colours of Vercel's Geist terminal themes. Unofficial: not made or endorsed by Vercel.</description>
   <idea-version since-build="261" />
