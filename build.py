@@ -4,15 +4,17 @@
 import json
 import math
 import plistlib
+import textwrap
 import tomllib
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent
+AUTHOR = "brzzdev"
+FAMILY = "Geist"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
-NETNEWSWIRE_THEME = "Geist"
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
 OKLCH_DECIMALS = 6
 
@@ -217,8 +219,8 @@ def zed_style(palette: Palette) -> dict[str, Any]:
 def zed_family(palettes: list[Palette]) -> dict[str, Any]:
     return {
         "$schema": ZED_SCHEMA,
-        "name": "Geist",
-        "author": "brzzdev",
+        "name": FAMILY,
+        "author": AUTHOR,
         "themes": [
             {"name": p["name"], "appearance": p["appearance"], "style": zed_style(p)}
             for p in palettes
@@ -303,23 +305,22 @@ def xcode_recipe(palette: Palette) -> dict[str, Any]:
     }
 
 
-def netnewswire_variables(palette: Palette, indent: str = "") -> str:
+def netnewswire_variables(palette: Palette) -> str:
     declarations = {"color-scheme": palette["appearance"]} | {
         f"--{name}": colour(palette, path)
         for name, path in NETNEWSWIRE_VARIABLES.items()
     }
-    body = "".join(
-        f"{indent}\t{key}: {value};\n" for key, value in declarations.items()
-    )
-    return f"{indent}:root {{\n{body}{indent}}}\n"
+    body = "".join(f"\t{key}: {value};\n" for key, value in declarations.items())
+    return f":root {{\n{body}}}\n"
 
 
 def netnewswire_stylesheet(palettes: list[Palette]) -> str:
-    default, *others = palettes
+    default, *others = sorted(palettes, key=lambda p: p["appearance"] != "dark")
     blocks = [netnewswire_variables(default)]
     blocks += [
         f"@media (prefers-color-scheme: {p['appearance']}) {{\n"
-        f"{netnewswire_variables(p, indent='\t')}}}\n"
+        + textwrap.indent(netnewswire_variables(p), "\t")
+        + "}\n"
         for p in others
     ]
     rules = (ROOT / "templates" / "netnewswire.css").read_text()
@@ -329,8 +330,8 @@ def netnewswire_stylesheet(palettes: list[Palette]) -> str:
 def netnewswire_info() -> str:
     info = {
         "CreatorHomePage": "https://github.com/brzzdev/geist-themes",
-        "CreatorName": "brzzdev",
-        "Name": NETNEWSWIRE_THEME,
+        "CreatorName": AUTHOR,
+        "Name": FAMILY,
         "ThemeIdentifier": "dev.brzz.geist-themes.netnewswire",
         "Version": 1,
     }
@@ -347,7 +348,7 @@ def main() -> None:
     palettes = [
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
-    bundle = ROOT / "netnewswire" / f"{NETNEWSWIRE_THEME}.nnwtheme"
+    bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
     write(bundle / "Info.plist", netnewswire_info())
     write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
     write(

@@ -32,7 +32,6 @@
 
 :root {
 	--mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
-	--sans: "Geist", -apple-system, system-ui, sans-serif;
 }
 
 body {
@@ -42,15 +41,14 @@ body {
 	word-wrap: break-word;
 	background: var(--background);
 	color: var(--foreground);
-	font-family: var(--sans);
+	font-family: "Geist", -apple-system, system-ui, sans-serif;
 }
 
 ::selection {
 	background: var(--selection);
 }
 
-a,
-a:visited {
+a {
 	color: var(--link);
 	text-decoration: underline;
 	text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
@@ -88,14 +86,12 @@ a u {
 	color: var(--muted);
 }
 
-.header a,
-.header a:visited {
+.header a {
 	color: var(--muted);
 	text-decoration: none;
 }
 
-.header a.feedlink,
-.header a.feedlink:visited {
+.header a.feedlink {
 	color: var(--accent);
 	font-weight: 600;
 }
@@ -118,9 +114,7 @@ a u {
 }
 
 .articleTitle a,
-.articleTitle a:visited,
-.articleDatelineTitle a,
-.articleDatelineTitle a:visited {
+.articleDatelineTitle a {
 	color: var(--foreground);
 	text-decoration: none;
 }
@@ -134,8 +128,7 @@ a u {
 	text-transform: uppercase;
 }
 
-.articleDateline a,
-.articleDateline a:visited {
+.articleDateline a {
 	color: var(--muted);
 	text-decoration: none;
 }
@@ -147,7 +140,6 @@ a u {
 	font-size: 0.875em;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	width: 100%;
 }
 
 .externalLink:has(a[href=""]) {
@@ -222,13 +214,11 @@ a code {
 .nnw-overflow table {
 	margin-bottom: 1px;
 	border-collapse: collapse;
-	border-spacing: 0;
 	font-size: inherit;
 }
 
 .nnw-overflow table table {
 	margin-bottom: 0;
-	border: none;
 }
 
 .nnw-overflow td,
@@ -252,10 +242,6 @@ a code {
 .nnw-overflow td pre {
 	border: none;
 	padding: 0;
-}
-
-.nnw-overflow table[border="0"] {
-	border-width: 0;
 }
 
 img, figure, video, div, object {
@@ -342,7 +328,6 @@ sub {
 }
 
 body a.footnote,
-body a.footnote:visited,
 .newsfoot-footnote-popover + a.footnote:hover {
 	background: var(--code-background);
 	color: var(--link);
@@ -352,7 +337,6 @@ body a.footnote:visited,
 a.footnote:hover,
 .newsfoot-footnote-popover + a.footnote {
 	background: var(--selection);
-	transition: background-color 200ms ease-out;
 }
 
 /* iOS */
