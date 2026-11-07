@@ -1,0 +1,65 @@
+name = "Geist Dark"
+appearance = "dark"
+
+[ui]
+accent = "#52a9ff"
+accent_bright = "#97c9fe"
+background = "#000000"
+border = "#2e2e2e"
+border_variant = "#1a1a1a"
+cursor = "#ededed"
+element = "#1a1a1a"
+find = "#f1a10d40"
+foreground = "#ededed"
+hover = "#111111"
+indent_active = "#8f8f8f"
+invisible = "#2e2e2e"
+muted = "#a0a0a0"
+panel = "#0a0a0a"
+quiet = "#8f8f8f"
+selection = "#2e2e2e"
+accents = ["#52a9ff", "#bf7af0", "#f1a10d", "#0ac5b3", "#63c174", "#e5484d"]
+
+[status]
+conflict = "#f1a10d"
+created = "#63c174"
+deleted = "#e5484d"
+error = "#e5484d"
+hidden = "#8f8f8f"
+hint = "#8f8f8f"
+ignored = "#8f8f8f"
+info = "#52a9ff"
+modified = "#52a9ff"
+predictive = "#8f8f8f"
+renamed = "#52a9ff"
+success = "#63c174"
+unreachable = "#8f8f8f"
+warning = "#f1a10d"
+
+# black, red, green, yellow, blue, magenta, cyan, white
+[ansi]
+normal = ["#1a1a1a", "#e5484d", "#63c174", "#f1a10d", "#52a9ff", "#bf7af0", "#0ac5b3", "#a0a0a0"]
+bright = ["#8f8f8f", "#fe7573", "#83e293", "#ffc983", "#97c9fe", "#d7a4ff", "#4be6d3", "#ffffff"]
+
+# `_system` roles colour symbols from outside the project, where an editor tells them apart.
+[syntax]
+attribute = "#ffc983"
+comment = "#8f8f8f"
+comment_emphasized = "#a0a0a0"
+constant = "#f1a10d"
+function = "#52a9ff"
+function_system = "#97c9fe"
+keyword = "#bf7af0"
+link = "#97c9fe"
+literal = "#a0a0a0"
+namespace = "#d7a4ff"
+number = "#f1a10d"
+plain = "#ededed"
+punctuation = "#a0a0a0"
+regex = "#fe7573"
+string = "#63c174"
+tag = "#fe7573"
+type = "#0ac5b3"
+type_parameter = "#4be6d3"
+type_system = "#4be6d3"
+variable = "#ededed"
