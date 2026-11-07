@@ -117,6 +117,8 @@ XCODE_OVERRIDES = {
 }
 
 
+# The selection colour at this alpha keeps syntax at or above its contrast on the selection.
+VSCODE_RANGE_ALPHA = "60"
 VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
 
 VSCODE_TOKENS = [
@@ -701,6 +703,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "button.background": ui["accent"],
         "button.foreground": ui["background"],
         "button.hoverBackground": ui["accent_strong"],
+        "commandCenter.background": ui["hover"],
         "descriptionForeground": ui["muted"],
         "disabledForeground": ui["quiet"],
         "dropdown.background": ui["element"],
@@ -710,6 +713,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.foreground": ui["foreground"],
         "editor.lineHighlightBackground": ui["hover"],
+        "editor.rangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
         "editor.selectionBackground": ui["selection"],
         "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
