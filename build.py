@@ -113,7 +113,7 @@ def slug(palette: Palette) -> str:
     return palette["name"].lower().replace(" ", "-")
 
 
-def colour(palette: Palette, path: str) -> str:
+def palette_colour(palette: Palette, path: str) -> str:
     group, key = path.split(".")
     return palette[group][key]
 
@@ -283,7 +283,10 @@ def xcode_colour(hex_colour: str) -> dict[str, Any]:
 def xcode_recipe(palette: Palette) -> dict[str, Any]:
     overrides: list[Any] = []
     for token, path in XCODE_OVERRIDES.items():
-        overrides += [token, {"color": {"_0": xcode_colour(colour(palette, path))}}]
+        overrides += [
+            token,
+            {"color": {"_0": xcode_colour(palette_colour(palette, path))}},
+        ]
     return {
         "name": palette["name"],
         "recipe": {
@@ -307,7 +310,7 @@ def xcode_recipe(palette: Palette) -> dict[str, Any]:
 
 def netnewswire_variables(palette: Palette) -> str:
     declarations = {"color-scheme": palette["appearance"]} | {
-        f"--{name}": colour(palette, path)
+        f"--{name}": palette_colour(palette, path)
         for name, path in NETNEWSWIRE_VARIABLES.items()
     }
     body = "".join(f"\t{key}: {value};\n" for key, value in declarations.items())

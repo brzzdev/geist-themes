@@ -12,7 +12,7 @@ Copy `ghostty/geist-dark` and `ghostty/geist-light` into `~/.config/ghostty/them
 
 ### NetNewsWire
 
-Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNewsWire → Settings → Reading → Theme. The article view follows the system appearance between Geist Dark and Geist Light.
+Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
 
 ### Xcode 27
 

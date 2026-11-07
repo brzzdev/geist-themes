@@ -212,7 +212,7 @@ a code {
 	padding: 0;
 }
 
-img, figure, video, div, object {
+div, figure, img, object, video {
 	max-width: 100%;
 	height: auto !important;
 	margin: 0 auto;
