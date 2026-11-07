@@ -10,7 +10,7 @@
 	--muted: #a0a0a0;
 	--panel: #0a0a0a;
 	--quiet: #8f8f8f;
-	--selection: #454545;
+	--selection: #262626;
 }
 
 @media (prefers-color-scheme: light) {
@@ -26,7 +26,7 @@
 		--muted: #4f5359;
 		--panel: #ffffff;
 		--quiet: #656a70;
-		--selection: #dce3ec;
+		--selection: #e6ebf1;
 	}
 }
 

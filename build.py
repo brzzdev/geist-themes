@@ -291,7 +291,7 @@ JETBRAINS_COLOURS = {
     "FILESTATUS_MODIFIED": "status.modified",
     "FILESTATUS_RENAMED": "status.renamed",
     "GUTTER_BACKGROUND": "ui.background",
-    "INDENT_GUIDE": "ui.border",
+    "INDENT_GUIDE": "ui.indent",
     "LINE_NUMBERS_COLOR": "ui.quiet",
     "LINE_NUMBER_ON_CARET_ROW_COLOR": "ui.foreground",
     "LOOKUP_COLOR": "ui.panel",
@@ -301,7 +301,7 @@ JETBRAINS_COLOURS = {
     "RIGHT_MARGIN_COLOR": "ui.border",
     "SELECTED_INDENT_GUIDE": "ui.indent_active",
     "SELECTION_BACKGROUND": "ui.selection",
-    "VISUAL_INDENT_GUIDE": "ui.border",
+    "VISUAL_INDENT_GUIDE": "ui.indent",
     "WHITESPACES": "ui.invisible",
 }
 
@@ -453,7 +453,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "editor.foreground": ui["foreground"],
         "editor.gutter.background": ui["background"],
         "editor.highlighted_line.background": ui["hover"],
-        "editor.indent_guide": ui["border"],
+        "editor.indent_guide": ui["indent"],
         "editor.indent_guide_active": ui["indent_active"],
         "editor.invisible": ui["invisible"],
         "editor.line_number": ui["quiet"],
@@ -478,7 +478,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "pane_group.border": ui["border"],
         "panel.background": ui["panel"],
         "panel.focused_border": ui["accent"],
-        "panel.indent_guide": ui["border"],
+        "panel.indent_guide": ui["indent"],
         "panel.indent_guide_active": ui["indent_active"],
         "players": [
             {
@@ -723,7 +723,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editorGutter.modifiedBackground": status["modified"],
         "editorHint.foreground": status["hint"],
         "editorIndentGuide.activeBackground1": ui["indent_active"],
-        "editorIndentGuide.background1": ui["border"],
+        "editorIndentGuide.background1": ui["indent"],
         "editorInfo.foreground": status["info"],
         "editorLineNumber.activeForeground": ui["foreground"],
         "editorLineNumber.foreground": ui["quiet"],

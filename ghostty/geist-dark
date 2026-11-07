@@ -2,7 +2,7 @@ background = #000000
 foreground = #ededed
 cursor-color = #ededed
 cursor-text = #000000
-selection-background = #454545
+selection-background = #262626
 selection-foreground = #ededed
 
 palette = 0=#1a1a1a

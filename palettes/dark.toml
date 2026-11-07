@@ -13,14 +13,16 @@ find = "#f1a10d40"
 foreground = "#ededed"
 highlight = "#2e2e2e"
 hover = "#111111"
+indent = "#454545"
 indent_active = "#8f8f8f"
-invisible = "#2e2e2e"
+invisible = "#454545"
 muted = "#a0a0a0"
 panel = "#0a0a0a"
 quiet = "#8f8f8f"
-selection = "#454545"
+# Off Geist's grey scale: see docs/adr/0001-syntax-contrast-in-a-selection.md.
+selection = "#262626"
 # Translucent, compositing to `selection` over the black background.
-selection_overlay = "#c8c8c858"
+selection_overlay = "#6e6e6e58"
 accents = ["#52a9ff", "#bf7af0", "#f1a10d", "#0ac5b3", "#63c174", "#e5484d"]
 
 [status]
