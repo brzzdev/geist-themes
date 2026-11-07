@@ -6,6 +6,7 @@ import math
 import plistlib
 import textwrap
 import tomllib
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -14,8 +15,10 @@ AUTHOR = "brzzdev"
 FAMILY = "Geist"
 SCROLLBAR_ALPHA = "50"
 SCROLLBAR_HOVER_ALPHA = "80"
+REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
+OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
 OKLCH_DECIMALS = 6
@@ -111,6 +114,188 @@ XCODE_OVERRIDES = {
     "string": "syntax.string",
     "string.regex": "syntax.regex",
     "typeDeclaration": "syntax.type",
+}
+
+JETBRAINS_PLUGIN_ID = "dev.brzz.geist-themes"
+JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
+JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
+JETBRAINS_PARENT_THEMES = {"dark": "Islands Dark", "light": "Islands Light"}
+JETBRAINS_SCHEME_VERSION = "142"
+JETBRAINS_EFFECT_UNDERSCORE = "1"
+JETBRAINS_EFFECT_WAVE = "2"
+JETBRAINS_FONT_ITALIC = "2"
+JETBRAINS_TINT_ALPHA = "33"
+
+JETBRAINS_THEME_TOKENS = {
+    "accent-brand-bg": "ui.accent",
+    "accent-brand-border": "ui.accent",
+    "container-dialog-bg": "ui.panel",
+    "container-dialog-border": "ui.border",
+    "container-editor-bg": "ui.background",
+    "container-editor-border": "ui.border",
+    "container-main-window-bg": "ui.element",
+    "container-popup-bg": "ui.panel",
+    "container-popup-border": "ui.border",
+    "container-tool-window-bg": "ui.panel",
+    "container-tool-window-border": "ui.border",
+    "editor-text": "ui.foreground",
+    "selection-bg-active": "ui.selection",
+    "selection-bg-inactive": "ui.element",
+    "tab-selected-bg-active": "ui.selection",
+    "tab-selected-bg-inactive": "ui.element",
+    "tab-selected-border-active": "ui.accent",
+    "tab-selected-border-inactive": "ui.border",
+    "text-default": "ui.foreground",
+    "text-error": "status.error",
+    "text-link": "ui.accent",
+    "text-muted": "ui.muted",
+    "text-secondary": "ui.quiet",
+    "text-success": "status.success",
+    "text-warning": "status.warning",
+}
+
+JETBRAINS_COLOURS = {
+    "ADDED_LINES_COLOR": "status.created",
+    "BLOCK_TERMINAL_DEFAULT_BACKGROUND": "ui.background",
+    "BLOCK_TERMINAL_DEFAULT_FOREGROUND": "ui.foreground",
+    "CARET_COLOR": "ui.cursor",
+    "CARET_ROW_COLOR": "ui.hover",
+    "CONSOLE_BACKGROUND_KEY": "ui.background",
+    "DELETED_LINES_COLOR": "status.deleted",
+    "DOCUMENTATION_COLOR": "ui.panel",
+    "FILESTATUS_ADDED": "status.created",
+    "FILESTATUS_COPIED": "status.created",
+    "FILESTATUS_DELETED": "status.deleted",
+    "FILESTATUS_IDEA_FILESTATUS_DELETED_FROM_FILE_SYSTEM": "status.deleted",
+    "FILESTATUS_IDEA_FILESTATUS_IGNORED": "status.ignored",
+    "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_BOTH_CONFLICTS": "status.conflict",
+    "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_CONFLICTS": "status.conflict",
+    "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_PROPERTY_CONFLICTS": "status.conflict",
+    "FILESTATUS_MODIFIED": "status.modified",
+    "FILESTATUS_RENAMED": "status.renamed",
+    "GUTTER_BACKGROUND": "ui.background",
+    "INDENT_GUIDE": "ui.border",
+    "LINE_NUMBERS_COLOR": "ui.quiet",
+    "LINE_NUMBER_ON_CARET_ROW_COLOR": "ui.foreground",
+    "LOOKUP_COLOR": "ui.panel",
+    "METHOD_SEPARATORS_COLOR": "ui.border",
+    "MODIFIED_LINES_COLOR": "status.modified",
+    "NOTIFICATION_BACKGROUND": "ui.element",
+    "RIGHT_MARGIN_COLOR": "ui.border",
+    "SELECTED_INDENT_GUIDE": "ui.indent_active",
+    "SELECTION_BACKGROUND": "ui.selection",
+    "VISUAL_INDENT_GUIDE": "ui.border",
+    "WHITESPACES": "ui.invisible",
+}
+
+JETBRAINS_FOREGROUNDS = {
+    "CONSOLE_NORMAL_OUTPUT": "ui.foreground",
+    "DEFAULT_ATTRIBUTE": "syntax.attribute",
+    "DEFAULT_BLOCK_COMMENT": "syntax.comment",
+    "DEFAULT_BRACES": "syntax.punctuation",
+    "DEFAULT_BRACKETS": "syntax.punctuation",
+    "DEFAULT_CLASS_NAME": "syntax.type",
+    "DEFAULT_CLASS_REFERENCE": "syntax.type",
+    "DEFAULT_COMMA": "syntax.punctuation",
+    "DEFAULT_CONSTANT": "syntax.constant",
+    "DEFAULT_DOC_COMMENT": "syntax.comment",
+    "DEFAULT_DOC_COMMENT_TAG": "syntax.comment_emphasized",
+    "DEFAULT_DOC_COMMENT_TAG_VALUE": "syntax.comment_emphasized",
+    "DEFAULT_DOC_MARKUP": "syntax.comment",
+    "DEFAULT_DOT": "syntax.punctuation",
+    "DEFAULT_ENTITY": "syntax.number",
+    "DEFAULT_FUNCTION_CALL": "syntax.function",
+    "DEFAULT_FUNCTION_DECLARATION": "syntax.function",
+    "DEFAULT_GLOBAL_VARIABLE": "syntax.variable",
+    "DEFAULT_IDENTIFIER": "syntax.variable",
+    "DEFAULT_INSTANCE_FIELD": "syntax.variable",
+    "DEFAULT_INSTANCE_METHOD": "syntax.function",
+    "DEFAULT_INTERFACE_NAME": "syntax.type",
+    "DEFAULT_KEYWORD": "syntax.keyword",
+    "DEFAULT_LABEL": "syntax.attribute",
+    "DEFAULT_LINE_COMMENT": "syntax.comment",
+    "DEFAULT_LOCAL_VARIABLE": "syntax.variable",
+    "DEFAULT_METADATA": "syntax.attribute",
+    "DEFAULT_NUMBER": "syntax.number",
+    "DEFAULT_OPERATION_SIGN": "syntax.punctuation",
+    "DEFAULT_PARAMETER": "syntax.variable",
+    "DEFAULT_PARENTHS": "syntax.punctuation",
+    "DEFAULT_PREDEFINED_SYMBOL": "syntax.function_system",
+    "DEFAULT_SEMICOLON": "syntax.punctuation",
+    "DEFAULT_STATIC_FIELD": "syntax.variable",
+    "DEFAULT_STATIC_METHOD": "syntax.function",
+    "DEFAULT_STRING": "syntax.string",
+    "DEFAULT_TAG": "syntax.tag",
+    "DEFAULT_TEMPLATE_LANGUAGE_COLOR": "syntax.plain",
+    "DEFAULT_VALID_STRING_ESCAPE": "syntax.number",
+    "HTML_ATTRIBUTE_NAME": "syntax.attribute",
+    "HTML_ATTRIBUTE_VALUE": "syntax.string",
+    "HTML_CUSTOM_TAG_NAME": "syntax.tag",
+    "HTML_ENTITY_REFERENCE": "syntax.number",
+    "HTML_TAG": "syntax.punctuation",
+    "HTML_TAG_NAME": "syntax.tag",
+    "JS.GLOBAL_FUNCTION": "syntax.function",
+    "JS.GLOBAL_VARIABLE": "syntax.variable",
+    "JS.INSTANCE_MEMBER_FUNCTION": "syntax.function",
+    "JS.LOCAL_VARIABLE": "syntax.variable",
+    "JS.PARAMETER": "syntax.variable",
+    "JS.REGEXP": "syntax.regex",
+    "NOT_USED_ELEMENT_ATTRIBUTES": "status.unreachable",
+    "ReSharper.ASP_NET_RAZOR_TAG_HELPER_ATTRIBUTE": "syntax.attribute",
+    "ReSharper.ASP_NET_RAZOR_TAG_HELPER_ELEMENT": "syntax.tag",
+    "ReSharper.FORMAT_STRING_ITEM": "syntax.number",
+    "ReSharper.FORMAT_STRING_ITEM_2": "syntax.number",
+    "ReSharper.STRING_ESCAPE_CHARACTER_2": "syntax.number",
+    "TS.TYPE_PARAMETER": "syntax.type_parameter",
+    "TYPE_PARAMETER_NAME_ATTRIBUTES": "syntax.type_parameter",
+    "WRONG_REFERENCES_ATTRIBUTES": "status.error",
+    "XML_ATTRIBUTE_NAME": "syntax.attribute",
+    "XML_CUSTOM_TAG_NAME": "syntax.tag",
+    "XML_ENTITY_REFERENCE": "syntax.number",
+    "XML_PROLOGUE": "syntax.attribute",
+    "XML_TAG": "syntax.punctuation",
+    "XML_TAG_NAME": "syntax.tag",
+}
+
+JETBRAINS_ITALIC = {
+    "DEFAULT_BLOCK_COMMENT",
+    "DEFAULT_DOC_COMMENT",
+    "DEFAULT_DOC_COMMENT_TAG",
+    "DEFAULT_DOC_COMMENT_TAG_VALUE",
+    "DEFAULT_DOC_MARKUP",
+    "DEFAULT_LINE_COMMENT",
+    "DEFAULT_STATIC_FIELD",
+    "DEFAULT_STATIC_METHOD",
+    "JS.GLOBAL_VARIABLE",
+}
+
+JETBRAINS_DIAGNOSTICS = {
+    "ERRORS_ATTRIBUTES": "status.error",
+    "INFO_ATTRIBUTES": "status.hint",
+    "WARNING_ATTRIBUTES": "status.warning",
+}
+
+JETBRAINS_CONSOLE = {
+    "normal": [
+        "CONSOLE_BLACK_OUTPUT",
+        "CONSOLE_RED_OUTPUT",
+        "CONSOLE_GREEN_OUTPUT",
+        "CONSOLE_YELLOW_OUTPUT",
+        "CONSOLE_BLUE_OUTPUT",
+        "CONSOLE_MAGENTA_OUTPUT",
+        "CONSOLE_CYAN_OUTPUT",
+        "CONSOLE_GRAY_OUTPUT",
+    ],
+    "bright": [
+        "CONSOLE_DARKGRAY_OUTPUT",
+        "CONSOLE_RED_BRIGHT_OUTPUT",
+        "CONSOLE_GREEN_BRIGHT_OUTPUT",
+        "CONSOLE_YELLOW_BRIGHT_OUTPUT",
+        "CONSOLE_BLUE_BRIGHT_OUTPUT",
+        "CONSOLE_MAGENTA_BRIGHT_OUTPUT",
+        "CONSOLE_CYAN_BRIGHT_OUTPUT",
+        "CONSOLE_WHITE_OUTPUT",
+    ],
 }
 
 
@@ -477,7 +662,7 @@ def netnewswire_stylesheet(palettes: list[Palette]) -> str:
 
 def netnewswire_info() -> str:
     info = {
-        "CreatorHomePage": "https://github.com/brzzdev/geist-themes",
+        "CreatorHomePage": REPOSITORY_URL,
         "CreatorName": AUTHOR,
         "Name": FAMILY,
         "ThemeIdentifier": "dev.brzz.geist-themes.netnewswire",
@@ -621,6 +806,37 @@ def vscode_theme(palette: Palette) -> dict[str, Any]:
         ],
         "semanticTokenColors": {
             selector: syntax[role] for selector, role in VSCODE_SEMANTIC.items()
+
+
+def opaque(colour: str, ground: str) -> str:
+    if len(colour) == OPAQUE_HEX_LENGTH:
+        return colour
+    alpha = int(colour[OPAQUE_HEX_LENGTH:], 16) / 255
+    channels = (
+        round(
+            int(colour[i : i + 2], 16) * alpha
+            + int(ground[i : i + 2], 16) * (1 - alpha)
+        )
+        for i in (1, 3, 5)
+    )
+    return "#" + "".join(f"{c:02x}" for c in channels)
+
+
+def xml_text(root: ET.Element) -> str:
+    ET.indent(root)
+    return ET.tostring(root, encoding="unicode") + "\n"
+
+
+def jetbrains_theme(palette: Palette) -> dict[str, Any]:
+    return {
+        "name": palette["name"],
+        "dark": palette["appearance"] == "dark",
+        "author": AUTHOR,
+        "parentTheme": JETBRAINS_PARENT_THEMES[palette["appearance"]],
+        "editorScheme": f"/{slug(palette)}.xml",
+        "colors": {
+            token: palette_colour(palette, path)
+            for token, path in JETBRAINS_THEME_TOKENS.items()
         },
     }
 
@@ -633,7 +849,7 @@ def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
         "version": "1.0.0",
         "publisher": AUTHOR,
         "license": "MIT",
-        "repository": "https://github.com/brzzdev/geist-themes",
+        "repository": REPOSITORY_URL,
         "engines": {"vscode": "^1.81.0"},
         "categories": ["Themes"],
         "files": ["LICENSE", "themes"],
@@ -648,6 +864,104 @@ def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
             ],
         },
     }
+
+
+def jetbrains_scheme(palette: Palette) -> str:
+    ui = palette["ui"]
+
+    def colour(value: str) -> str:
+        return opaque(value, ui["background"])[1:]
+
+    def path_colour(path: str) -> str:
+        return colour(palette_colour(palette, path))
+
+    link = path_colour("syntax.link")
+    keyword = palette["syntax"]["keyword"]
+    find = {
+        "BACKGROUND": colour(ui["find"]),
+        "ERROR_STRIPE_COLOR": colour(ui["find"][:OPAQUE_HEX_LENGTH]),
+    }
+    attributes = {
+        "HYPERLINK_ATTRIBUTES": {
+            "EFFECT_COLOR": link,
+            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
+            "FOREGROUND": link,
+        },
+        "IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
+            "BACKGROUND": colour(ui["element"]),
+            "ERROR_STRIPE_COLOR": colour(ui["accent"]),
+        },
+        "SEARCH_RESULT_ATTRIBUTES": find,
+        "TEXT": {
+            "BACKGROUND": colour(ui["background"]),
+            "FOREGROUND": colour(ui["foreground"]),
+        },
+        "TEXT_SEARCH_RESULT_ATTRIBUTES": find,
+        # Empty drops the JavaScript plugin's green type-guard background.
+        "TS.TYPE_GUARD": {},
+        "WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
+            "BACKGROUND": colour(keyword + JETBRAINS_TINT_ALPHA),
+            "ERROR_STRIPE_COLOR": colour(keyword),
+        },
+    }
+    for key, path in JETBRAINS_FOREGROUNDS.items():
+        attributes[key] = {"FOREGROUND": path_colour(path)}
+        if key in JETBRAINS_ITALIC:
+            attributes[key]["FONT_TYPE"] = JETBRAINS_FONT_ITALIC
+    for key, path in JETBRAINS_DIAGNOSTICS.items():
+        severity = path_colour(path)
+        attributes[key] = {
+            "EFFECT_COLOR": severity,
+            "EFFECT_TYPE": JETBRAINS_EFFECT_WAVE,
+            "ERROR_STRIPE_COLOR": severity,
+        }
+    for shade, keys in JETBRAINS_CONSOLE.items():
+        for key, value in zip(keys, palette["ansi"][shade], strict=True):
+            attributes[key] = {"FOREGROUND": colour(value)}
+    for shade, suffix in (("normal", ""), ("bright", "_BRIGHT")):
+        for name, value in zip(ANSI_NAMES, palette["ansi"][shade], strict=True):
+            attributes[f"BLOCK_TERMINAL_{name.upper()}{suffix}"] = {
+                "FOREGROUND": colour(value)
+            }
+
+    scheme = ET.Element(
+        "scheme",
+        name=palette["name"],
+        version=JETBRAINS_SCHEME_VERSION,
+        parent_scheme=JETBRAINS_PARENT_SCHEMES[palette["appearance"]],
+    )
+    colours = ET.SubElement(scheme, "colors")
+    for key, path in JETBRAINS_COLOURS.items():
+        ET.SubElement(colours, "option", name=key, value=path_colour(path))
+    # Empty keeps syntax colours in a selection, where the Default parent paints it white.
+    ET.SubElement(colours, "option", name="SELECTION_FOREGROUND", value="")
+    options = ET.SubElement(scheme, "attributes")
+    for key, values in sorted(attributes.items()):
+        value = ET.SubElement(ET.SubElement(options, "option", name=key), "value")
+        for name, setting in sorted(values.items()):
+            ET.SubElement(value, "option", name=name, value=setting)
+    return xml_text(scheme)
+
+
+def jetbrains_plugin(palettes: list[Palette]) -> str:
+    plugin = ET.Element("idea-plugin")
+    ET.SubElement(plugin, "id").text = JETBRAINS_PLUGIN_ID
+    ET.SubElement(plugin, "name").text = "Geist Themes"
+    ET.SubElement(plugin, "vendor", url=REPOSITORY_URL).text = AUTHOR
+    names = " and ".join(p["name"] for p in palettes)
+    ET.SubElement(plugin, "description").text = (
+        f"{names}, built from the colours of Vercel's Geist terminal themes. "
+        "Unofficial: not made or endorsed by Vercel."
+    )
+    ET.SubElement(
+        plugin, "idea-version", {"since-build": JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD}
+    )
+    ET.SubElement(plugin, "depends").text = "com.intellij.modules.platform"
+    extensions = ET.SubElement(plugin, "extensions", defaultExtensionNs="com.intellij")
+    for palette in palettes:
+        name = slug(palette)
+        ET.SubElement(extensions, "themeProvider", id=name, path=f"/{name}.theme.json")
+    return xml_text(plugin)
 
 
 def write(path: Path, text: str) -> None:
@@ -665,6 +979,7 @@ def main() -> None:
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
     write(ROOT / "herdr" / "geist.toml", herdr(palettes))
+    write(ROOT / "jetbrains" / "META-INF" / "plugin.xml", jetbrains_plugin(palettes))
     bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
     write(bundle / "Info.plist", netnewswire_info())
     write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
@@ -674,6 +989,8 @@ def main() -> None:
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / name, ghostty(palette))
+        write_json(ROOT / "jetbrains" / f"{name}.theme.json", jetbrains_theme(palette))
+        write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
         write_json(ROOT / "vscode" / "themes" / f"{name}.json", vscode_theme(palette))
         write_json(ROOT / "xcode" / f"{name}.json", xcode_recipe(palette))
 

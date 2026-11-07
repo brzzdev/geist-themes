@@ -1,0 +1,12 @@
+<idea-plugin>
+  <id>dev.brzz.geist-themes</id>
+  <name>Geist Themes</name>
+  <vendor url="https://github.com/brzzdev/geist-themes">brzzdev</vendor>
+  <description>Geist Dark and Geist Light, built from the colours of Vercel's Geist terminal themes. Unofficial: not made or endorsed by Vercel.</description>
+  <idea-version since-build="261" />
+  <depends>com.intellij.modules.platform</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <themeProvider id="geist-dark" path="/geist-dark.theme.json" />
+    <themeProvider id="geist-light" path="/geist-light.theme.json" />
+  </extensions>
+</idea-plugin>

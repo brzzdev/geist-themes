@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, NetNewsWire, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
@@ -19,6 +19,16 @@ herdr server reload-config
 ```
 
 The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match your terminal's appearance. Picking a theme in herdr's settings turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+
+### JetBrains IDEs
+
+For Rider, IntelliJ IDEA, WebStorm and the other JetBrains IDEs, 2026.1 or later. From the repository root, build the plugin:
+
+```sh
+python3 -m zipfile -c geist-themes.jar jetbrains/*
+```
+
+Then install `geist-themes.jar` with Settings → Plugins → ⚙ → **Install Plugin from Disk…**, and pick **Geist Dark** or **Geist Light** under Appearance & Behavior → Appearance → Theme. Each theme switches the editor to its matching colour scheme.
 
 ### NetNewsWire
 
