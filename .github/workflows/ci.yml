@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -18,3 +21,65 @@ jobs:
           python3 build.py
           git diff --exit-code
           test -z "$(git status --porcelain)"
+
+  release:
+    if: github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Only what the release archive carries counts as a change worth releasing.
+      - name: Pick the next version
+        id: version
+        run: |
+          shipped=(ghostty install-xcode.py xcode zed)
+          last="$(git tag --list 'v*' --merged HEAD --sort=-v:refname | head -n 1)"
+          if [ -z "$last" ]; then
+            echo "tag=v1.0.0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet "$last" HEAD -- "${shipped[@]}"; then
+            echo "Nothing shipped has changed since $last"
+            exit 0
+          fi
+          subjects="$(git log --format=%s "$last..HEAD" -- "${shipped[@]}")"
+          IFS=. read -r major minor patch <<< "${last#v}"
+          if grep -qE '^[a-z]+(\([^)]*\))?!:' <<< "$subjects"; then
+            tag="v$((major + 1)).0.0"
+          elif grep -qE '^feat(\([^)]*\))?:' <<< "$subjects"; then
+            tag="v$major.$((minor + 1)).0"
+          else
+            tag="v$major.$minor.$((patch + 1))"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Package
+        if: steps.version.outputs.tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          stage="geist-themes-$TAG"
+          mkdir "$stage"
+          cp -R ghostty install-xcode.py LICENSE README.md xcode zed "$stage/"
+          zip -r "$stage.zip" "$stage"
+
+      - name: Publish
+        if: steps.version.outputs.tag
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release create "$TAG" "geist-themes-$TAG.zip" \
+            --generate-notes \
+            --target "$GITHUB_SHA" \
+            --title "$TAG"
