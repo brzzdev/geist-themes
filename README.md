@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, NetNewsWire, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
@@ -9,6 +9,10 @@ This is an unofficial project, not made or endorsed by Vercel. The colours belon
 ### Ghostty
 
 Copy `ghostty/geist-dark` and `ghostty/geist-light` into `~/.config/ghostty/themes/`, then set `theme = geist-dark` or `theme = geist-light` in your Ghostty config. To follow the system appearance, set `theme = light:geist-light,dark:geist-dark`.
+
+### NetNewsWire
+
+Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNewsWire → Settings → Reading → Theme. The article view follows the system appearance between Geist Dark and Geist Light.
 
 ### Xcode 27
 

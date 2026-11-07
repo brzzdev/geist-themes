@@ -303,25 +303,25 @@ def xcode_recipe(palette: Palette) -> dict[str, Any]:
     }
 
 
-def netnewswire_variables(palette: Palette) -> str:
-    lines = [f"\tcolor-scheme: {palette['appearance']};"]
-    lines += [
-        f"\t--{name}: {colour(palette, path)};"
+def netnewswire_variables(palette: Palette, indent: str = "") -> str:
+    declarations = {"color-scheme": palette["appearance"]} | {
+        f"--{name}": colour(palette, path)
         for name, path in NETNEWSWIRE_VARIABLES.items()
-    ]
-    return ":root {\n" + "\n".join(lines) + "\n}\n"
+    }
+    body = "".join(
+        f"{indent}\t{key}: {value};\n" for key, value in declarations.items()
+    )
+    return f"{indent}:root {{\n{body}{indent}}}\n"
 
 
 def netnewswire_stylesheet(palettes: list[Palette]) -> str:
     default, *others = palettes
     blocks = [netnewswire_variables(default)]
-    for palette in others:
-        variables = netnewswire_variables(palette).replace("\n\t", "\n\t\t")
-        blocks.append(
-            f"@media (prefers-color-scheme: {palette['appearance']}) {{\n"
-            + "\t" + variables.replace("\n}", "\n\t}")
-            + "}\n"
-        )
+    blocks += [
+        f"@media (prefers-color-scheme: {p['appearance']}) {{\n"
+        f"{netnewswire_variables(p, indent='\t')}}}\n"
+        for p in others
+    ]
     rules = (ROOT / "templates" / "netnewswire.css").read_text()
     return "\n".join([*blocks, rules])
 
