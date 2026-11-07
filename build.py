@@ -117,7 +117,7 @@ XCODE_OVERRIDES = {
 }
 
 
-# A translucent selection never takes syntax contrast below the selection's own.
+# The selection colour at this alpha keeps syntax at or above its contrast on the selection.
 VSCODE_RANGE_ALPHA = "60"
 VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
 
