@@ -18,7 +18,7 @@ herdr can't load a separate theme file, so paste the contents of `herdr/geist.to
 herdr server reload-config
 ```
 
-The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. In Ghostty, use the conditional `theme = light:geist-light,dark:geist-dark` from the [Ghostty](#ghostty) section: with a fixed `theme = geist-dark`, Ghostty reports light, so herdr picks Geist Light. Picking a theme in herdr's settings turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. In Ghostty, use the conditional `theme = light:geist-light,dark:geist-dark` from the [Ghostty](#ghostty) section: with a fixed `theme = geist-dark`, Ghostty reports light, so herdr picks Geist Light. To keep herdr on Geist Dark instead, pick a theme in herdr's settings: that turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
 
 ### JetBrains IDEs
 
@@ -32,7 +32,7 @@ Then install the jar with Settings → Plugins → ⚙ → **Install Plugin from
 
 ### NetNewsWire
 
-Open `netnewswire/Geist.nnwtheme` with NetNewsWire while it's running, and accept the install prompt. If it isn't running, opening the file only launches it, so open the file again. Then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
+With NetNewsWire running, open `netnewswire/Geist.nnwtheme` and accept the install prompt. Opening it while NetNewsWire is closed only launches the app, so open it again. Then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
 
 ### VS Code
 
@@ -52,7 +52,7 @@ Xcode 27 keeps themes in its settings rather than in `.xccolortheme` files. Quit
 ./install-xcode.py
 ```
 
-Then, in Xcode → Settings → Appearance → Theme → **Choose…**, pick **Geist Light** for the light appearance and **Geist Dark** for the dark one. Running it again updates the themes in place.
+Then, in Xcode → Settings → Appearance → Theme → **Choose…**, pick **Geist Dark** for the dark appearance and **Geist Light** for the light one. Running it again updates the themes in place.
 
 ### Zed
 
