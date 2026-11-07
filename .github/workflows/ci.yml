@@ -29,6 +29,7 @@ jobs:
     timeout-minutes: 5
     concurrency:
       group: release
+      queue: max
     permissions:
       contents: write
     steps:
