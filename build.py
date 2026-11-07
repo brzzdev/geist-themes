@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parent
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
+# libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
+OKLCH_DECIMALS = 6
 
 type Palette = dict[str, Any]
 
@@ -238,7 +240,7 @@ def oklch(hex_colour: str) -> tuple[float, float, float]:
 
 
 def xcode_colour(hex_colour: str) -> dict[str, Any]:
-    lightness, chroma, hue = oklch(hex_colour)
+    lightness, chroma, hue = (round(v, OKLCH_DECIMALS) for v in oklch(hex_colour))
     return {
         "wrapped": {
             "oklch": {
