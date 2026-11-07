@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, Rex, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
@@ -33,6 +33,10 @@ Then install the jar with Settings → Plugins → ⚙ → **Install Plugin from
 ### NetNewsWire
 
 Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
+
+### Rex
+
+Rex imports the Ghostty files. In Rex → Settings → Themes → Import Theme, click **Import** and pick `ghostty/geist-dark`, then do the same for `ghostty/geist-light`. Rex selects each theme for the appearance it matches, so Light Mode switches to **geist-light** and Dark Mode to **geist-dark**. To switch back to them later, pick them under Light Mode and Dark Mode on the same page.
 
 ### VS Code
 
