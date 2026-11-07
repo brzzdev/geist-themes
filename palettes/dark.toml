@@ -11,6 +11,7 @@ cursor = "#ededed"
 element = "#1a1a1a"
 find = "#f1a10d40"
 foreground = "#ededed"
+highlight = "#2e2e2e"
 hover = "#111111"
 indent_active = "#8f8f8f"
 invisible = "#2e2e2e"
@@ -19,7 +20,7 @@ panel = "#0a0a0a"
 quiet = "#8f8f8f"
 selection = "#454545"
 # `selection` when composited over the black background.
-selection_overlay = "#8a8a8a80"
+selection_overlay = "#c8c8c858"
 accents = ["#52a9ff", "#bf7af0", "#f1a10d", "#0ac5b3", "#63c174", "#e5484d"]
 
 [status]

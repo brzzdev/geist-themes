@@ -34,9 +34,9 @@
         "editor.active_line.background": "#111111",
         "editor.active_line_number": "#ededed",
         "editor.background": "#000000",
-        "editor.document_highlight.bracket_background": "#454545",
-        "editor.document_highlight.read_background": "#454545",
-        "editor.document_highlight.write_background": "#454545",
+        "editor.document_highlight.bracket_background": "#2e2e2e",
+        "editor.document_highlight.read_background": "#2e2e2e",
+        "editor.document_highlight.write_background": "#2e2e2e",
         "editor.foreground": "#ededed",
         "editor.gutter.background": "#000000",
         "editor.highlighted_line.background": "#111111",
@@ -89,7 +89,7 @@
           {
             "background": "#ededed",
             "cursor": "#ededed",
-            "selection": "#8a8a8a80"
+            "selection": "#c8c8c858"
           }
         ],
         "predictive": "#8f8f8f",
