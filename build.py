@@ -241,6 +241,9 @@ def oklch(hex_colour: str) -> tuple[float, float, float]:
 
 def xcode_colour(hex_colour: str) -> dict[str, Any]:
     lightness, chroma, hue = (round(v, OKLCH_DECIMALS) for v in oklch(hex_colour))
+    if chroma == 0:
+        # A grey's hue is noise from cancelling terms and can straddle a rounding boundary.
+        hue = 0.0
     return {
         "wrapped": {
             "oklch": {
