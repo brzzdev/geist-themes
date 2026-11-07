@@ -225,7 +225,7 @@ a code {
 .nnw-overflow th {
 	padding: 8px 11px;
 	border-bottom: 1px solid var(--border);
-	text-align: left;
+	text-align: start;
 	word-break: normal;
 	-webkit-hyphens: none;
 }
@@ -342,7 +342,7 @@ a.footnote:hover,
 /* iOS */
 @supports (-webkit-touch-callout: none) {
 	:root {
-		/* NetNewsWire replaces the placeholder with the Dynamic Type size. */
+		/* [[font-size]] is the Dynamic Type size. */
 		font-size: [[font-size]]px;
 	}
 
