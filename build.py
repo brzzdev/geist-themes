@@ -13,9 +13,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 AUTHOR = "brzzdev"
 FAMILY = "Geist"
+REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
 SCROLLBAR_ALPHA = "50"
 SCROLLBAR_HOVER_ALPHA = "80"
-REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 OPAQUE_HEX_LENGTH = len("#rrggbb")
@@ -115,6 +115,108 @@ XCODE_OVERRIDES = {
     "string.regex": "syntax.regex",
     "typeDeclaration": "syntax.type",
 }
+
+
+VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
+
+VSCODE_TOKENS = [
+    (
+        [
+            "entity.name.function.decorator",
+            "entity.name.function.preprocessor",
+            "entity.other.attribute-name",
+            "keyword.control.directive",
+            "meta.decorator",
+            "meta.preprocessor",
+            "punctuation.decorator",
+            "storage.type.annotation",
+        ],
+        "attribute",
+        None,
+    ),
+    (["comment", "punctuation.definition.comment"], "comment", "italic"),
+    (
+        ["constant.language", "support.constant", "variable.other.enummember"],
+        "constant",
+        None,
+    ),
+    (["entity.name.function", "meta.function-call.generic"], "function", None),
+    (["support.function"], "function_system", None),
+    (
+        [
+            "keyword",
+            "keyword.operator.alignas",
+            "keyword.operator.alignof",
+            "keyword.operator.cast",
+            "keyword.operator.expression",
+            "keyword.operator.instanceof",
+            "keyword.operator.logical.python",
+            "keyword.operator.new",
+            "keyword.operator.noexcept",
+            "keyword.operator.sizeof",
+            "keyword.operator.type.asserts",
+            "keyword.operator.typeid",
+            "keyword.operator.wordlike",
+            "storage",
+            "variable.language",
+        ],
+        "keyword",
+        None,
+    ),
+    (["markup.underline.link"], "link", None),
+    (["markup.fenced_code", "markup.inline.raw"], "literal", None),
+    (["entity.name.namespace", "entity.name.type.module"], "namespace", None),
+    (["constant.character", "constant.numeric"], "number", None),
+    (["markup.bold", "markup.heading"], "plain", "bold"),
+    (["markup.italic"], "plain", "italic"),
+    (["keyword.operator", "meta.brace", "punctuation"], "punctuation", None),
+    (["string.regexp"], "regex", None),
+    (["punctuation.definition.string", "string"], "string", None),
+    (["entity.name.tag"], "tag", None),
+    (
+        ["entity.name.class", "entity.name.type", "entity.other.inherited-class"],
+        "type",
+        None,
+    ),
+    (["entity.name.type.parameter"], "type_parameter", None),
+    (["support.class", "support.type"], "type_system", None),
+    (
+        [
+            "meta.definition.variable",
+            "support.type.property-name",
+            "support.variable",
+            "variable",
+        ],
+        "variable",
+        None,
+    ),
+]
+
+VSCODE_SEMANTIC = {
+    "class": "type",
+    "class.defaultLibrary": "type_system",
+    "decorator": "attribute",
+    "enum": "type",
+    "enum.defaultLibrary": "type_system",
+    "enumMember": "constant",
+    "function": "function",
+    "function.defaultLibrary": "function_system",
+    "interface": "type",
+    "interface.defaultLibrary": "type_system",
+    "macro": "attribute",
+    "method": "function",
+    "method.defaultLibrary": "function_system",
+    "namespace": "namespace",
+    "parameter": "variable",
+    "property": "variable",
+    "struct": "type",
+    "struct.defaultLibrary": "type_system",
+    "type": "type",
+    "type.defaultLibrary": "type_system",
+    "typeParameter": "type_parameter",
+    "variable": "variable",
+}
+
 
 JETBRAINS_PLUGIN_ID = "dev.brzz.geist-themes"
 JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
@@ -296,107 +398,6 @@ JETBRAINS_CONSOLE = {
         "CONSOLE_CYAN_BRIGHT_OUTPUT",
         "CONSOLE_WHITE_OUTPUT",
     ],
-}
-
-
-VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
-
-VSCODE_TOKENS = [
-    (
-        [
-            "entity.name.function.decorator",
-            "entity.name.function.preprocessor",
-            "entity.other.attribute-name",
-            "keyword.control.directive",
-            "meta.decorator",
-            "meta.preprocessor",
-            "punctuation.decorator",
-            "storage.type.annotation",
-        ],
-        "attribute",
-        None,
-    ),
-    (["comment", "punctuation.definition.comment"], "comment", "italic"),
-    (
-        ["constant.language", "support.constant", "variable.other.enummember"],
-        "constant",
-        None,
-    ),
-    (["entity.name.function", "meta.function-call.generic"], "function", None),
-    (["support.function"], "function_system", None),
-    (
-        [
-            "keyword",
-            "keyword.operator.alignas",
-            "keyword.operator.alignof",
-            "keyword.operator.cast",
-            "keyword.operator.expression",
-            "keyword.operator.instanceof",
-            "keyword.operator.logical.python",
-            "keyword.operator.new",
-            "keyword.operator.noexcept",
-            "keyword.operator.sizeof",
-            "keyword.operator.type.asserts",
-            "keyword.operator.typeid",
-            "keyword.operator.wordlike",
-            "storage",
-            "variable.language",
-        ],
-        "keyword",
-        None,
-    ),
-    (["markup.underline.link"], "link", None),
-    (["markup.fenced_code", "markup.inline.raw"], "literal", None),
-    (["entity.name.namespace", "entity.name.type.module"], "namespace", None),
-    (["constant.character", "constant.numeric"], "number", None),
-    (["markup.bold", "markup.heading"], "plain", "bold"),
-    (["markup.italic"], "plain", "italic"),
-    (["keyword.operator", "meta.brace", "punctuation"], "punctuation", None),
-    (["string.regexp"], "regex", None),
-    (["punctuation.definition.string", "string"], "string", None),
-    (["entity.name.tag"], "tag", None),
-    (
-        ["entity.name.class", "entity.name.type", "entity.other.inherited-class"],
-        "type",
-        None,
-    ),
-    (["entity.name.type.parameter"], "type_parameter", None),
-    (["support.class", "support.type"], "type_system", None),
-    (
-        [
-            "meta.definition.variable",
-            "support.type.property-name",
-            "support.variable",
-            "variable",
-        ],
-        "variable",
-        None,
-    ),
-]
-
-VSCODE_SEMANTIC = {
-    "class": "type",
-    "class.defaultLibrary": "type_system",
-    "decorator": "attribute",
-    "enum": "type",
-    "enum.defaultLibrary": "type_system",
-    "enumMember": "constant",
-    "function": "function",
-    "function.defaultLibrary": "function_system",
-    "interface": "type",
-    "interface.defaultLibrary": "type_system",
-    "macro": "attribute",
-    "method": "function",
-    "method.defaultLibrary": "function_system",
-    "namespace": "namespace",
-    "parameter": "variable",
-    "property": "variable",
-    "struct": "type",
-    "struct.defaultLibrary": "type_system",
-    "type": "type",
-    "type.defaultLibrary": "type_system",
-    "typeParameter": "type_parameter",
-    "variable": "variable",
 }
 
 
@@ -806,6 +807,33 @@ def vscode_theme(palette: Palette) -> dict[str, Any]:
         ],
         "semanticTokenColors": {
             selector: syntax[role] for selector, role in VSCODE_SEMANTIC.items()
+        },
+    }
+
+
+def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
+    return {
+        "name": "geist-themes",
+        "displayName": "Geist Themes",
+        "description": "Colour themes from Vercel's Geist terminal themes.",
+        "version": "1.0.0",
+        "publisher": AUTHOR,
+        "license": "MIT",
+        "repository": REPOSITORY_URL,
+        "engines": {"vscode": "^1.81.0"},
+        "categories": ["Themes"],
+        "files": ["LICENSE", "themes"],
+        "contributes": {
+            "themes": [
+                {
+                    "label": p["name"],
+                    "uiTheme": VSCODE_UI_THEMES[p["appearance"]],
+                    "path": f"./themes/{slug(p)}.json",
+                }
+                for p in palettes
+            ],
+        },
+    }
 
 
 def opaque(colour: str, ground: str) -> str:
@@ -837,31 +865,6 @@ def jetbrains_theme(palette: Palette) -> dict[str, Any]:
         "colors": {
             token: palette_colour(palette, path)
             for token, path in JETBRAINS_THEME_TOKENS.items()
-        },
-    }
-
-
-def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
-    return {
-        "name": "geist-themes",
-        "displayName": "Geist Themes",
-        "description": "Colour themes from Vercel's Geist terminal themes.",
-        "version": "1.0.0",
-        "publisher": AUTHOR,
-        "license": "MIT",
-        "repository": REPOSITORY_URL,
-        "engines": {"vscode": "^1.81.0"},
-        "categories": ["Themes"],
-        "files": ["LICENSE", "themes"],
-        "contributes": {
-            "themes": [
-                {
-                    "label": p["name"],
-                    "uiTheme": VSCODE_UI_THEMES[p["appearance"]],
-                    "path": f"./themes/{slug(p)}.json",
-                }
-                for p in palettes
-            ],
         },
     }
 
