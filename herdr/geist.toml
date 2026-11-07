@@ -1,7 +1,7 @@
 [theme]
 auto_switch = true
 
-[theme.custom.dark]
+[theme.custom]
 accent = "#52a9ff"
 active_row_bg = "#1a1a1a"
 blue = "#52a9ff"

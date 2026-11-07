@@ -12,13 +12,13 @@ Copy `ghostty/geist-dark` and `ghostty/geist-light` into `~/.config/ghostty/them
 
 ### herdr
 
-herdr can't load a separate theme file, so paste the contents of `herdr/geist.toml` into `~/.config/herdr/config.toml`, replacing any `[theme.custom]` tables already there. Then run:
+herdr can't load a separate theme file, so paste the contents of `herdr/geist.toml` into `~/.config/herdr/config.toml`, replacing the `[theme]` table and any `[theme.custom]` tables already there. Keep any other `[theme]` keys you want, such as `name`, under the pasted `[theme]` header. Then run:
 
 ```sh
 herdr server reload-config
 ```
 
-The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match your terminal's appearance. It sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match your terminal's appearance. Picking a theme in herdr's settings turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
 
 ### NetNewsWire
 

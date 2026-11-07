@@ -277,8 +277,14 @@ def herdr_table(header: str, colours: dict[str, str]) -> str:
 
 
 def herdr(palettes: list[Palette]) -> str:
+    # [theme.custom] applies even with auto_switch off, so dark is the fallback.
     tables = [
-        herdr_table(f"theme.custom.{p['appearance']}", herdr_colours(p))
+        herdr_table(
+            "theme.custom"
+            if p["appearance"] == "dark"
+            else f"theme.custom.{p['appearance']}",
+            herdr_colours(p),
+        )
         for p in palettes
     ]
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
