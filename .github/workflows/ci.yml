@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -18,3 +21,57 @@ jobs:
           python3 build.py
           git diff --exit-code
           test -z "$(git status --porcelain)"
+
+  release:
+    if: github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: release
+      queue: max
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Release what ships, when it has changed
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tip="$(gh api "repos/$GH_REPO/commits/$GITHUB_REF_NAME" --jq .sha)"
+          if [ "$tip" != "$GITHUB_SHA" ]; then
+            echo "$GITHUB_REF_NAME has moved on to $tip, whose run releases this change too"
+            exit 0
+          fi
+          shipped=(ghostty install-xcode.py xcode zed)
+          last="$(git tag --list 'v*' --merged HEAD --sort=-v:refname | head -n 1)"
+          if [ -z "$last" ]; then
+            tag=v1.0.0
+          elif git diff --quiet "$last" HEAD -- "${shipped[@]}"; then
+            echo "Nothing shipped has changed since $last"
+            exit 0
+          else
+            subjects="$(git log --format=%s "$last..HEAD" -- "${shipped[@]}")"
+            bodies="$(git log --format=%b "$last..HEAD" -- "${shipped[@]}")"
+            IFS=. read -r major minor patch <<< "${last#v}"
+            if grep -qiE '^[a-z]+(\([^)]*\))?!:' <<< "$subjects" ||
+              grep -qE '^BREAKING[ -]CHANGE:' <<< "$bodies"; then
+              tag="v$((major + 1)).0.0"
+            elif grep -qiE '^feat(\([^)]*\))?:' <<< "$subjects"; then
+              tag="v$major.$((minor + 1)).0"
+            else
+              tag="v$major.$minor.$((patch + 1))"
+            fi
+          fi
+          archive="geist-themes-$tag"
+          git archive --format=zip --prefix="$archive/" -o "$archive.zip" HEAD \
+            "${shipped[@]}" LICENSE README.md
+          gh release create "$tag" "$archive.zip" \
+            --generate-notes \
+            --target "$GITHUB_SHA" \
+            --title "$tag"
