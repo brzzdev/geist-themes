@@ -218,8 +218,8 @@ VSCODE_SEMANTIC = {
 }
 
 
-JETBRAINS_PLUGIN_ID = "dev.brzz.geist-themes"
 JETBRAINS_PLUGIN_DEV_VERSION = "0.0.0-dev"
+JETBRAINS_PLUGIN_ID = "dev.brzz.geist-themes"
 JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
 JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
 JETBRAINS_PARENT_THEMES = {"dark": "Islands Dark", "light": "Islands Light"}
