@@ -218,6 +218,7 @@ VSCODE_SEMANTIC = {
 }
 
 
+JETBRAINS_PLUGIN_DEV_VERSION = "0.0.0-dev"
 JETBRAINS_PLUGIN_ID = "dev.brzz.geist-themes"
 JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
 JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
@@ -950,6 +951,7 @@ def jetbrains_plugin(palettes: list[Palette]) -> str:
     plugin = ET.Element("idea-plugin")
     ET.SubElement(plugin, "id").text = JETBRAINS_PLUGIN_ID
     ET.SubElement(plugin, "name").text = "Geist Themes"
+    ET.SubElement(plugin, "version").text = JETBRAINS_PLUGIN_DEV_VERSION
     ET.SubElement(plugin, "vendor", url=REPOSITORY_URL).text = AUTHOR
     names = " and ".join(p["name"] for p in palettes)
     ET.SubElement(plugin, "description").text = (
