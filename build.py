@@ -3,11 +3,15 @@
 
 import json
 import math
+import plistlib
+import textwrap
 import tomllib
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent
+AUTHOR = "brzzdev"
+FAMILY = "Geist"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
@@ -53,6 +57,20 @@ ZED_SYNTAX = {
     "variant": ("constant", None),
 }
 
+NETNEWSWIRE_VARIABLES = {
+    "accent": "ui.accent",
+    "background": "ui.background",
+    "border": "ui.border",
+    "border-variant": "ui.border_variant",
+    "code-background": "ui.element",
+    "foreground": "ui.foreground",
+    "link": "syntax.link",
+    "muted": "ui.muted",
+    "panel": "ui.panel",
+    "quiet": "ui.quiet",
+    "selection": "ui.selection",
+}
+
 XCODE_OVERRIDES = {
     "comment": "syntax.comment",
     "commentEmphasized": "syntax.comment_emphasized",
@@ -93,6 +111,11 @@ XCODE_OVERRIDES = {
 
 def slug(palette: Palette) -> str:
     return palette["name"].lower().replace(" ", "-")
+
+
+def palette_colour(palette: Palette, path: str) -> str:
+    group, key = path.split(".")
+    return palette[group][key]
 
 
 def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
@@ -196,8 +219,8 @@ def zed_style(palette: Palette) -> dict[str, Any]:
 def zed_family(palettes: list[Palette]) -> dict[str, Any]:
     return {
         "$schema": ZED_SCHEMA,
-        "name": "Geist",
-        "author": "brzzdev",
+        "name": FAMILY,
+        "author": AUTHOR,
         "themes": [
             {"name": p["name"], "appearance": p["appearance"], "style": zed_style(p)}
             for p in palettes
@@ -258,13 +281,12 @@ def xcode_colour(hex_colour: str) -> dict[str, Any]:
 
 
 def xcode_recipe(palette: Palette) -> dict[str, Any]:
-    def lookup(path: str) -> str:
-        group, key = path.split(".")
-        return palette[group][key]
-
     overrides: list[Any] = []
     for token, path in XCODE_OVERRIDES.items():
-        overrides += [token, {"color": {"_0": xcode_colour(lookup(path))}}]
+        overrides += [
+            token,
+            {"color": {"_0": xcode_colour(palette_colour(palette, path))}},
+        ]
     return {
         "name": palette["name"],
         "recipe": {
@@ -286,6 +308,39 @@ def xcode_recipe(palette: Palette) -> dict[str, Any]:
     }
 
 
+def netnewswire_variables(palette: Palette) -> str:
+    declarations = {"color-scheme": palette["appearance"]} | {
+        f"--{name}": palette_colour(palette, path)
+        for name, path in NETNEWSWIRE_VARIABLES.items()
+    }
+    body = "".join(f"\t{key}: {value};\n" for key, value in declarations.items())
+    return f":root {{\n{body}}}\n"
+
+
+def netnewswire_stylesheet(palettes: list[Palette]) -> str:
+    default, *others = sorted(palettes, key=lambda p: p["appearance"] != "dark")
+    blocks = [netnewswire_variables(default)]
+    blocks += [
+        f"@media (prefers-color-scheme: {p['appearance']}) {{\n"
+        + textwrap.indent(netnewswire_variables(p), "\t")
+        + "}\n"
+        for p in others
+    ]
+    rules = (ROOT / "templates" / "netnewswire.css").read_text()
+    return "\n".join([*blocks, rules])
+
+
+def netnewswire_info() -> str:
+    info = {
+        "CreatorHomePage": "https://github.com/brzzdev/geist-themes",
+        "CreatorName": AUTHOR,
+        "Name": FAMILY,
+        "ThemeIdentifier": "dev.brzz.geist-themes.netnewswire",
+        "Version": 1,
+    }
+    return plistlib.dumps(info).decode()
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
@@ -296,6 +351,9 @@ def main() -> None:
     palettes = [
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
+    bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
+    write(bundle / "Info.plist", netnewswire_info())
+    write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
     write(
         ROOT / "zed" / "geist.json", json.dumps(zed_family(palettes), indent=2) + "\n"
     )
