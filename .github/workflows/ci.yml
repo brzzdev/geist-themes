@@ -42,6 +42,11 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          tip="$(gh api "repos/$GH_REPO/commits/$GITHUB_REF_NAME" --jq .sha)"
+          if [ "$tip" != "$GITHUB_SHA" ]; then
+            echo "$GITHUB_REF_NAME has moved on to $tip, whose run releases this change too"
+            exit 0
+          fi
           shipped=(ghostty install-xcode.py xcode zed)
           last="$(git tag --list 'v*' --merged HEAD --sort=-v:refname | head -n 1)"
           if [ -z "$last" ]; then
@@ -51,10 +56,12 @@ jobs:
             exit 0
           else
             subjects="$(git log --format=%s "$last..HEAD" -- "${shipped[@]}")"
+            bodies="$(git log --format=%b "$last..HEAD" -- "${shipped[@]}")"
             IFS=. read -r major minor patch <<< "${last#v}"
-            if grep -qE '^[a-z]+(\([^)]*\))?!:' <<< "$subjects"; then
+            if grep -qiE '^[a-z]+(\([^)]*\))?!:' <<< "$subjects" ||
+              grep -qE '^BREAKING[ -]CHANGE:' <<< "$bodies"; then
               tag="v$((major + 1)).0.0"
-            elif grep -qE '^feat(\([^)]*\))?:' <<< "$subjects"; then
+            elif grep -qiE '^feat(\([^)]*\))?:' <<< "$subjects"; then
               tag="v$major.$((minor + 1)).0"
             else
               tag="v$major.$minor.$((patch + 1))"
