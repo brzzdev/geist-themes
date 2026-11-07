@@ -493,6 +493,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "scrollbar.thumb.hover_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
         "scrollbar.track.background": TRANSPARENT,
         "scrollbar.track.border": TRANSPARENT,
+        "search.active_match_background": ui["find_active"],
         "search.match_background": ui["find"],
         "status_bar.background": ui["panel"],
         "surface.background": ui["panel"],
@@ -709,8 +710,10 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "dropdown.background": ui["element"],
         "dropdown.border": ui["border"],
         "editor.background": ui["background"],
-        "editor.findMatchBackground": ui["find"],
+        "editor.findMatchBackground": ui["find_active"],
+        "editor.findMatchBorder": ui["find_active_border"],
         "editor.findMatchHighlightBackground": ui["find"],
+        "editor.findMatchHighlightBorder": ui["find_border"],
         "editor.foreground": ui["foreground"],
         "editor.lineHighlightBackground": ui["hover"],
         "editor.rangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
@@ -788,6 +791,10 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "tab.inactiveBackground": ui["panel"],
         "tab.inactiveForeground": ui["muted"],
         "terminal.background": ui["background"],
+        "terminal.findMatchBackground": ui["find_terminal_active"],
+        "terminal.findMatchBorder": ui["find_active_border"],
+        "terminal.findMatchHighlightBackground": ui["find_terminal"],
+        "terminal.findMatchHighlightBorder": ui["find_border"],
         "terminal.foreground": ui["foreground"],
         "terminal.selectionBackground": ui["selection"],
         "terminalCursor.foreground": ui["cursor"],
@@ -901,7 +908,7 @@ def jetbrains_scheme(palette: Palette) -> str:
     keyword = palette["syntax"]["keyword"]
     find = {
         "BACKGROUND": colour(ui["find"]),
-        "ERROR_STRIPE_COLOR": colour(ui["find"][:OPAQUE_HEX_LENGTH]),
+        "ERROR_STRIPE_COLOR": colour(ui["find_active_border"]),
     }
     attributes = {
         "HYPERLINK_ATTRIBUTES": {
