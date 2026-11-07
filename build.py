@@ -710,6 +710,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchBackground": ui["find_active"],
         "editor.findMatchBorder": ui["find_active_border"],
         "editor.findMatchHighlightBackground": ui["find"],
+        "editor.findMatchHighlightBorder": ui["find_border"],
         "editor.foreground": ui["foreground"],
         "editor.lineHighlightBackground": ui["hover"],
         "editor.selectionBackground": ui["selection"],
