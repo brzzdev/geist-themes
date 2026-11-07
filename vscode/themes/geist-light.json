@@ -30,7 +30,7 @@
     "editorBracketHighlight.foreground4": "#0b7268",
     "editorBracketHighlight.foreground5": "#18703a",
     "editorBracketHighlight.foreground6": "#cf2f36",
-    "editorBracketMatch.background": "#dce3ec",
+    "editorBracketMatch.background": "#ebeef2",
     "editorBracketMatch.border": "#a8a8a8",
     "editorCursor.foreground": "#24292f",
     "editorError.foreground": "#cf2f36",
