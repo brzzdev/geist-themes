@@ -19,6 +19,12 @@ SCROLLBAR_HOVER_ALPHA = "80"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 OPAQUE_HEX_LENGTH = len("#rrggbb")
+CARD_CELL_WIDTH = 210
+CARD_COLUMNS = 4
+CARD_FONT = "ui-monospace, SFMono-Regular, Menlo, monospace"
+CARD_PADDING = 24
+CARD_ROW_HEIGHT = 44
+CARD_SWATCH = 32
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
 OKLCH_DECIMALS = 6
@@ -990,8 +996,80 @@ def jetbrains_plugin(palettes: list[Palette]) -> str:
     extensions = ET.SubElement(plugin, "extensions", defaultExtensionNs="com.intellij")
     for palette in palettes:
         name = slug(palette)
+        write(
+            ROOT / "docs" / f"palette-{palette['appearance']}.svg",
+            palette_card(palette),
+        )
         ET.SubElement(extensions, "themeProvider", id=name, path=f"/{name}.theme.json")
     return xml_text(plugin)
+
+
+def palette_card(palette: Palette) -> str:
+    ui, ansi = palette["ui"], palette["ansi"]
+    sections = [
+        ("UI", [(key, ui[key]) for key in ("background", "foreground", "accent")]),
+        ("Syntax", sorted(palette["syntax"].items())),
+        (
+            "ANSI",
+            [
+                (f"{prefix}{name}", colour)
+                for shade, prefix in (("normal", ""), ("bright", "bright "))
+                for name, colour in zip(ANSI_NAMES, ansi[shade], strict=True)
+            ],
+        ),
+    ]
+    rows = sum(1 + math.ceil(len(swatches) / CARD_COLUMNS) for _, swatches in sections)
+    width = 2 * CARD_PADDING + CARD_COLUMNS * CARD_CELL_WIDTH
+    height = 2 * CARD_PADDING + rows * CARD_ROW_HEIGHT
+    svg = ET.Element(
+        "svg",
+        xmlns="http://www.w3.org/2000/svg",
+        width=str(width),
+        height=str(height),
+        viewBox=f"0 0 {width} {height}",
+        style=f"font-family: {CARD_FONT}; font-size: 13px",
+    )
+    ET.SubElement(svg, "title").text = f"{palette['name']} palette"
+    ET.SubElement(
+        svg, "rect", width="100%", height="100%", rx="12", fill=ui["background"]
+    )
+    y = CARD_PADDING
+    for heading, swatches in sections:
+        ET.SubElement(
+            svg, "text", x=str(CARD_PADDING), y=str(y + 20), fill=ui["muted"]
+        ).text = heading
+        y += CARD_ROW_HEIGHT
+        for index, (role, colour) in enumerate(swatches):
+            row, column = divmod(index, CARD_COLUMNS)
+            x = CARD_PADDING + column * CARD_CELL_WIDTH
+            top = y + row * CARD_ROW_HEIGHT
+            ET.SubElement(
+                svg,
+                "rect",
+                x=str(x),
+                y=str(top),
+                width=str(CARD_SWATCH),
+                height=str(CARD_SWATCH),
+                rx="6",
+                fill=colour,
+                stroke=ui["border"],
+            )
+            ET.SubElement(
+                svg,
+                "text",
+                x=str(x + CARD_SWATCH + 10),
+                y=str(top + 13),
+                fill=ui["foreground"],
+            ).text = role
+            ET.SubElement(
+                svg,
+                "text",
+                x=str(x + CARD_SWATCH + 10),
+                y=str(top + 29),
+                fill=ui["muted"],
+            ).text = colour
+        y += math.ceil(len(swatches) / CARD_COLUMNS) * CARD_ROW_HEIGHT
+    return xml_text(svg)
 
 
 def write(path: Path, text: str) -> None:
