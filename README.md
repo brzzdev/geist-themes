@@ -36,7 +36,7 @@ Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNe
 
 ### Rex
 
-Rex imports the Ghostty files. In Rex → Settings → Themes → Import Theme, click **Import** and pick `ghostty/geist-dark`, then do the same for `ghostty/geist-light`. Rex selects each theme for the appearance it matches, so Light Mode switches to **geist-light** and Dark Mode to **geist-dark**. To switch back to them later, pick them under Light Mode and Dark Mode on the same page.
+Rex imports the Ghostty files. In Rex → Settings → Themes → Import Theme, click **Import** and pick `ghostty/geist-dark`, then do the same for `ghostty/geist-light`. Rex selects each theme for the appearance it matches, so Light Mode switches to **geist-light** and Dark Mode to **geist-dark**. You can pick them again later under Light Mode and Dark Mode on the same page.
 
 ### VS Code
 
