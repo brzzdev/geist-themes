@@ -12,6 +12,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 AUTHOR = "brzzdev"
 FAMILY = "Geist"
+SCROLLBAR_ALPHA = "50"
+SCROLLBAR_HOVER_ALPHA = "80"
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
@@ -112,6 +114,107 @@ XCODE_OVERRIDES = {
 }
 
 
+VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
+
+VSCODE_TOKENS = [
+    (
+        [
+            "entity.name.function.decorator",
+            "entity.name.function.preprocessor",
+            "entity.other.attribute-name",
+            "keyword.control.directive",
+            "meta.decorator",
+            "meta.preprocessor",
+            "punctuation.decorator",
+            "storage.type.annotation",
+        ],
+        "attribute",
+        None,
+    ),
+    (["comment", "punctuation.definition.comment"], "comment", "italic"),
+    (
+        ["constant.language", "support.constant", "variable.other.enummember"],
+        "constant",
+        None,
+    ),
+    (["entity.name.function", "meta.function-call.generic"], "function", None),
+    (["support.function"], "function_system", None),
+    (
+        [
+            "keyword",
+            "keyword.operator.alignas",
+            "keyword.operator.alignof",
+            "keyword.operator.cast",
+            "keyword.operator.expression",
+            "keyword.operator.instanceof",
+            "keyword.operator.logical.python",
+            "keyword.operator.new",
+            "keyword.operator.noexcept",
+            "keyword.operator.sizeof",
+            "keyword.operator.type.asserts",
+            "keyword.operator.typeid",
+            "keyword.operator.wordlike",
+            "storage",
+            "variable.language",
+        ],
+        "keyword",
+        None,
+    ),
+    (["markup.underline.link"], "link", None),
+    (["markup.fenced_code", "markup.inline.raw"], "literal", None),
+    (["entity.name.namespace", "entity.name.type.module"], "namespace", None),
+    (["constant.character", "constant.numeric"], "number", None),
+    (["markup.bold", "markup.heading"], "plain", "bold"),
+    (["markup.italic"], "plain", "italic"),
+    (["keyword.operator", "meta.brace", "punctuation"], "punctuation", None),
+    (["string.regexp"], "regex", None),
+    (["punctuation.definition.string", "string"], "string", None),
+    (["entity.name.tag"], "tag", None),
+    (
+        ["entity.name.class", "entity.name.type", "entity.other.inherited-class"],
+        "type",
+        None,
+    ),
+    (["entity.name.type.parameter"], "type_parameter", None),
+    (["support.class", "support.type"], "type_system", None),
+    (
+        [
+            "meta.definition.variable",
+            "support.type.property-name",
+            "support.variable",
+            "variable",
+        ],
+        "variable",
+        None,
+    ),
+]
+
+VSCODE_SEMANTIC = {
+    "class": "type",
+    "class.defaultLibrary": "type_system",
+    "decorator": "attribute",
+    "enum": "type",
+    "enum.defaultLibrary": "type_system",
+    "enumMember": "constant",
+    "function": "function",
+    "function.defaultLibrary": "function_system",
+    "interface": "type",
+    "interface.defaultLibrary": "type_system",
+    "macro": "attribute",
+    "method": "function",
+    "method.defaultLibrary": "function_system",
+    "namespace": "namespace",
+    "parameter": "variable",
+    "property": "variable",
+    "struct": "type",
+    "struct.defaultLibrary": "type_system",
+    "type": "type",
+    "type.defaultLibrary": "type_system",
+    "typeParameter": "type_parameter",
+    "variable": "variable",
+}
+
+
 def slug(palette: Palette) -> str:
     return palette["name"].lower().replace(" ", "-")
 
@@ -183,8 +286,8 @@ def zed_style(palette: Palette) -> dict[str, Any]:
                 "selection": ui["selection"],
             },
         ],
-        "scrollbar.thumb.background": ui["indent_active"] + "50",
-        "scrollbar.thumb.hover_background": ui["muted"] + "80",
+        "scrollbar.thumb.background": ui["indent_active"] + SCROLLBAR_ALPHA,
+        "scrollbar.thumb.hover_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
         "scrollbar.track.background": TRANSPARENT,
         "scrollbar.track.border": TRANSPARENT,
         "search.match_background": ui["find"],
@@ -383,10 +486,178 @@ def netnewswire_info() -> str:
     return plistlib.dumps(info).decode()
 
 
+def vscode_colours(palette: Palette) -> dict[str, str]:
+    ui, status, ansi = palette["ui"], palette["status"], palette["ansi"]
+    colours = {
+        "activityBar.background": ui["panel"],
+        "activityBar.border": ui["border"],
+        "activityBar.foreground": ui["foreground"],
+        "activityBar.inactiveForeground": ui["quiet"],
+        "activityBarBadge.background": ui["accent"],
+        "activityBarBadge.foreground": ui["background"],
+        "badge.background": ui["element"],
+        "badge.foreground": ui["foreground"],
+        "button.background": ui["accent"],
+        "button.foreground": ui["background"],
+        "button.hoverBackground": ui["accent_strong"],
+        "descriptionForeground": ui["muted"],
+        "disabledForeground": ui["quiet"],
+        "dropdown.background": ui["element"],
+        "dropdown.border": ui["border"],
+        "editor.background": ui["background"],
+        "editor.findMatchBackground": ui["find"],
+        "editor.findMatchHighlightBackground": ui["find"],
+        "editor.foreground": ui["foreground"],
+        "editor.lineHighlightBackground": ui["hover"],
+        "editor.selectionBackground": ui["selection"],
+        "editorBracketMatch.background": ui["selection"],
+        "editorBracketMatch.border": ui["indent_active"],
+        "editorCursor.foreground": ui["cursor"],
+        "editorError.foreground": status["error"],
+        "editorGroup.border": ui["border"],
+        "editorGroupHeader.tabsBackground": ui["panel"],
+        "editorGutter.addedBackground": status["created"],
+        "editorGutter.background": ui["background"],
+        "editorGutter.deletedBackground": status["deleted"],
+        "editorGutter.modifiedBackground": status["modified"],
+        "editorHint.foreground": status["hint"],
+        "editorIndentGuide.activeBackground1": ui["indent_active"],
+        "editorIndentGuide.background1": ui["border"],
+        "editorInfo.foreground": status["info"],
+        "editorLineNumber.activeForeground": ui["foreground"],
+        "editorLineNumber.foreground": ui["quiet"],
+        "editorRuler.foreground": ui["border"],
+        "editorWarning.foreground": status["warning"],
+        "editorWhitespace.foreground": ui["invisible"],
+        "editorWidget.background": ui["panel"],
+        "editorWidget.border": ui["border"],
+        "focusBorder": ui["accent"],
+        "foreground": ui["foreground"],
+        "gitDecoration.addedResourceForeground": status["created"],
+        "gitDecoration.conflictingResourceForeground": status["conflict"],
+        "gitDecoration.deletedResourceForeground": status["deleted"],
+        "gitDecoration.ignoredResourceForeground": status["ignored"],
+        "gitDecoration.modifiedResourceForeground": status["modified"],
+        "gitDecoration.renamedResourceForeground": status["renamed"],
+        "gitDecoration.untrackedResourceForeground": status["created"],
+        "input.background": ui["element"],
+        "input.border": ui["border"],
+        "input.placeholderForeground": ui["quiet"],
+        "list.activeSelectionBackground": ui["selection"],
+        "list.activeSelectionForeground": ui["foreground"],
+        "list.errorForeground": status["error"],
+        "list.focusOutline": ui["accent"],
+        "list.highlightForeground": ui["accent_strong"],
+        "list.hoverBackground": ui["hover"],
+        "list.inactiveSelectionBackground": ui["element"],
+        "list.warningForeground": status["warning"],
+        "menu.background": ui["panel"],
+        "menu.border": ui["border"],
+        "panel.background": ui["panel"],
+        "panel.border": ui["border"],
+        "panelTitle.activeBorder": ui["accent"],
+        "panelTitle.activeForeground": ui["foreground"],
+        "panelTitle.inactiveForeground": ui["muted"],
+        "problemsErrorIcon.foreground": status["error"],
+        "problemsInfoIcon.foreground": status["info"],
+        "problemsWarningIcon.foreground": status["warning"],
+        "quickInput.background": ui["panel"],
+        "scrollbarSlider.activeBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "scrollbarSlider.background": ui["indent_active"] + SCROLLBAR_ALPHA,
+        "scrollbarSlider.hoverBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "selection.background": ui["selection"],
+        "sideBar.background": ui["panel"],
+        "sideBar.border": ui["border"],
+        "sideBar.foreground": ui["foreground"],
+        "sideBarSectionHeader.background": ui["panel"],
+        "statusBar.background": ui["panel"],
+        "statusBar.border": ui["border"],
+        "statusBar.debuggingBackground": status["warning"],
+        "statusBar.debuggingForeground": ui["background"],
+        "statusBar.foreground": ui["muted"],
+        "statusBar.noFolderBackground": ui["panel"],
+        "tab.activeBackground": ui["background"],
+        "tab.activeBorderTop": ui["accent"],
+        "tab.activeForeground": ui["foreground"],
+        "tab.border": ui["border"],
+        "tab.inactiveBackground": ui["panel"],
+        "tab.inactiveForeground": ui["muted"],
+        "terminal.background": ui["background"],
+        "terminal.foreground": ui["foreground"],
+        "terminal.selectionBackground": ui["selection"],
+        "terminalCursor.foreground": ui["cursor"],
+        "textLink.activeForeground": ui["accent"],
+        "textLink.foreground": ui["accent_strong"],
+        "titleBar.activeBackground": ui["panel"],
+        "titleBar.activeForeground": ui["foreground"],
+        "titleBar.border": ui["border"],
+        "titleBar.inactiveBackground": ui["panel"],
+    }
+    for index, accent in enumerate(ui["accents"], start=1):
+        colours[f"editorBracketHighlight.foreground{index}"] = accent
+    for index, name in enumerate(ANSI_NAMES):
+        title = name.capitalize()
+        colours[f"terminal.ansi{title}"] = ansi["normal"][index]
+        colours[f"terminal.ansiBright{title}"] = ansi["bright"][index]
+    return dict(sorted(colours.items()))
+
+
+def vscode_token_settings(colour: str, style: str | None) -> dict[str, str]:
+    if style is None:
+        return {"foreground": colour}
+    return {"foreground": colour, "fontStyle": style}
+
+
+def vscode_theme(palette: Palette) -> dict[str, Any]:
+    syntax = palette["syntax"]
+    return {
+        "name": palette["name"],
+        "type": palette["appearance"],
+        "semanticHighlighting": True,
+        "colors": vscode_colours(palette),
+        "tokenColors": [
+            {"scope": scopes, "settings": vscode_token_settings(syntax[role], style)}
+            for scopes, role, style in VSCODE_TOKENS
+        ],
+        "semanticTokenColors": {
+            selector: syntax[role] for selector, role in VSCODE_SEMANTIC.items()
+        },
+    }
+
+
+def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
+    return {
+        "name": "geist-themes",
+        "displayName": "Geist Themes",
+        "description": "Colour themes from Vercel's Geist terminal themes.",
+        "version": "1.0.0",
+        "publisher": AUTHOR,
+        "license": "MIT",
+        "repository": "https://github.com/brzzdev/geist-themes",
+        "engines": {"vscode": "^1.81.0"},
+        "categories": ["Themes"],
+        "files": ["LICENSE", "themes"],
+        "contributes": {
+            "themes": [
+                {
+                    "label": p["name"],
+                    "uiTheme": VSCODE_UI_THEMES[p["appearance"]],
+                    "path": f"./themes/{slug(p)}.json",
+                }
+                for p in palettes
+            ],
+        },
+    }
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
     print(path.relative_to(ROOT))
+
+
+def write_json(path: Path, value: dict[str, Any]) -> None:
+    write(path, json.dumps(value, indent=2) + "\n")
 
 
 def main() -> None:
@@ -397,16 +668,14 @@ def main() -> None:
     bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"
     write(bundle / "Info.plist", netnewswire_info())
     write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
-    write(
-        ROOT / "zed" / "geist.json", json.dumps(zed_family(palettes), indent=2) + "\n"
-    )
+    write_json(ROOT / "vscode" / "package.json", vscode_manifest(palettes))
+    write(ROOT / "vscode" / "LICENSE", (ROOT / "LICENSE").read_text())
+    write_json(ROOT / "zed" / "geist.json", zed_family(palettes))
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / name, ghostty(palette))
-        write(
-            ROOT / "xcode" / f"{name}.json",
-            json.dumps(xcode_recipe(palette), indent=2) + "\n",
-        )
+        write_json(ROOT / "vscode" / "themes" / f"{name}.json", vscode_theme(palette))
+        write_json(ROOT / "xcode" / f"{name}.json", xcode_recipe(palette))
 
 
 if __name__ == "__main__":

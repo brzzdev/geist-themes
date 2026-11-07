@@ -1,0 +1,33 @@
+{
+  "name": "geist-themes",
+  "displayName": "Geist Themes",
+  "description": "Colour themes from Vercel's Geist terminal themes.",
+  "version": "1.0.0",
+  "publisher": "brzzdev",
+  "license": "MIT",
+  "repository": "https://github.com/brzzdev/geist-themes",
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "files": [
+    "LICENSE",
+    "themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Geist Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/geist-dark.json"
+      },
+      {
+        "label": "Geist Light",
+        "uiTheme": "vs",
+        "path": "./themes/geist-light.json"
+      }
+    ]
+  }
+}
