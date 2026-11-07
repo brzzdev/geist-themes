@@ -9,6 +9,7 @@ border = "#2e2e2e"
 border_variant = "#1a1a1a"
 cursor = "#ededed"
 element = "#1a1a1a"
+# Opaque, with every syntax role at 4.5:1: see docs/adr/0002-find-match-contrast.md.
 find = "#1d1301"
 find_active = "#352303"
 find_active_border = "#f1a10d"
