@@ -73,9 +73,9 @@ jobs:
             "${shipped[@]}" LICENSE README.md
           plugin="$(mktemp -d)"
           cp -R jetbrains/. "$plugin"
-          sed -i "s|<version>[^<]*</version>|<version>${tag#v}</version>|" \
-            "$plugin/META-INF/plugin.xml"
-          grep -qF "<version>${tag#v}</version>" "$plugin/META-INF/plugin.xml"
+          version_element="<version>${tag#v}</version>"
+          sed -i "s|<version>[^<]*</version>|$version_element|" "$plugin/META-INF/plugin.xml"
+          grep -qF "$version_element" "$plugin/META-INF/plugin.xml"
           python3 -m zipfile -c "$archive.jar" "$plugin"/*
           gh release create "$tag" "$archive.zip" "$archive.jar" \
             --generate-notes \
