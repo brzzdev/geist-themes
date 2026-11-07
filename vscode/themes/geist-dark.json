@@ -14,7 +14,7 @@
     "button.background": "#52a9ff",
     "button.foreground": "#000000",
     "button.hoverBackground": "#97c9fe",
-    "commandCenter.background": "#1a1a1a",
+    "commandCenter.background": "#111111",
     "descriptionForeground": "#a0a0a0",
     "disabledForeground": "#8f8f8f",
     "dropdown.background": "#1a1a1a",
