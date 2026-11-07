@@ -3,6 +3,7 @@
 
 import json
 import math
+import plistlib
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
+NETNEWSWIRE_THEME = "Geist"
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
 OKLCH_DECIMALS = 6
 
@@ -53,6 +55,20 @@ ZED_SYNTAX = {
     "variant": ("constant", None),
 }
 
+NETNEWSWIRE_VARIABLES = {
+    "accent": "ui.accent",
+    "background": "ui.background",
+    "border": "ui.border",
+    "border-variant": "ui.border_variant",
+    "code-background": "ui.element",
+    "foreground": "ui.foreground",
+    "link": "syntax.link",
+    "muted": "ui.muted",
+    "panel": "ui.panel",
+    "quiet": "ui.quiet",
+    "selection": "ui.selection",
+}
+
 XCODE_OVERRIDES = {
     "comment": "syntax.comment",
     "commentEmphasized": "syntax.comment_emphasized",
@@ -93,6 +109,11 @@ XCODE_OVERRIDES = {
 
 def slug(palette: Palette) -> str:
     return palette["name"].lower().replace(" ", "-")
+
+
+def colour(palette: Palette, path: str) -> str:
+    group, key = path.split(".")
+    return palette[group][key]
 
 
 def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
@@ -258,13 +279,9 @@ def xcode_colour(hex_colour: str) -> dict[str, Any]:
 
 
 def xcode_recipe(palette: Palette) -> dict[str, Any]:
-    def lookup(path: str) -> str:
-        group, key = path.split(".")
-        return palette[group][key]
-
     overrides: list[Any] = []
     for token, path in XCODE_OVERRIDES.items():
-        overrides += [token, {"color": {"_0": xcode_colour(lookup(path))}}]
+        overrides += [token, {"color": {"_0": xcode_colour(colour(palette, path))}}]
     return {
         "name": palette["name"],
         "recipe": {
@@ -286,6 +303,40 @@ def xcode_recipe(palette: Palette) -> dict[str, Any]:
     }
 
 
+def netnewswire_variables(palette: Palette) -> str:
+    lines = [f"\tcolor-scheme: {palette['appearance']};"]
+    lines += [
+        f"\t--{name}: {colour(palette, path)};"
+        for name, path in NETNEWSWIRE_VARIABLES.items()
+    ]
+    return ":root {\n" + "\n".join(lines) + "\n}\n"
+
+
+def netnewswire_stylesheet(palettes: list[Palette]) -> str:
+    default, *others = palettes
+    blocks = [netnewswire_variables(default)]
+    for palette in others:
+        variables = netnewswire_variables(palette).replace("\n\t", "\n\t\t")
+        blocks.append(
+            f"@media (prefers-color-scheme: {palette['appearance']}) {{\n"
+            + "\t" + variables.replace("\n}", "\n\t}")
+            + "}\n"
+        )
+    rules = (ROOT / "templates" / "netnewswire.css").read_text()
+    return "\n".join([*blocks, rules])
+
+
+def netnewswire_info() -> str:
+    info = {
+        "CreatorHomePage": "https://github.com/brzzdev/geist-themes",
+        "CreatorName": "brzzdev",
+        "Name": NETNEWSWIRE_THEME,
+        "ThemeIdentifier": "dev.brzz.geist-themes.netnewswire",
+        "Version": 1,
+    }
+    return plistlib.dumps(info).decode()
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
@@ -296,6 +347,9 @@ def main() -> None:
     palettes = [
         tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
+    bundle = ROOT / "netnewswire" / f"{NETNEWSWIRE_THEME}.nnwtheme"
+    write(bundle / "Info.plist", netnewswire_info())
+    write(bundle / "stylesheet.css", netnewswire_stylesheet(palettes))
     write(
         ROOT / "zed" / "geist.json", json.dumps(zed_family(palettes), indent=2) + "\n"
     )

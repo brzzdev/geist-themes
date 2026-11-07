@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CreatorHomePage</key>
+	<string>https://github.com/brzzdev/geist-themes</string>
+	<key>CreatorName</key>
+	<string>brzzdev</string>
+	<key>Name</key>
+	<string>Geist</string>
+	<key>ThemeIdentifier</key>
+	<string>dev.brzz.geist-themes.netnewswire</string>
+	<key>Version</key>
+	<integer>1</integer>
+</dict>
+</plist>
