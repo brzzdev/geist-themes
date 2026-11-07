@@ -11,6 +11,7 @@ cursor = "#24292f"
 element = "#ebebeb"
 find = "#ffb20040"
 foreground = "#24292f"
+highlight = "#dce3ec"
 hover = "#f2f2f2"
 indent_active = "#a8a8a8"
 invisible = "#c9c9c9"
@@ -18,6 +19,7 @@ muted = "#4f5359"
 panel = "#ffffff"
 quiet = "#656a70"
 selection = "#dce3ec"
+selection_overlay = "#dce3ec"
 accents = ["#1a5fb4", "#7e3ab8", "#8a5300", "#0b7268", "#18703a", "#cf2f36"]
 
 [status]
