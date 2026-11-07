@@ -18,7 +18,7 @@ herdr can't load a separate theme file, so paste the contents of `herdr/geist.to
 herdr server reload-config
 ```
 
-The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match your terminal's appearance. Picking a theme in herdr's settings turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. Ghostty reports dark only with a conditional theme, so in Ghostty set `theme = light:geist-light,dark:geist-dark` as in the [Ghostty](#ghostty) section: with a fixed `theme = geist-dark`, Ghostty reports light and herdr picks Geist Light. Picking a theme in herdr's settings turns `auto_switch` off, which leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
 
 ### JetBrains IDEs
 
@@ -32,7 +32,7 @@ Then install the jar with Settings → Plugins → ⚙ → **Install Plugin from
 
 ### NetNewsWire
 
-Open `netnewswire/Geist.nnwtheme` with NetNewsWire, then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
+With NetNewsWire running, open `netnewswire/Geist.nnwtheme` with it and accept the install prompt. If NetNewsWire isn't running, opening the file launches it without the prompt, so open the file again once it's up. Then pick **Geist** in NetNewsWire → Settings → General → Article Theme. The article view follows the system appearance between Geist Dark and Geist Light.
 
 ### VS Code
 
@@ -52,7 +52,7 @@ Xcode 27 keeps themes in its settings rather than in `.xccolortheme` files. Quit
 ./install-xcode.py
 ```
 
-Then pick **Geist Dark** or **Geist Light** in Xcode → Settings → Themes. Running it again updates the themes in place.
+Then open Xcode → Settings → Appearance → Theme → **Choose…**, which keeps a separate list for each appearance, and pick **Geist Light** for the light appearance and **Geist Dark** for the dark one. Running it again updates the themes in place.
 
 ### Zed
 
