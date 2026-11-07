@@ -229,6 +229,7 @@ JETBRAINS_EFFECT_WAVE = "2"
 JETBRAINS_FONT_ITALIC = "2"
 JETBRAINS_TINT_ALPHA = "33"
 
+# 2026.1 names the container tokens `container-*`; 2026.2 dropped the prefix.
 JETBRAINS_THEME_TOKENS = {
     "accent-brand-bg": "ui.accent",
     "accent-brand-border": "ui.accent",
@@ -241,7 +242,16 @@ JETBRAINS_THEME_TOKENS = {
     "container-popup-border": "ui.border",
     "container-tool-window-bg": "ui.panel",
     "container-tool-window-border": "ui.border",
+    "dialog-bg": "ui.panel",
+    "dialog-border": "ui.border",
+    "editor-bg": "ui.background",
+    "editor-bg-inline": "ui.panel",
+    "editor-border": "ui.border",
+    "editor-border-inline": "ui.border",
     "editor-text": "ui.foreground",
+    "main-window-bg": "ui.element",
+    "popup-bg": "ui.panel",
+    "popup-border": "ui.border",
     "selection-bg-active": "ui.selection",
     "selection-bg-inactive": "ui.element",
     "tab-selected-bg-active": "ui.selection",
@@ -255,6 +265,8 @@ JETBRAINS_THEME_TOKENS = {
     "text-secondary": "ui.quiet",
     "text-success": "status.success",
     "text-warning": "status.warning",
+    "tool-window-bg": "ui.panel",
+    "tool-window-border": "ui.border",
 }
 
 JETBRAINS_COLOURS = {

@@ -16,7 +16,16 @@
     "container-popup-border": "#ebebeb",
     "container-tool-window-bg": "#ffffff",
     "container-tool-window-border": "#ebebeb",
+    "dialog-bg": "#ffffff",
+    "dialog-border": "#ebebeb",
+    "editor-bg": "#fbfbfa",
+    "editor-bg-inline": "#ffffff",
+    "editor-border": "#ebebeb",
+    "editor-border-inline": "#ebebeb",
     "editor-text": "#24292f",
+    "main-window-bg": "#ebebeb",
+    "popup-bg": "#ffffff",
+    "popup-border": "#ebebeb",
     "selection-bg-active": "#dce3ec",
     "selection-bg-inactive": "#ebebeb",
     "tab-selected-bg-active": "#dce3ec",
@@ -29,6 +38,8 @@
     "text-muted": "#4f5359",
     "text-secondary": "#656a70",
     "text-success": "#18703a",
-    "text-warning": "#8a5300"
+    "text-warning": "#8a5300",
+    "tool-window-bg": "#ffffff",
+    "tool-window-border": "#ebebeb"
   }
 }
