@@ -3,7 +3,7 @@ appearance = "dark"
 
 [ui]
 accent = "#52a9ff"
-accent_bright = "#97c9fe"
+accent_strong = "#97c9fe"
 background = "#000000"
 border = "#2e2e2e"
 border_variant = "#1a1a1a"
