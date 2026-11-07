@@ -20,6 +20,9 @@ OKLCH_DECIMALS = 6
 
 type Palette = dict[str, Any]
 
+# Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
+HERDR_TABLES = {"dark": "theme.custom", "light": "theme.custom.light"}
+
 ZED_SYNTAX = {
     "attribute": ("attribute", None),
     "boolean": ("constant", None),
@@ -264,7 +267,7 @@ def herdr_colours(palette: Palette) -> dict[str, str]:
         "subtext0": ui["muted"],
         "surface0": ui["element"],
         "surface1": ui["selection"],
-        "surface_dim": ui["border_variant"],
+        "surface_dim": ui["hover"],
         "teal": normal["cyan"],
         "text": ui["foreground"],
         "yellow": status["warning"],
@@ -277,15 +280,8 @@ def herdr_table(header: str, colours: dict[str, str]) -> str:
 
 
 def herdr(palettes: list[Palette]) -> str:
-    # [theme.custom] applies even with auto_switch off, so dark is the fallback.
     tables = [
-        herdr_table(
-            "theme.custom"
-            if p["appearance"] == "dark"
-            else f"theme.custom.{p['appearance']}",
-            herdr_colours(p),
-        )
-        for p in palettes
+        herdr_table(HERDR_TABLES[p["appearance"]], herdr_colours(p)) for p in palettes
     ]
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 

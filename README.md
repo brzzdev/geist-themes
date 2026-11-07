@@ -12,7 +12,7 @@ Copy `ghostty/geist-dark` and `ghostty/geist-light` into `~/.config/ghostty/them
 
 ### herdr
 
-herdr can't load a separate theme file, so paste the contents of `herdr/geist.toml` into `~/.config/herdr/config.toml`, replacing the `[theme]` table and any `[theme.custom]` tables already there. Keep any other `[theme]` keys you want, such as `name`, under the pasted `[theme]` header. Then run:
+herdr can't load a separate theme file, so paste the contents of `herdr/geist.toml` into `~/.config/herdr/config.toml`, replacing the `[theme]` table and every `[theme.custom]`, `[theme.custom.dark]` and `[theme.custom.light]` table already there. Keep any other `[theme]` keys you want, such as `name`, under the pasted `[theme]` header. Then run:
 
 ```sh
 herdr server reload-config
