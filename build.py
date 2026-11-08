@@ -20,8 +20,8 @@ SCROLLBAR_HOVER_ALPHA = "80"
 TINT_ALPHAS = {"dark": "33", "light": "1a"}
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
-# Zed keeps its own players past the ones a theme gives; the last is the agent.
-ZED_PLAYERS = 8
+# The players between yours and the agent's, which Zed keeps last; it fills any omitted with its own.
+ZED_COLLABORATORS = 6
 OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
@@ -56,10 +56,16 @@ TINTS = {
     "created": "status.created",
     "deleted": "status.deleted",
     "error": "status.error",
+    "hidden": "status.hidden",
+    "hint": "status.hint",
+    "ignored": "status.ignored",
     "info": "status.info",
     "keyword": "syntax.keyword",
     "modified": "status.modified",
+    "predictive": "status.predictive",
+    "renamed": "status.renamed",
     "success": "status.success",
+    "unreachable": "status.unreachable",
     "warning": "status.warning",
 }
 HINT_PAIRS = [
@@ -68,6 +74,7 @@ HINT_PAIRS = [
     ("status.hint", "ui.hover"),
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
+    ("ui.foreground", "tint.accent"),
     ("ui.quiet", "ui.background"),
     ("ui.quiet", "ui.element"),
     ("ui.quiet", "ui.panel"),
@@ -189,6 +196,8 @@ XCODE_OVERRIDES = {
 
 # The selection colour at this alpha keeps syntax at or above its contrast on the selection.
 VSCODE_RANGE_ALPHA = "60"
+# VS Code draws decorations over the selection, so their fills stay translucent.
+VSCODE_DECORATION_ALPHA = "80"
 VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
 
 VSCODE_TOKENS = [
@@ -296,7 +305,6 @@ JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
 JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
 JETBRAINS_PARENT_THEMES = {"dark": "Islands Dark", "light": "Islands Light"}
 JETBRAINS_SCHEME_VERSION = "142"
-JETBRAINS_VCS_ANNOTATION_SHADES = 5
 JETBRAINS_EFFECT_BOXED = "0"
 JETBRAINS_EFFECT_UNDERSCORE = "1"
 JETBRAINS_EFFECT_WAVE = "2"
@@ -304,6 +312,8 @@ JETBRAINS_EFFECT_STRIKEOUT = "3"
 JETBRAINS_EFFECT_BOLD_DOTTED = "5"
 JETBRAINS_FONT_BOLD = "1"
 JETBRAINS_FONT_ITALIC = "2"
+JETBRAINS_FILE_COLOUR_MASK_ALPHA = "80"
+JETBRAINS_VCS_ANNOTATION_SHADES = 5
 
 # 2026.1 names the container tokens `container-*`; 2026.2 dropped the prefix.
 JETBRAINS_THEME_TOKENS = {
@@ -454,6 +464,7 @@ JETBRAINS_UI = {
     "Badge.purpleSecondaryBackground": "tint.keyword",
     "Badge.purpleSecondaryForeground": "syntax.keyword",
     "Bookmark.MnemonicCurrent.foreground": "ui.background",
+    "Counter.foreground": "ui.foreground",
     "Debugger.Variables.changedValueForeground": "ui.accent",
     "Debugger.Variables.collectingDataForeground": "ui.quiet",
     "Debugger.Variables.errorMessageForeground": "status.error",
@@ -477,7 +488,6 @@ JETBRAINS_UI = {
     "MainWindow.Tab.selectedInactiveBackground": "ui.element",
     "MemoryIndicator.allocatedBackground": "ui.element",
     "MemoryIndicator.usedBackground": "tint.accent",
-    "Menu.borderColor.os.windows": "ui.border",
     "ParameterInfo.background": "ui.panel",
     "ParameterInfo.borderColor": "ui.border",
     "ParameterInfo.currentOverloadBackground": "ui.selection",
@@ -521,11 +531,18 @@ JETBRAINS_UI = {
     "ToolWindow.Button.DragAndDrop.stripeBackground": "ui.panel",
     "ToolWindow.Button.hoverBackground": "ui.hover",
     "ToolWindow.DragAndDrop.areaBackground": "tint.accent",
+    "Tooltip.Learning.Header.foreground": "ui.foreground",
+    "Tooltip.Learning.background": "ui.element",
+    "Tooltip.Learning.borderColor": "ui.element",
     "Tooltip.Learning.codeBorderColor": "ui.border",
+    "Tooltip.Learning.foreground": "ui.foreground",
+    "Tooltip.Learning.iconFillColor": "ui.element",
+    "Tooltip.Learning.linkForeground": "ui.accent_strong",
     "Tooltip.Learning.linkUnderlineDefaultColor": "ui.accent_strong",
     "Tooltip.Learning.linkUnderlineHoveredColor": "ui.accent_strong",
     "Tooltip.Learning.secondaryActionForeground": "ui.accent_strong",
     "Tooltip.Learning.spanBackground": "ui.selection",
+    "Tooltip.Learning.spanForeground": "ui.foreground",
     "Tooltip.Learning.stepNumberForeground": "ui.quiet",
     "VersionControl.FileHistory.Commit.selectedBranchBackground": "tint.accent",
     "VersionControl.GitLog.headIconColor": "status.warning",
@@ -1036,7 +1053,7 @@ def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
 def zed_style(palette: Palette) -> dict[str, Any]:
     ui, ansi, syntax = palette["ui"], palette["ansi"], palette["syntax"]
     status, tints = palette["status"], palette["tint"]
-    thumb, hover_thumb = scrollbar_thumbs(ui)
+    thumb, hover_thumb = scrollbar_thumbs(palette)
     style = {
         "accents": ui["accents"],
         "background": ui["panel"],
@@ -1134,7 +1151,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
     }
     for name, colour in status.items():
         style[name] = colour
-        style.setdefault(f"{name}.background", tint(palette, colour))
+        style.setdefault(f"{name}.background", tints[name])
         style[f"{name}.border"] = colour
     for index, name in enumerate(ANSI_NAMES):
         style[f"terminal.ansi.{name}"] = ansi["normal"][index]
@@ -1146,7 +1163,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
 def zed_players(palette: Palette) -> list[dict[str, str]]:
     ui = palette["ui"]
     *others, agent = ui["accents"]
-    collaborators = [others[i % len(others)] for i in range(ZED_PLAYERS - 2)]
+    collaborators = [others[i % len(others)] for i in range(ZED_COLLABORATORS)]
     return [
         {"background": cursor, "cursor": cursor, "selection": ui["selection_overlay"]}
         for cursor in [ui["cursor"], *collaborators, agent]
@@ -1330,7 +1347,11 @@ def netnewswire_info() -> str:
 def vscode_colours(palette: Palette) -> dict[str, str]:
     ui, status, syntax = palette["ui"], palette["status"], palette["syntax"]
     ansi, tints = palette["ansi"], palette["tint"]
-    thumb, hover_thumb = scrollbar_thumbs(ui)
+    thumb, hover_thumb = scrollbar_thumbs(palette)
+
+    def decoration(colour: str) -> str:
+        return translucent(colour, ui["background"], VSCODE_DECORATION_ALPHA)
+
     colours = {
         "activityBar.background": ui["panel"],
         "activityBar.border": ui["border"],
@@ -1382,11 +1403,11 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "debugView.valueChangedHighlight": ui["accent"],
         "descriptionForeground": ui["muted"],
         "diffEditor.diagonalFill": ui["border"],
-        "diffEditor.insertedLineBackground": tints["created"],
+        "diffEditor.insertedLineBackground": decoration(tints["created"]),
         "diffEditor.insertedTextBackground": TRANSPARENT,
         "diffEditor.insertedTextBorder": status["created"],
         "diffEditor.moveActive.border": status["warning"],
-        "diffEditor.removedLineBackground": tints["deleted"],
+        "diffEditor.removedLineBackground": decoration(tints["deleted"]),
         "diffEditor.removedTextBackground": TRANSPARENT,
         "diffEditor.removedTextBorder": status["deleted"],
         "disabledForeground": ui["quiet"],
@@ -1399,22 +1420,22 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.findMatchHighlightBorder": ui["find_border"],
         "editor.findRangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
-        "editor.focusedStackFrameHighlightBackground": tints["accent"],
+        "editor.focusedStackFrameHighlightBackground": decoration(tints["accent"]),
         "editor.foldPlaceholderForeground": ui["quiet"],
         "editor.foreground": ui["foreground"],
-        "editor.hoverHighlightBackground": ui["highlight"],
+        "editor.hoverHighlightBackground": decoration(ui["highlight"]),
         "editor.inlineValuesBackground": ui["element"],
         "editor.inlineValuesForeground": status["hint"],
         "editor.lineHighlightBackground": ui["hover"],
         "editor.lineHighlightBorder": ui["hover"],
-        "editor.linkedEditingBackground": ui["highlight"],
+        "editor.linkedEditingBackground": decoration(ui["highlight"]),
         "editor.rangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
         "editor.selectionBackground": ui["selection"],
         "editor.snippetFinalTabstopHighlightBorder": ui["indent_active"],
-        "editor.snippetTabstopHighlightBackground": ui["highlight"],
-        "editor.stackFrameHighlightBackground": ui["highlight"],
-        "editor.wordHighlightBackground": ui["highlight"],
-        "editor.wordHighlightStrongBackground": tints["keyword"],
+        "editor.snippetTabstopHighlightBackground": decoration(ui["highlight"]),
+        "editor.stackFrameHighlightBackground": decoration(ui["highlight"]),
+        "editor.wordHighlightBackground": decoration(ui["highlight"]),
+        "editor.wordHighlightStrongBackground": decoration(tints["keyword"]),
         "editorBracketHighlight.unexpectedBracket.foreground": syntax["regex"],
         "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
@@ -1659,6 +1680,17 @@ def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
     }
 
 
+def translucent(colour: str, ground: str, alpha: str) -> str:
+    weight = int(alpha, 16) / 255
+    channels = (
+        min(255, max(0, round(g + (c - g) / weight)))
+        for c, g in (
+            (int(colour[i : i + 2], 16), int(ground[i : i + 2], 16)) for i in (1, 3, 5)
+        )
+    )
+    return "#" + "".join(f"{c:02x}" for c in channels) + alpha
+
+
 def opaque(colour: str, ground: str) -> str:
     if len(colour) == OPAQUE_HEX_LENGTH:
         return colour
@@ -1737,7 +1769,9 @@ def jetbrains_theme(palette: Palette) -> dict[str, Any]:
         token: palette_colour(palette, path)
         for token, path in JETBRAINS_THEME_TOKENS.items()
     }
-    colours["tab-file-color-mask-bg"] = ui["background"] + "80"
+    colours["tab-file-color-mask-bg"] = (
+        ui["background"] + JETBRAINS_FILE_COLOUR_MASK_ALPHA
+    )
     colours["toolbar-selected-bg-hovered"] = tint(palette, ui["accent_strong"])
     overrides = {
         key: palette_colour(palette, path) for key, path in JETBRAINS_UI.items()
@@ -1755,12 +1789,13 @@ def jetbrains_theme(palette: Palette) -> dict[str, Any]:
     }
 
 
-def scrollbar_thumbs(ui: dict[str, Any]) -> tuple[str, str]:
+def scrollbar_thumbs(palette: Palette) -> tuple[str, str]:
+    ui = palette["ui"]
     return ui["indent_active"] + SCROLLBAR_ALPHA, ui["muted"] + SCROLLBAR_HOVER_ALPHA
 
 
 def jetbrains_scrollbars(palette: Palette) -> dict[str, str]:
-    thumb, hover = scrollbar_thumbs(palette["ui"])
+    thumb, hover = scrollbar_thumbs(palette)
     return {key: thumb for key in JETBRAINS_SCROLLBAR_THUMBS} | {
         key: hover for key in JETBRAINS_SCROLLBAR_HOVER_THUMBS
     }
@@ -1939,7 +1974,7 @@ def jetbrains_scheme(palette: Palette) -> str:
     for key, path in JETBRAINS_COLOURS.items():
         ET.SubElement(colours, "option", name=key, value=path_colour(path))
     for key, value in jetbrains_scrollbars(palette).items():
-        ET.SubElement(colours, "option", name=key, value=colour(value))
+        ET.SubElement(colours, "option", name=key, value=value[1:])
     shades = ui["accents"][:JETBRAINS_VCS_ANNOTATION_SHADES]
     for index, accent in enumerate(shades, start=1):
         name = f"VCS_ANNOTATIONS_COLOR_{index}"

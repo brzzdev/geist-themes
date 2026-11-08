@@ -82,22 +82,22 @@
     <option name="VISUAL_INDENT_GUIDE" value="ebebeb" />
     <option name="WHITESPACES" value="c9c9c9" />
     <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="1a5fb4" />
-    <option name="ScrollBar.Mac.thumbBorderColor" value="e1e1e0" />
-    <option name="ScrollBar.Mac.thumbColor" value="e1e1e0" />
-    <option name="ScrollBar.Transparent.thumbBorderColor" value="e1e1e0" />
-    <option name="ScrollBar.Transparent.thumbColor" value="e1e1e0" />
-    <option name="ScrollBar.thumbBorderColor" value="e1e1e0" />
-    <option name="ScrollBar.thumbColor" value="e1e1e0" />
-    <option name="Scrollbar.Tabs.ThumbColor" value="e1e1e0" />
-    <option name="ScrollBar.Mac.Transparent.hoverThumbBorderColor" value="a5a7a9" />
-    <option name="ScrollBar.Mac.Transparent.hoverThumbColor" value="a5a7a9" />
-    <option name="ScrollBar.Mac.hoverThumbBorderColor" value="a5a7a9" />
-    <option name="ScrollBar.Mac.hoverThumbColor" value="a5a7a9" />
-    <option name="ScrollBar.Transparent.hoverThumbBorderColor" value="a5a7a9" />
-    <option name="ScrollBar.Transparent.hoverThumbColor" value="a5a7a9" />
-    <option name="ScrollBar.hoverThumbBorderColor" value="a5a7a9" />
-    <option name="ScrollBar.hoverThumbColor" value="a5a7a9" />
-    <option name="Scrollbar.Tabs.HoveredThumbColor" value="a5a7a9" />
+    <option name="ScrollBar.Mac.thumbBorderColor" value="a8a8a850" />
+    <option name="ScrollBar.Mac.thumbColor" value="a8a8a850" />
+    <option name="ScrollBar.Transparent.thumbBorderColor" value="a8a8a850" />
+    <option name="ScrollBar.Transparent.thumbColor" value="a8a8a850" />
+    <option name="ScrollBar.thumbBorderColor" value="a8a8a850" />
+    <option name="ScrollBar.thumbColor" value="a8a8a850" />
+    <option name="Scrollbar.Tabs.ThumbColor" value="a8a8a850" />
+    <option name="ScrollBar.Mac.Transparent.hoverThumbBorderColor" value="4f535980" />
+    <option name="ScrollBar.Mac.Transparent.hoverThumbColor" value="4f535980" />
+    <option name="ScrollBar.Mac.hoverThumbBorderColor" value="4f535980" />
+    <option name="ScrollBar.Mac.hoverThumbColor" value="4f535980" />
+    <option name="ScrollBar.Transparent.hoverThumbBorderColor" value="4f535980" />
+    <option name="ScrollBar.Transparent.hoverThumbColor" value="4f535980" />
+    <option name="ScrollBar.hoverThumbBorderColor" value="4f535980" />
+    <option name="ScrollBar.hoverThumbColor" value="4f535980" />
+    <option name="Scrollbar.Tabs.HoveredThumbColor" value="4f535980" />
     <option name="VCS_ANNOTATIONS_COLOR_1" value="e4ebf3" />
     <option name="VCS_ANNOTATIONS_COLOR_2" value="eee7f3" />
     <option name="VCS_ANNOTATIONS_COLOR_3" value="efeae1" />

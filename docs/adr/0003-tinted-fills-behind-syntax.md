@@ -6,6 +6,8 @@ JetBrains' write-usage highlight used a fixed `33` keyword tint, which left Geis
 
 The headroom rules out a second, brighter fill for the changed words inside a changed line. VS Code paints `diffEditor.insertedTextBackground` over `insertedLineBackground`, and two Light tints stacked drop comments to about 3.97:1, so VS Code's changed text gets no fill of its own and is bordered in the status colour instead. Zed has no border for word diffs, so its word fills equal its hunk fills, and changed words inside a hunk aren't singled out. We accept losing that emphasis rather than put text below the bar.
 
+VS Code draws decorations over the selection, and asks for translucent fills so they don't hide it. Its diff lines, stack frames, word and hover highlights, linked edits and snippet tabstops therefore take the translucent colour at alpha `80` that composites over the background to the same opaque tint or highlight, which is what `build.py` checks. Over a selection, the blend of the two isn't held to 4.5:1, the same exception ADR 0001 makes for Zed's selection over a highlight. Find matches stay opaque, as ADR 0002 decided.
+
 | Tint | Dark (`33`), weakest role | Light (`1a`), weakest role |
 | --- | --- | --- |
 | accent | `#102233` (comment 5.00) | `#e4ebf3` (comment 4.54) |

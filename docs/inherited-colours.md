@@ -32,7 +32,11 @@ Audited against herdr 0.9.5. A `[theme.custom]` table accepts 19 tokens, and Gei
 
 Audited against Rider 2026.1.5 and its bundled plugins. Geist's editor schemes inherit from Darcula and Default, together with the colour schemes each plugin adds for them. The UI themes inherit from Islands Dark and Islands Light, which inherit from the platform's Experimental themes.
 
-Rider's `ReSharper.*` keys don't appear here. The .NET backend registers them at runtime, and the ones absent from the bundled schemes fall back to the `DEFAULT_*` keys Geist sets. Neither the Java keys that IntelliJ IDEA's Java plugin adds nor the UI keys outside the two theme files that the platform defaults in code were audited.
+Three sets of keys were not audited, so they are neither set nor recorded here:
+
+- **Rider's `ReSharper.*` keys**, apart from those the bundled schemes name. The .NET backend registers them at runtime. Its highlighter registrations in `lib/ReSharperHost` carry 368 dark colours, which are Visual Studio's (C# keywords `#569CD6`, comments `#57A64A`), and some also name a fallback IntelliJ key. Whether Rider shows those colours under Darcula, or the fallbacks and so the keys Geist sets, needs checking in a running Rider.
+- **The Java keys** that IntelliJ IDEA's Java plugin adds, since the audit ran against Rider.
+- **UI keys outside the two theme files**, which the platform defaults in code.
 
 ### Colour tokens
 
