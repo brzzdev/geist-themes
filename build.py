@@ -41,6 +41,7 @@ CARD_SWATCH = 32
 MINIMUM_CONTRAST = 4.5
 SYNTAX_GROUNDS = [
     "background",
+    "element",
     "find",
     "find_active",
     "highlight",
@@ -48,15 +49,19 @@ SYNTAX_GROUNDS = [
     "panel",
     "selection",
 ]
-TINTED_STATUSES = [
-    "conflict",
-    "created",
-    "deleted",
-    "error",
-    "modified",
-    "success",
-    "warning",
-]
+# The colours a palette's `tint` group composites behind syntax text.
+TINTS = {
+    "accent": "ui.accent",
+    "conflict": "status.conflict",
+    "created": "status.created",
+    "deleted": "status.deleted",
+    "error": "status.error",
+    "info": "status.info",
+    "keyword": "syntax.keyword",
+    "modified": "status.modified",
+    "success": "status.success",
+    "warning": "status.warning",
+}
 HINT_PAIRS = [
     ("status.hint", "ui.background"),
     ("status.hint", "ui.element"),
@@ -291,7 +296,7 @@ JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
 JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
 JETBRAINS_PARENT_THEMES = {"dark": "Islands Dark", "light": "Islands Light"}
 JETBRAINS_SCHEME_VERSION = "142"
-VCS_ANNOTATION_SHADES = 5
+JETBRAINS_VCS_ANNOTATION_SHADES = 5
 JETBRAINS_EFFECT_BOXED = "0"
 JETBRAINS_EFFECT_UNDERSCORE = "1"
 JETBRAINS_EFFECT_WAVE = "2"
@@ -303,16 +308,20 @@ JETBRAINS_FONT_ITALIC = "2"
 # 2026.1 names the container tokens `container-*`; 2026.2 dropped the prefix.
 JETBRAINS_THEME_TOKENS = {
     "accent-brand-bg": "ui.accent",
+    "accent-brand-bg-secondary": "tint.accent",
     "accent-brand-border": "ui.accent",
     "accent-brand-border-secondary": "ui.accent",
     "accent-error-bg": "status.error",
+    "accent-error-bg-secondary": "tint.error",
     "accent-error-border": "status.error",
     "accent-error-border-secondary": "status.error",
     "accent-neutral-bg": "ui.element",
     "accent-success-bg": "status.success",
+    "accent-success-bg-secondary": "tint.success",
     "accent-success-border": "status.success",
     "accent-success-border-secondary": "status.success",
     "accent-warning-bg": "status.warning",
+    "accent-warning-bg-secondary": "tint.warning",
     "accent-warning-border": "status.warning",
     "accent-warning-border-secondary": "status.warning",
     "container-dialog-bg": "ui.panel",
@@ -423,6 +432,7 @@ JETBRAINS_THEME_TOKENS = {
     "tool-window-border": "ui.border",
     "tool-window-border-inline": "ui.border",
     "toolbar-run-bg-hovered": "status.success",
+    "toolbar-selected-bg": "tint.accent",
     "toolbar-stop-bg-hovered": "status.error",
     "tree-indent-guide-border": "ui.indent",
 }
@@ -431,6 +441,7 @@ JETBRAINS_THEME_TOKENS = {
 JETBRAINS_UI = {
     "Badge.blueBackground": "ui.accent",
     "Badge.blueForeground": "ui.background",
+    "Badge.blueSecondaryBackground": "tint.accent",
     "Badge.blueSecondaryForeground": "ui.accent_strong",
     "Badge.disabledBackground": "ui.element",
     "Badge.disabledForeground": "ui.quiet",
@@ -438,7 +449,9 @@ JETBRAINS_UI = {
     "Badge.graySecondaryForeground": "ui.muted",
     "Badge.greenBackground": "status.success",
     "Badge.greenForeground": "ui.background",
+    "Badge.greenSecondaryBackground": "tint.success",
     "Badge.greenSecondaryForeground": "status.success",
+    "Badge.purpleSecondaryBackground": "tint.keyword",
     "Badge.purpleSecondaryForeground": "syntax.keyword",
     "Bookmark.MnemonicCurrent.foreground": "ui.background",
     "Debugger.Variables.changedValueForeground": "ui.accent",
@@ -449,6 +462,8 @@ JETBRAINS_UI = {
     "Debugger.Variables.modifyingValueForeground": "ui.accent",
     "Debugger.Variables.typeForeground": "ui.quiet",
     "Debugger.Variables.valueForeground": "syntax.constant",
+    "DragAndDrop.areaBackground": "tint.accent",
+    "DragAndDrop.rowBackground": "tint.accent",
     "Editor.ToolTip.foreground": "ui.foreground",
     "Editor.ToolTip.selectionBackground": "ui.selection",
     "GotItTooltip.animationBackground": "ui.element",
@@ -461,6 +476,7 @@ JETBRAINS_UI = {
     "MainWindow.Tab.selectedForeground": "ui.foreground",
     "MainWindow.Tab.selectedInactiveBackground": "ui.element",
     "MemoryIndicator.allocatedBackground": "ui.element",
+    "MemoryIndicator.usedBackground": "tint.accent",
     "Menu.borderColor.os.windows": "ui.border",
     "ParameterInfo.background": "ui.panel",
     "ParameterInfo.borderColor": "ui.border",
@@ -501,20 +517,24 @@ JETBRAINS_UI = {
     "StatusBar.Breadcrumbs.floatingBackground": "ui.panel",
     "Table.stripeColor": "ui.hover",
     "Tag.background": "ui.element",
+    "ToolWindow.Button.DragAndDrop.buttonDropBackground": "tint.accent",
     "ToolWindow.Button.DragAndDrop.stripeBackground": "ui.panel",
     "ToolWindow.Button.hoverBackground": "ui.hover",
+    "ToolWindow.DragAndDrop.areaBackground": "tint.accent",
     "Tooltip.Learning.codeBorderColor": "ui.border",
     "Tooltip.Learning.linkUnderlineDefaultColor": "ui.accent_strong",
     "Tooltip.Learning.linkUnderlineHoveredColor": "ui.accent_strong",
     "Tooltip.Learning.secondaryActionForeground": "ui.accent_strong",
     "Tooltip.Learning.spanBackground": "ui.selection",
     "Tooltip.Learning.stepNumberForeground": "ui.quiet",
+    "VersionControl.FileHistory.Commit.selectedBranchBackground": "tint.accent",
     "VersionControl.GitLog.headIconColor": "status.warning",
     "VersionControl.GitLog.localBranchIconColor": "status.success",
     "VersionControl.GitLog.otherIconColor": "ui.quiet",
     "VersionControl.GitLog.remoteBranchIconColor": "syntax.keyword",
     "VersionControl.GitLog.tagIconColor": "ui.quiet",
     "VersionControl.Log.Commit.Reference.foreground": "ui.quiet",
+    "VersionControl.Log.Commit.currentBranchBackground": "tint.accent",
     "VersionControl.Log.Commit.hoveredBackground": "ui.hover",
     "VersionControl.Log.Commit.unmatchedForeground": "ui.quiet",
     "VersionControl.MarkerPopup.borderColor": "ui.border",
@@ -872,7 +892,6 @@ JETBRAINS_ITALIC = {
     "STATIC_FINAL_FIELD_ATTRIBUTES",
     "STATIC_METHOD_ATTRIBUTES",
     "Static method access",
-    "TODO_DEFAULT_ATTRIBUTES",
 }
 
 JETBRAINS_BACKGROUNDS = {
@@ -888,23 +907,20 @@ JETBRAINS_BACKGROUNDS = {
 
 # A diff or debugger fill keyed to a status colour, with that colour as its stripe.
 JETBRAINS_TINTS = {
-    "BREAKPOINT_ATTRIBUTES": "status.error",
-    "DEBUGGER_PREDICTED_VALUE_FALSE": "status.error",
-    "DEBUGGER_PREDICTED_VALUE_FALSE_ALT": "status.error",
-    "DEBUGGER_PREDICTED_VALUE_TRUE": "status.success",
-    "DEBUGGER_PREDICTED_VALUE_TRUE_ALT": "status.success",
-    "DIFF_CONFLICT": "status.conflict",
-    "DIFF_DELETED": "status.deleted",
-    "DIFF_INSERTED": "status.created",
-    "DIFF_MODIFIED": "status.modified",
-    "EXECUTIONPOINT_ATTRIBUTES": "ui.accent",
-    "ReSharper.UNITY_PERFORMANCE_COSTLY_METHOD_HIGHLIGHTER": "status.warning",
+    "BREAKPOINT_ATTRIBUTES": "error",
+    "DEBUGGER_PREDICTED_VALUE_FALSE": "error",
+    "DEBUGGER_PREDICTED_VALUE_FALSE_ALT": "error",
+    "DEBUGGER_PREDICTED_VALUE_TRUE": "success",
+    "DEBUGGER_PREDICTED_VALUE_TRUE_ALT": "success",
+    "DIFF_CONFLICT": "conflict",
+    "DIFF_DELETED": "deleted",
+    "DIFF_INSERTED": "created",
+    "DIFF_MODIFIED": "modified",
+    "EXECUTIONPOINT_ATTRIBUTES": "accent",
+    "ReSharper.UNITY_PERFORMANCE_COSTLY_METHOD_HIGHLIGHTER": "warning",
 }
 
 JETBRAINS_EFFECTS = {
-    "AI_INLAY_BUTTON_DEFAULT": ("ui.accent", JETBRAINS_EFFECT_BOXED),
-    "AI_INLAY_BUTTON_FOCUSED": ("ui.accent", JETBRAINS_EFFECT_BOXED),
-    "AI_INLAY_BUTTON_HOVERED": ("ui.accent", JETBRAINS_EFFECT_BOXED),
     "BAD_CHARACTER": ("status.error", JETBRAINS_EFFECT_WAVE),
     "BLINKING_HIGHLIGHTS_ATTRIBUTES": ("ui.indent_active", JETBRAINS_EFFECT_BOXED),
     "CODE_LENS_BORDER_COLOR": ("ui.border", JETBRAINS_EFFECT_BOXED),
@@ -918,9 +934,6 @@ JETBRAINS_EFFECTS = {
     "DEPRECATED_ATTRIBUTES": ("ui.muted", JETBRAINS_EFFECT_STRIKEOUT),
     "GRAMMAR_ERROR": ("status.error", JETBRAINS_EFFECT_WAVE),
     "INACTIVE_HYPERLINK_ATTRIBUTES": ("ui.quiet", JETBRAINS_EFFECT_UNDERSCORE),
-    "INLAY_BUTTON_DEFAULT": ("ui.border", JETBRAINS_EFFECT_BOXED),
-    "INLAY_BUTTON_FOCUSED": ("ui.indent_active", JETBRAINS_EFFECT_BOXED),
-    "INLAY_BUTTON_HOVERED": ("ui.indent_active", JETBRAINS_EFFECT_BOXED),
     "LIVE_TEMPLATE_ATTRIBUTES": ("ui.accent", JETBRAINS_EFFECT_BOXED),
     "LIVE_TEMPLATE_INACTIVE_SEGMENT": ("ui.invisible", JETBRAINS_EFFECT_BOXED),
     "MARKED_FOR_REMOVAL_ATTRIBUTES": ("status.error", JETBRAINS_EFFECT_STRIKEOUT),
@@ -943,14 +956,15 @@ JETBRAINS_EFFECTS = {
     "TYPO": ("status.info", JETBRAINS_EFFECT_WAVE),
 }
 
-JETBRAINS_INLAY_BUTTONS = [
-    "AI_INLAY_BUTTON_DEFAULT",
-    "AI_INLAY_BUTTON_FOCUSED",
-    "AI_INLAY_BUTTON_HOVERED",
-    "INLAY_BUTTON_DEFAULT",
-    "INLAY_BUTTON_FOCUSED",
-    "INLAY_BUTTON_HOVERED",
-]
+# Boxed in the given colour around hint text.
+JETBRAINS_INLAY_BUTTONS = {
+    "AI_INLAY_BUTTON_DEFAULT": "ui.accent",
+    "AI_INLAY_BUTTON_FOCUSED": "ui.accent",
+    "AI_INLAY_BUTTON_HOVERED": "ui.accent",
+    "INLAY_BUTTON_DEFAULT": "ui.border",
+    "INLAY_BUTTON_FOCUSED": "ui.indent_active",
+    "INLAY_BUTTON_HOVERED": "ui.indent_active",
+}
 
 # An effect in the severity's colour, which also marks the error stripe.
 JETBRAINS_DIAGNOSTICS = {
@@ -1021,7 +1035,8 @@ def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
 
 def zed_style(palette: Palette) -> dict[str, Any]:
     ui, ansi, syntax = palette["ui"], palette["ansi"], palette["syntax"]
-    status = palette["status"]
+    status, tints = palette["status"], palette["tint"]
+    thumb, hover_thumb = scrollbar_thumbs(ui)
     style = {
         "accents": ui["accents"],
         "background": ui["panel"],
@@ -1038,9 +1053,9 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "editor.active_line_number": ui["foreground"],
         "editor.active_wrap_guide": ui["border"],
         "editor.background": ui["background"],
-        "editor.debugger_active_line.background": tint(palette, ui["accent"]),
-        "editor.diff_hunk.added.background": tint(palette, status["created"]),
-        "editor.diff_hunk.deleted.background": tint(palette, status["deleted"]),
+        "editor.debugger_active_line.background": tints["accent"],
+        "editor.diff_hunk.added.background": tints["created"],
+        "editor.diff_hunk.deleted.background": tints["deleted"],
         "editor.document_highlight.bracket_background": ui["highlight"],
         "editor.document_highlight.read_background": ui["highlight"],
         "editor.document_highlight.write_background": ui["highlight"],
@@ -1065,6 +1080,8 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "ghost_element.disabled": ui["element"],
         "ghost_element.hover": ui["hover"],
         "ghost_element.selected": ui["element"],
+        # The inlay hint pill, opaque like the other editors' so hint text keeps 4.5:1.
+        "hint.background": ui["element"],
         "icon": ui["foreground"],
         "icon.accent": ui["accent"],
         "icon.disabled": ui["quiet"],
@@ -1079,9 +1096,9 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "panel.indent_guide_active": ui["indent_active"],
         "panel.indent_guide_hover": ui["indent_active"],
         "players": zed_players(palette),
-        "scrollbar.thumb.active_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
-        "scrollbar.thumb.background": ui["indent_active"] + SCROLLBAR_ALPHA,
-        "scrollbar.thumb.hover_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "scrollbar.thumb.active_background": hover_thumb,
+        "scrollbar.thumb.background": thumb,
+        "scrollbar.thumb.hover_background": hover_thumb,
         "scrollbar.track.background": TRANSPARENT,
         "scrollbar.track.border": TRANSPARENT,
         "search.active_match_background": ui["find_active"],
@@ -1096,6 +1113,7 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "tab.inactive_background": ui["panel"],
         "tab_bar.background": ui["panel"],
         "terminal.ansi.background": ui["background"],
+        "terminal.ansi.dim_white": ui["quiet"],
         "terminal.background": ui["background"],
         "terminal.bright_foreground": ansi["bright"][7],
         "terminal.dim_foreground": ui["quiet"],
@@ -1109,22 +1127,19 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "title_bar.inactive_background": ui["panel"],
         "toolbar.background": ui["background"],
         "version_control.conflict": status["conflict"],
-        "version_control.conflict_marker.ours": tint(palette, status["created"]),
-        "version_control.conflict_marker.theirs": tint(palette, status["info"]),
-        "version_control.word_added": tint(palette, status["created"]),
-        "version_control.word_deleted": tint(palette, status["deleted"]),
+        "version_control.conflict_marker.ours": tints["created"],
+        "version_control.conflict_marker.theirs": tints["info"],
+        "version_control.word_added": tints["created"],
+        "version_control.word_deleted": tints["deleted"],
     }
-    for name, colour in palette["status"].items():
+    for name, colour in status.items():
         style[name] = colour
-        style[f"{name}.background"] = tint(palette, colour)
+        style.setdefault(f"{name}.background", tint(palette, colour))
         style[f"{name}.border"] = colour
-    # The inlay hint pill, opaque like the other editors' so hint text keeps 4.5:1.
-    style["hint.background"] = ui["element"]
     for index, name in enumerate(ANSI_NAMES):
         style[f"terminal.ansi.{name}"] = ansi["normal"][index]
         style[f"terminal.ansi.bright_{name}"] = ansi["bright"][index]
-        style[f"terminal.ansi.dim_{name}"] = ansi["normal"][index]
-    style["terminal.ansi.dim_white"] = ui["quiet"]
+        style.setdefault(f"terminal.ansi.dim_{name}", ansi["normal"][index])
     return dict(sorted(style.items()))
 
 
@@ -1210,12 +1225,17 @@ def herdr(palettes: list[Palette]) -> str:
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 
 
-def oklch(hex_colour: str) -> tuple[float, float, float]:
+def linear_rgb(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
         return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
 
     r, g, b = (linear(hex_colour[i : i + 2]) for i in (1, 3, 5))
+    return r, g, b
+
+
+def oklch(hex_colour: str) -> tuple[float, float, float]:
+    r, g, b = linear_rgb(hex_colour)
     lms = (
         0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b,
         0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b,
@@ -1308,8 +1328,9 @@ def netnewswire_info() -> str:
 
 
 def vscode_colours(palette: Palette) -> dict[str, str]:
-    ui, status, ansi = palette["ui"], palette["status"], palette["ansi"]
-    syntax = palette["syntax"]
+    ui, status, syntax = palette["ui"], palette["status"], palette["syntax"]
+    ansi, tints = palette["ansi"], palette["tint"]
+    thumb, hover_thumb = scrollbar_thumbs(ui)
     colours = {
         "activityBar.background": ui["panel"],
         "activityBar.border": ui["border"],
@@ -1330,7 +1351,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "button.hoverBackground": ui["accent_strong"],
         "commandCenter.activeBackground": ui["element"],
         "commandCenter.background": ui["hover"],
-        "debugExceptionWidget.background": tint(palette, status["error"]),
+        "debugExceptionWidget.background": tints["error"],
         "debugExceptionWidget.border": status["error"],
         "debugIcon.breakpointCurrentStackframeForeground": status["warning"],
         "debugIcon.breakpointDisabledForeground": ui["quiet"],
@@ -1361,11 +1382,11 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "debugView.valueChangedHighlight": ui["accent"],
         "descriptionForeground": ui["muted"],
         "diffEditor.diagonalFill": ui["border"],
-        "diffEditor.insertedLineBackground": tint(palette, status["created"]),
+        "diffEditor.insertedLineBackground": tints["created"],
         "diffEditor.insertedTextBackground": TRANSPARENT,
         "diffEditor.insertedTextBorder": status["created"],
         "diffEditor.moveActive.border": status["warning"],
-        "diffEditor.removedLineBackground": tint(palette, status["deleted"]),
+        "diffEditor.removedLineBackground": tints["deleted"],
         "diffEditor.removedTextBackground": TRANSPARENT,
         "diffEditor.removedTextBorder": status["deleted"],
         "disabledForeground": ui["quiet"],
@@ -1378,7 +1399,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.findMatchHighlightBorder": ui["find_border"],
         "editor.findRangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
-        "editor.focusedStackFrameHighlightBackground": tint(palette, ui["accent"]),
+        "editor.focusedStackFrameHighlightBackground": tints["accent"],
         "editor.foldPlaceholderForeground": ui["quiet"],
         "editor.foreground": ui["foreground"],
         "editor.hoverHighlightBackground": ui["highlight"],
@@ -1393,7 +1414,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.snippetTabstopHighlightBackground": ui["highlight"],
         "editor.stackFrameHighlightBackground": ui["highlight"],
         "editor.wordHighlightBackground": ui["highlight"],
-        "editor.wordHighlightStrongBackground": tint(palette, syntax["keyword"]),
+        "editor.wordHighlightStrongBackground": tints["keyword"],
         "editorBracketHighlight.unexpectedBracket.foreground": syntax["regex"],
         "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
@@ -1506,9 +1527,9 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "progressBar.background": ui["accent"],
         "quickInput.background": ui["panel"],
         "quickInputTitle.background": ui["element"],
-        "scrollbarSlider.activeBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
-        "scrollbarSlider.background": ui["indent_active"] + SCROLLBAR_ALPHA,
-        "scrollbarSlider.hoverBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "scrollbarSlider.activeBackground": hover_thumb,
+        "scrollbarSlider.background": thumb,
+        "scrollbarSlider.hoverBackground": hover_thumb,
         "selection.background": ui["selection"],
         "settings.headerForeground": ui["foreground"],
         "settings.modifiedItemIndicator": status["modified"],
@@ -1657,12 +1678,16 @@ def tint(palette: Palette, colour: str) -> str:
     return opaque(colour + alpha, palette["ui"]["background"])
 
 
-def luminance(hex_colour: str) -> float:
-    def linear(channel: str) -> float:
-        c = int(channel, 16) / 255
-        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+def with_tints(palette: Palette) -> Palette:
+    tints = {
+        name: tint(palette, palette_colour(palette, path))
+        for name, path in TINTS.items()
+    }
+    return palette | {"tint": tints}
 
-    r, g, b = (linear(hex_colour[i : i + 2]) for i in (1, 3, 5))
+
+def luminance(hex_colour: str) -> float:
+    r, g, b = linear_rgb(hex_colour)
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
@@ -1672,14 +1697,10 @@ def contrast(text: str, ground: str) -> float:
 
 
 def syntax_grounds(palette: Palette) -> dict[str, str]:
-    ui, status = palette["ui"], palette["status"]
-    grounds = {key: ui[key] for key in SYNTAX_GROUNDS}
-    grounds |= {f"{key} tint": tint(palette, status[key]) for key in TINTED_STATUSES}
-    grounds |= {
-        "accent tint": tint(palette, ui["accent"]),
-        "keyword tint": tint(palette, palette["syntax"]["keyword"]),
+    grounds = {f"ui.{key}": palette["ui"][key] for key in SYNTAX_GROUNDS}
+    return grounds | {
+        f"tint.{name}": colour for name, colour in palette["tint"].items()
     }
-    return grounds
 
 
 def contrast_failures(palette: Palette) -> list[str]:
@@ -1696,11 +1717,13 @@ def contrast_failures(palette: Palette) -> list[str]:
         )
         for text, ground in HINT_PAIRS
     ]
-    return [
-        f"{palette['name']}: {label} is {contrast(text, ground):.2f}:1"
-        for label, text, ground in pairs
-        if contrast(text, ground) < MINIMUM_CONTRAST
-    ]
+    failures = []
+    for label, text, ground in pairs:
+        ratio = contrast(text, ground)
+        if ratio >= MINIMUM_CONTRAST:
+            continue
+        failures.append(f"{palette['name']}: {label} is {ratio:.2f}:1")
+    return failures
 
 
 def xml_text(root: ET.Element) -> str:
@@ -1710,37 +1733,17 @@ def xml_text(root: ET.Element) -> str:
 
 def jetbrains_theme(palette: Palette) -> dict[str, Any]:
     ui = palette["ui"]
-    accent = tint(palette, ui["accent"])
     colours = {
         token: palette_colour(palette, path)
         for token, path in JETBRAINS_THEME_TOKENS.items()
     }
-    colours |= {
-        "accent-brand-bg-secondary": accent,
-        "accent-error-bg-secondary": tint(palette, palette["status"]["error"]),
-        "accent-success-bg-secondary": tint(palette, palette["status"]["success"]),
-        "accent-warning-bg-secondary": tint(palette, palette["status"]["warning"]),
-        "tab-file-color-mask-bg": ui["background"] + SCROLLBAR_HOVER_ALPHA,
-        "toolbar-selected-bg": accent,
-        "toolbar-selected-bg-hovered": tint(palette, ui["accent_strong"]),
-    }
+    colours["tab-file-color-mask-bg"] = ui["background"] + "80"
+    colours["toolbar-selected-bg-hovered"] = tint(palette, ui["accent_strong"])
     overrides = {
         key: palette_colour(palette, path) for key, path in JETBRAINS_UI.items()
     }
     overrides |= {key: ui["foreground"] for key in JETBRAINS_OFF_ACCENT_FOREGROUNDS}
     overrides |= jetbrains_scrollbars(palette)
-    overrides |= {
-        "Badge.blueSecondaryBackground": accent,
-        "Badge.greenSecondaryBackground": tint(palette, palette["status"]["success"]),
-        "Badge.purpleSecondaryBackground": tint(palette, palette["syntax"]["keyword"]),
-        "DragAndDrop.areaBackground": accent,
-        "DragAndDrop.rowBackground": accent,
-        "MemoryIndicator.usedBackground": accent,
-        "ToolWindow.Button.DragAndDrop.buttonDropBackground": accent,
-        "ToolWindow.DragAndDrop.areaBackground": accent,
-        "VersionControl.FileHistory.Commit.selectedBranchBackground": accent,
-        "VersionControl.Log.Commit.currentBranchBackground": accent,
-    }
     return {
         "name": palette["name"],
         "dark": palette["appearance"] == "dark",
@@ -1752,10 +1755,12 @@ def jetbrains_theme(palette: Palette) -> dict[str, Any]:
     }
 
 
+def scrollbar_thumbs(ui: dict[str, Any]) -> tuple[str, str]:
+    return ui["indent_active"] + SCROLLBAR_ALPHA, ui["muted"] + SCROLLBAR_HOVER_ALPHA
+
+
 def jetbrains_scrollbars(palette: Palette) -> dict[str, str]:
-    ui = palette["ui"]
-    thumb = ui["indent_active"] + SCROLLBAR_ALPHA
-    hover = ui["muted"] + SCROLLBAR_HOVER_ALPHA
+    thumb, hover = scrollbar_thumbs(palette["ui"])
     return {key: thumb for key in JETBRAINS_SCROLLBAR_THUMBS} | {
         key: hover for key in JETBRAINS_SCROLLBAR_HOVER_THUMBS
     }
@@ -1770,15 +1775,14 @@ def jetbrains_scheme(palette: Palette) -> str:
     def path_colour(path: str) -> str:
         return colour(palette_colour(palette, path))
 
-    def path_tint(path: str) -> str:
-        return tint(palette, palette_colour(palette, path))[1:]
+    def underlined(value: str) -> dict[str, str]:
+        return {
+            "EFFECT_COLOR": value,
+            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
+            "FOREGROUND": value,
+        }
 
-    link = path_colour("syntax.link")
-    hyperlink = {
-        "EFFECT_COLOR": link,
-        "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
-        "FOREGROUND": link,
-    }
+    hyperlink = underlined(path_colour("syntax.link"))
     find = {
         "BACKGROUND": colour(ui["find"]),
         "ERROR_STRIPE_COLOR": colour(ui["find_active_border"]),
@@ -1790,7 +1794,7 @@ def jetbrains_scheme(palette: Palette) -> str:
     hint = path_colour("status.hint")
     inlay = {"BACKGROUND": colour(ui["element"]), "FOREGROUND": hint}
     current_hint = {
-        "BACKGROUND": path_tint("ui.accent"),
+        "BACKGROUND": path_colour("tint.accent"),
         "FOREGROUND": colour(ui["foreground"]),
     }
     invalid_escape = {
@@ -1799,6 +1803,11 @@ def jetbrains_scheme(palette: Palette) -> str:
         "FOREGROUND": path_colour("syntax.string"),
     }
     unreachable = path_colour("status.unreachable")
+    struck_unreachable = {
+        "EFFECT_COLOR": unreachable,
+        "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
+        "FOREGROUND": unreachable,
+    }
     keyword = path_colour("syntax.keyword")
     attributes = {
         "BLOCK_TERMINAL_CURRENT_SEARCH_ENTRY": terminal_find
@@ -1823,14 +1832,10 @@ def jetbrains_scheme(palette: Palette) -> str:
             "EFFECT_COLOR": colour(ui["accent"]),
             "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
         },
-        "DEBUGGER_UNREACHABLE_DECORATION": {
-            "EFFECT_COLOR": unreachable,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
-            "FOREGROUND": unreachable,
-        },
+        "DEBUGGER_UNREACHABLE_DECORATION": struck_unreachable,
         "DEFAULT_INVALID_STRING_ESCAPE": invalid_escape,
         "DELETED_TEXT_ATTRIBUTES": {
-            "BACKGROUND": path_tint("status.deleted"),
+            "BACKGROUND": path_colour("tint.deleted"),
             "EFFECT_COLOR": colour(ui["muted"]),
             "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
             "FOREGROUND": colour(ui["muted"]),
@@ -1860,16 +1865,8 @@ def jetbrains_scheme(palette: Palette) -> str:
             "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
         },
         "PROPERTIES.INVALID_STRING_ESCAPE": invalid_escape,
-        "ReSharper.ReSharper.ShaderLab_ENABLED_SHADER_KEYWORD": {
-            "EFFECT_COLOR": keyword,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
-            "FOREGROUND": keyword,
-        },
-        "ReSharper.ReSharper.ShaderLab_SUPPRESSED_SHADER_KEYWORD": {
-            "EFFECT_COLOR": unreachable,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
-            "FOREGROUND": unreachable,
-        },
+        "ReSharper.ReSharper.ShaderLab_ENABLED_SHADER_KEYWORD": underlined(keyword),
+        "ReSharper.ReSharper.ShaderLab_SUPPRESSED_SHADER_KEYWORD": struck_unreachable,
         "SEARCH_RESULT_ATTRIBUTES": find,
         "SQL_OUTER_QUERY_COLUMN": {
             "EFFECT_COLOR": colour(ui["quiet"]),
@@ -1887,7 +1884,7 @@ def jetbrains_scheme(palette: Palette) -> str:
             "FOREGROUND": path_colour("syntax.comment_emphasized"),
         },
         "WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
-            "BACKGROUND": path_tint("syntax.keyword"),
+            "BACKGROUND": path_colour("tint.keyword"),
             "ERROR_STRIPE_COLOR": keyword,
         },
         "WRITE_SEARCH_RESULT_ATTRIBUTES": find,
@@ -1900,13 +1897,19 @@ def jetbrains_scheme(palette: Palette) -> str:
             attributes[key]["FONT_TYPE"] = JETBRAINS_FONT_ITALIC
     for key, path in JETBRAINS_BACKGROUNDS.items():
         attributes[key] = {"BACKGROUND": path_colour(path)}
-    for key, path in JETBRAINS_TINTS.items():
+    for key, name in JETBRAINS_TINTS.items():
         attributes[key] = {
-            "BACKGROUND": path_tint(path),
-            "ERROR_STRIPE_COLOR": path_colour(path),
+            "BACKGROUND": path_colour(f"tint.{name}"),
+            "ERROR_STRIPE_COLOR": path_colour(TINTS[name]),
         }
     for key, (path, effect) in JETBRAINS_EFFECTS.items():
         attributes[key] = {"EFFECT_COLOR": path_colour(path), "EFFECT_TYPE": effect}
+    for key, path in JETBRAINS_INLAY_BUTTONS.items():
+        attributes[key] = {
+            "EFFECT_COLOR": path_colour(path),
+            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
+            "FOREGROUND": hint,
+        }
     for key, (path, effect) in JETBRAINS_DIAGNOSTICS.items():
         severity = path_colour(path)
         attributes[key] = {
@@ -1916,8 +1919,6 @@ def jetbrains_scheme(palette: Palette) -> str:
         }
     for key, path in JETBRAINS_STRIPES.items():
         attributes[key] = {"ERROR_STRIPE_COLOR": path_colour(path)}
-    for key in JETBRAINS_INLAY_BUTTONS:
-        attributes[key]["FOREGROUND"] = hint
     attributes |= {key: {} for key in JETBRAINS_CLEARED}
     for shade, keys in JETBRAINS_CONSOLE.items():
         for key, value in zip(keys, palette["ansi"][shade], strict=True):
@@ -1939,9 +1940,10 @@ def jetbrains_scheme(palette: Palette) -> str:
         ET.SubElement(colours, "option", name=key, value=path_colour(path))
     for key, value in jetbrains_scrollbars(palette).items():
         ET.SubElement(colours, "option", name=key, value=colour(value))
-    for index, accent in enumerate(ui["accents"][:VCS_ANNOTATION_SHADES], start=1):
+    shades = ui["accents"][:JETBRAINS_VCS_ANNOTATION_SHADES]
+    for index, accent in enumerate(shades, start=1):
         name = f"VCS_ANNOTATIONS_COLOR_{index}"
-        ET.SubElement(colours, "option", name=name, value=tint(palette, accent)[1:])
+        ET.SubElement(colours, "option", name=name, value=colour(tint(palette, accent)))
     # Empty keeps syntax colours in a selection, where the Default parent paints it white.
     ET.SubElement(colours, "option", name="SELECTION_FOREGROUND", value="")
     options = ET.SubElement(scheme, "attributes")
@@ -2054,7 +2056,8 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 def main() -> None:
     palettes = [
-        tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
+        with_tints(tomllib.loads(p.read_text()))
+        for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
     if failures := [f for p in palettes for f in contrast_failures(p)]:
         raise SystemExit("\n".join(failures))
