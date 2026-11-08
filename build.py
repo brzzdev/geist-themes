@@ -16,8 +16,12 @@ FAMILY = "Geist"
 REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
 SCROLLBAR_ALPHA = "50"
 SCROLLBAR_HOVER_ALPHA = "80"
+# Fills behind syntax text: see docs/adr/0003-tinted-fills-behind-syntax.md.
+TINT_ALPHAS = {"dark": "33", "light": "1a"}
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
+# The players between yours and the agent's, which Zed keeps last.
+ZED_COLLABORATORS = 6
 OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
@@ -33,6 +37,51 @@ CARD_ROLE_BASELINE = 13
 CARD_ROW_HEIGHT = 44
 CARD_SWATCH = 32
 
+MINIMUM_CONTRAST = 4.5
+# Each text colour reaches the minimum on the ground it's paired with.
+TEXT_PAIRS = [
+    ("ansi.normal.0", "ui.find_active_border"),
+    ("status.hint", "ui.background"),
+    ("status.hint", "ui.element"),
+    ("status.hint", "ui.hover"),
+    ("status.predictive", "ui.background"),
+    ("status.predictive", "ui.hover"),
+    ("ui.foreground", "tint.accent"),
+    ("ui.quiet", "ui.background"),
+    ("ui.quiet", "ui.element"),
+    ("ui.quiet", "ui.panel"),
+]
+# Every syntax role reaches the minimum on these, and on every tint.
+SYNTAX_GROUNDS = [
+    "background",
+    "element",
+    "find",
+    "find_active",
+    "highlight",
+    "hover",
+    "panel",
+    "selection",
+]
+# The colours a palette's `tint` group composites over its background.
+TINTS = {
+    "accent": "ui.accent",
+    "conflict": "status.conflict",
+    "created": "status.created",
+    "deleted": "status.deleted",
+    "error": "status.error",
+    "hidden": "status.hidden",
+    "hint": "status.hint",
+    "ignored": "status.ignored",
+    "info": "status.info",
+    "keyword": "syntax.keyword",
+    "modified": "status.modified",
+    "predictive": "status.predictive",
+    "renamed": "status.renamed",
+    "success": "status.success",
+    "unreachable": "status.unreachable",
+    "warning": "status.warning",
+}
+
 type Palette = dict[str, Any]
 
 # Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
@@ -43,23 +92,32 @@ ZED_SYNTAX = {
     "boolean": ("constant", None),
     "comment": ("comment", "italic"),
     "comment.doc": ("comment", "italic"),
+    "concept": ("type", None),
     "constant": ("constant", None),
     "constructor": ("type", None),
+    "diff.delta": ("function", None),
+    "diff.minus": ("tag", None),
+    "diff.plus": ("string", None),
     "emphasis": ("plain", "italic"),
     "emphasis.strong": ("plain", "bold"),
     "enum": ("type", None),
     "function": ("function", None),
+    "function.builtin": ("function_system", None),
     "function.macro": ("attribute", None),
     "keyword": ("keyword", None),
     "label": ("attribute", None),
+    "lifetime": ("type_parameter", None),
     "link_text": ("link", None),
     "link_uri": ("link", None),
+    "markup.heading": ("plain", "bold"),
+    "module": ("namespace", None),
     "namespace": ("namespace", None),
     "number": ("number", None),
     "operator": ("punctuation", None),
     "preproc": ("attribute", None),
     "property": ("variable", None),
     "punctuation": ("punctuation", None),
+    "selector": ("attribute", None),
     "string": ("string", None),
     "string.escape": ("number", None),
     "string.regex": ("regex", None),
@@ -69,9 +127,12 @@ ZED_SYNTAX = {
     "text.literal": ("literal", None),
     "title": ("plain", "bold"),
     "type": ("type", None),
+    "type.builtin": ("type_system", None),
     "type.parameter": ("type_parameter", None),
     "variable": ("variable", None),
+    "variable.builtin": ("keyword", None),
     "variable.parameter": ("variable", None),
+    "variable.special": ("keyword", None),
     "variant": ("constant", None),
 }
 
@@ -81,6 +142,7 @@ NETNEWSWIRE_VARIABLES = {
     "border": "ui.border",
     "border-variant": "ui.border_variant",
     "code-background": "ui.element",
+    "find": "ui.find",
     "foreground": "ui.foreground",
     "link": "syntax.link",
     "muted": "ui.muted",
@@ -90,15 +152,21 @@ NETNEWSWIRE_VARIABLES = {
 }
 
 XCODE_OVERRIDES = {
+    "codeFoldingRibbon": "ui.hover",
     "comment": "syntax.comment",
     "commentEmphasized": "syntax.comment_emphasized",
+    "consoleBackground": "ui.background",
     "currentLineHighlight": "ui.hover",
+    "debugger": "ui.accent",
+    "diffAddition": "status.created",
+    "diffDeletion": "status.deleted",
     "insertionPointColor": "ui.cursor",
     "invisibles": "ui.invisible",
     "keyword": "syntax.keyword",
     "keyword.attribute": "syntax.attribute",
     "link": "syntax.link",
     "markdown": "syntax.literal",
+    "markdownEmphasized": "syntax.plain",
     "memberDeclaration": "syntax.function",
     "number": "syntax.number",
     "number.character": "syntax.number",
@@ -120,6 +188,7 @@ XCODE_OVERRIDES = {
     "projectType": "syntax.type",
     "projectType.class": "syntax.type",
     "projectType.type": "syntax.type",
+    "scopeGuides": "ui.indent",
     "selectedTextBackgroundColor": "ui.selection",
     "string": "syntax.string",
     "string.regex": "syntax.regex",
@@ -129,6 +198,9 @@ XCODE_OVERRIDES = {
 
 # The selection colour at this alpha keeps syntax at or above its contrast on the selection.
 VSCODE_RANGE_ALPHA = "60"
+# VS Code draws decorations over the selection and the cursor line, so their fills stay
+# translucent and land on their checked colour over the cursor line, fainter elsewhere.
+VSCODE_DECORATION_ALPHA = "80"
 VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
 
 VSCODE_TOKENS = [
@@ -236,89 +308,406 @@ JETBRAINS_ISLANDS_TOKENS_SINCE_BUILD = "261"
 JETBRAINS_PARENT_SCHEMES = {"dark": "Darcula", "light": "Default"}
 JETBRAINS_PARENT_THEMES = {"dark": "Islands Dark", "light": "Islands Light"}
 JETBRAINS_SCHEME_VERSION = "142"
+JETBRAINS_EFFECT_BOXED = "0"
 JETBRAINS_EFFECT_UNDERSCORE = "1"
 JETBRAINS_EFFECT_WAVE = "2"
+JETBRAINS_EFFECT_STRIKEOUT = "3"
+JETBRAINS_EFFECT_BOLD_DOTTED = "5"
+JETBRAINS_FONT_BOLD = "1"
 JETBRAINS_FONT_ITALIC = "2"
-JETBRAINS_TINT_ALPHA = "33"
+JETBRAINS_FILE_COLOUR_MASK_ALPHA = "80"
+JETBRAINS_VCS_ANNOTATION_SHADES = 5
 
 # 2026.1 names the container tokens `container-*`; 2026.2 dropped the prefix.
 JETBRAINS_THEME_TOKENS = {
     "accent-brand-bg": "ui.accent",
+    "accent-brand-bg-secondary": "tint.accent",
     "accent-brand-border": "ui.accent",
+    "accent-brand-border-secondary": "ui.accent",
+    "accent-error-bg": "status.error",
+    "accent-error-bg-secondary": "tint.error",
+    "accent-error-border": "status.error",
+    "accent-error-border-secondary": "status.error",
+    "accent-neutral-bg": "ui.element",
+    "accent-success-bg": "status.success",
+    "accent-success-bg-secondary": "tint.success",
+    "accent-success-border": "status.success",
+    "accent-success-border-secondary": "status.success",
+    "accent-warning-bg": "status.warning",
+    "accent-warning-bg-secondary": "tint.warning",
+    "accent-warning-border": "status.warning",
+    "accent-warning-border-secondary": "status.warning",
     "container-dialog-bg": "ui.panel",
+    "container-dialog-bg-inline": "ui.hover",
     "container-dialog-border": "ui.border",
     "container-editor-bg": "ui.background",
     "container-editor-bg-inline": "ui.panel",
     "container-editor-border": "ui.border",
+    "container-editor-border-alt": "ui.border",
     "container-editor-border-inline": "ui.border",
     "container-main-window-bg": "ui.element",
+    "container-main-window-bg-alt": "ui.element",
+    "container-main-window-border": "ui.border",
     "container-popup-bg": "ui.panel",
+    "container-popup-bg-inline": "ui.panel",
     "container-popup-border": "ui.border",
+    "container-popup-border-inline": "ui.border",
+    "container-popup-border-windows": "ui.border",
     "container-tool-window-bg": "ui.panel",
+    "container-tool-window-bg-alt": "ui.panel",
+    "container-tool-window-bg-inline": "ui.hover",
     "container-tool-window-border": "ui.border",
+    "container-tool-window-border-inline": "ui.border",
+    "control-bg-raised": "ui.element",
+    "control-bg-small": "ui.border",
+    "control-bg-small-disabled": "ui.border_variant",
+    "control-border": "ui.border",
+    "control-border-disabled": "ui.border_variant",
+    "control-border-over-accent": "ui.border",
+    "control-border-raised": "ui.invisible",
+    "control-border-small": "ui.invisible",
+    "control-error-border-secondary": "status.error",
+    "control-warning-border-secondary": "status.warning",
+    "core-bg-transparent-hovered": "ui.hover",
+    "core-bg-transparent-pressed": "ui.element",
+    "core-border-transparent": "ui.border",
     "dialog-bg": "ui.panel",
+    "dialog-bg-inline": "ui.hover",
     "dialog-border": "ui.border",
     "editor-bg": "ui.background",
     "editor-bg-inline": "ui.panel",
     "editor-border": "ui.border",
+    "editor-border-alt": "ui.border",
     "editor-border-inline": "ui.border",
+    "editor-floating-toolbar-bg": "ui.element",
     "editor-text": "ui.foreground",
+    "feedback-bg": "ui.element",
+    "feedback-bg-inline": "ui.panel",
+    "feedback-border": "ui.border",
+    "got-it-bg": "ui.element",
+    "got-it-border": "ui.accent",
+    "got-it-code-border": "ui.border",
+    "got-it-contrast-button-bg": "ui.selection",
+    "got-it-shortcut-bg": "ui.selection",
+    "got-it-text-link": "ui.accent_strong",
+    "got-it-text-step": "ui.quiet",
+    "icon-default-stroke": "ui.foreground",
+    "icon-green-stroke": "status.success",
+    "icon-over-accent": "ui.background",
+    "inlay-bg": "ui.element",
+    "inlay-border": "ui.border",
+    "layer-0-bg": "ui.panel",
+    "layer-0-bg-inline": "ui.hover",
+    "layer-0-border": "ui.border",
+    "layer-0-border-inline": "ui.border",
+    "layer-1-bg": "ui.element",
+    "layer-1-bg-inline": "ui.element",
+    "layer-1-border": "ui.border",
+    "layer-1-border-inline": "ui.border",
+    "layer-2-bg": "ui.element",
+    "layer-2-bg-inline": "ui.selection",
+    "layer-2-border": "ui.border",
+    "layer-2-border-inline": "ui.border",
     "main-window-bg": "ui.element",
+    "main-window-bg-alt": "ui.element",
+    "main-window-border": "ui.border",
     "popup-bg": "ui.panel",
+    "popup-bg-inline": "ui.panel",
     "popup-border": "ui.border",
+    "popup-border-inline": "ui.border",
+    "popup-border-windows": "ui.border",
+    "popup-completion-match-text": "ui.accent_strong",
+    "presentation-assistant-bg": "ui.element",
+    "search-match-bg": "ui.find_active_border",
     "selection-bg-active": "ui.selection",
+    "selection-bg-active-muted": "ui.element",
+    "selection-bg-hovered": "ui.hover",
     "selection-bg-inactive": "ui.element",
     "tab-selected-bg-active": "ui.selection",
     "tab-selected-bg-inactive": "ui.element",
     "tab-selected-border-active": "ui.accent",
     "tab-selected-border-inactive": "ui.border",
     "text-default": "ui.foreground",
+    "text-disabled": "ui.quiet",
     "text-error": "status.error",
     "text-link": "ui.accent",
     "text-muted": "ui.muted",
+    "text-over-accent": "ui.background",
+    "text-over-accent-inverted": "ui.foreground",
     "text-secondary": "ui.quiet",
     "text-success": "status.success",
     "text-warning": "status.warning",
+    "toggle-border": "ui.invisible",
+    "toggle-button-bg": "ui.muted",
+    "toggle-off-bg": "ui.element",
     "tool-window-bg": "ui.panel",
+    "tool-window-bg-alt": "ui.panel",
+    "tool-window-bg-inline": "ui.hover",
     "tool-window-border": "ui.border",
+    "tool-window-border-inline": "ui.border",
+    "toolbar-run-bg-hovered": "status.success",
+    "toolbar-selected-bg": "tint.accent",
+    "toolbar-stop-bg-hovered": "status.error",
+    "tree-indent-guide-border": "ui.indent",
 }
+
+# Islands sets these to fixed colours rather than tokens.
+JETBRAINS_UI = {
+    "Badge.blueBackground": "ui.accent",
+    "Badge.blueForeground": "ui.background",
+    "Badge.blueSecondaryBackground": "tint.accent",
+    "Badge.blueSecondaryForeground": "ui.accent_strong",
+    "Badge.disabledBackground": "ui.element",
+    "Badge.disabledForeground": "ui.quiet",
+    "Badge.graySecondaryBackground": "ui.element",
+    "Badge.graySecondaryForeground": "ui.muted",
+    "Badge.greenBackground": "status.success",
+    "Badge.greenForeground": "ui.background",
+    "Badge.greenSecondaryBackground": "tint.success",
+    "Badge.greenSecondaryForeground": "status.success",
+    "Badge.purpleSecondaryBackground": "tint.keyword",
+    "Badge.purpleSecondaryForeground": "syntax.keyword",
+    "Bookmark.MnemonicCurrent.foreground": "ui.background",
+    "Counter.foreground": "ui.foreground",
+    "Debugger.Variables.changedValueForeground": "ui.accent",
+    "Debugger.Variables.collectingDataForeground": "ui.quiet",
+    "Debugger.Variables.errorMessageForeground": "status.error",
+    "Debugger.Variables.evaluatingExpressionForeground": "ui.quiet",
+    "Debugger.Variables.exceptionForeground": "status.error",
+    "Debugger.Variables.modifyingValueForeground": "ui.accent",
+    "Debugger.Variables.typeForeground": "ui.quiet",
+    "Debugger.Variables.valueForeground": "syntax.constant",
+    "DragAndDrop.areaBackground": "tint.accent",
+    "DragAndDrop.rowBackground": "tint.accent",
+    "Editor.ToolTip.foreground": "ui.foreground",
+    "Editor.ToolTip.selectionBackground": "ui.selection",
+    "GotItTooltip.animationBackground": "ui.element",
+    "List.Tag.background": "ui.element",
+    "List.Tag.foreground": "ui.muted",
+    "MainWindow.FullScreeControl.Background": "ui.element",
+    "MainWindow.Tab.background": "ui.panel",
+    "MainWindow.Tab.borderColor": "ui.border",
+    "MainWindow.Tab.hoverForeground": "ui.foreground",
+    "MainWindow.Tab.selectedForeground": "ui.foreground",
+    "MainWindow.Tab.selectedInactiveBackground": "ui.element",
+    "MemoryIndicator.allocatedBackground": "ui.element",
+    "MemoryIndicator.usedBackground": "tint.accent",
+    "ParameterInfo.background": "ui.panel",
+    "ParameterInfo.borderColor": "ui.border",
+    "ParameterInfo.currentOverloadBackground": "ui.selection",
+    "ParameterInfo.disabledForeground": "ui.quiet",
+    "ParameterInfo.foreground": "ui.foreground",
+    "ParameterInfo.infoForeground": "ui.muted",
+    "ParameterInfo.lineSeparatorColor": "ui.border",
+    "Plugins.background": "ui.panel",
+    "Plugins.tagBackground": "ui.element",
+    "Popup.borderColor": "ui.border",
+    "PresentationAssistant.Bright.keymapLabel": "ui.quiet",
+    "PresentationAssistant.Pale.Popup.border": "ui.border",
+    "PresentationAssistant.Pale.PopupBackground": "ui.element",
+    "PresentationAssistant.Pale.keymapLabel": "ui.quiet",
+    # Islands sets these progress keys in two spellings, so both are set here.
+    "ProgressBar.failedColor": "status.error",
+    "ProgressBar.failedEndColor": "status.error",
+    "ProgressBar.failedendcolor": "status.error",
+    "ProgressBar.indeterminateEndColor": "ui.accent",
+    "ProgressBar.indeterminateStartColor": "ui.accent_strong",
+    "ProgressBar.passedColor": "status.success",
+    "ProgressBar.passedEndColor": "status.success",
+    "ProgressBar.passedendcolor": "status.success",
+    "ProgressBar.progressCounterBackground": "ui.accent",
+    "ProgressBar.progressCounterForeground": "ui.background",
+    "Review.Branch.Background": "ui.element",
+    "Review.Branch.Background.Hover": "ui.selection",
+    "Review.ChatItem.Hover": "ui.hover",
+    "Review.State.Background": "ui.element",
+    "Review.State.Foreground": "ui.muted",
+    "RunWidget.foreground": "ui.foreground",
+    "Slider.buttonBorderColor": "ui.border",
+    "Slider.buttonColor": "ui.muted",
+    "Slider.tickColor": "ui.quiet",
+    "Slider.trackColor": "ui.border",
+    "StatusBar.Breadcrumbs.floatingBackground": "ui.panel",
+    "Table.stripeColor": "ui.hover",
+    "Tag.background": "ui.element",
+    "ToolWindow.Button.DragAndDrop.buttonDropBackground": "tint.accent",
+    "ToolWindow.Button.DragAndDrop.stripeBackground": "ui.panel",
+    "ToolWindow.Button.hoverBackground": "ui.hover",
+    "ToolWindow.DragAndDrop.areaBackground": "tint.accent",
+    "Tooltip.Learning.Header.foreground": "ui.foreground",
+    "Tooltip.Learning.background": "ui.element",
+    "Tooltip.Learning.borderColor": "ui.element",
+    "Tooltip.Learning.codeBorderColor": "ui.border",
+    "Tooltip.Learning.foreground": "ui.foreground",
+    "Tooltip.Learning.iconFillColor": "ui.element",
+    "Tooltip.Learning.linkForeground": "ui.accent_strong",
+    "Tooltip.Learning.linkUnderlineDefaultColor": "ui.accent_strong",
+    "Tooltip.Learning.linkUnderlineHoveredColor": "ui.accent_strong",
+    "Tooltip.Learning.secondaryActionForeground": "ui.accent_strong",
+    "Tooltip.Learning.spanBackground": "ui.selection",
+    "Tooltip.Learning.spanForeground": "ui.foreground",
+    "Tooltip.Learning.stepNumberForeground": "ui.quiet",
+    "VersionControl.FileHistory.Commit.selectedBranchBackground": "tint.accent",
+    "VersionControl.GitLog.headIconColor": "status.warning",
+    "VersionControl.GitLog.localBranchIconColor": "status.success",
+    "VersionControl.GitLog.otherIconColor": "ui.quiet",
+    "VersionControl.GitLog.remoteBranchIconColor": "syntax.keyword",
+    "VersionControl.GitLog.tagIconColor": "ui.quiet",
+    "VersionControl.Log.Commit.Reference.foreground": "ui.quiet",
+    "VersionControl.Log.Commit.currentBranchBackground": "tint.accent",
+    "VersionControl.Log.Commit.hoveredBackground": "ui.hover",
+    "VersionControl.Log.Commit.unmatchedForeground": "ui.quiet",
+    "VersionControl.MarkerPopup.borderColor": "ui.border",
+    "VersionControl.Merge.Status.NoConflicts.foreground": "status.success",
+    "WelcomeScreen.Projects.actions.background": "ui.element",
+}
+
+# These read `text-over-accent` or `icon-over-accent` but sit on a surface, not the accent.
+JETBRAINS_OFF_ACCENT_FOREGROUNDS = [
+    "GotItTooltip.iconBorderColor",
+    "ParameterInfo.currentParameterForeground",
+    "PresentationAssistant.Bright.Popup.foreground",
+    "PresentationAssistant.Pale.Popup.foreground",
+    "SearchEverywhere.Tab.selectedForeground",
+    "Tooltip.Learning.iconBorderColor",
+]
 
 JETBRAINS_COLOURS = {
     "ADDED_LINES_COLOR": "status.created",
+    "ANNOTATIONS_COLOR": "ui.quiet",
+    "ActionButton.hoverBackground": "ui.element",
+    "ActionButton.iconTextForeground": "ui.foreground",
+    "ActionButton.pressedBackground": "ui.selection",
+    "BLOCK_TERMINAL_BLOCK_BACKGROUND_END": "ui.hover",
+    "BLOCK_TERMINAL_BLOCK_BACKGROUND_START": "ui.hover",
     "BLOCK_TERMINAL_DEFAULT_BACKGROUND": "ui.background",
     "BLOCK_TERMINAL_DEFAULT_FOREGROUND": "ui.foreground",
+    "BLOCK_TERMINAL_ERROR_BLOCK_STROKE_COLOR": "status.error",
+    "BLOCK_TERMINAL_GENERATE_COMMAND_CARET_COLOR": "ui.cursor",
+    "BLOCK_TERMINAL_GENERATE_COMMAND_PLACEHOLDER_FOREGROUND": "ui.quiet",
+    "BLOCK_TERMINAL_HOVERED_BLOCK_BACKGROUND_END": "ui.element",
+    "BLOCK_TERMINAL_HOVERED_BLOCK_BACKGROUND_START": "ui.element",
+    "BLOCK_TERMINAL_INACTIVE_SELECTED_BLOCK_BACKGROUND": "ui.element",
+    "BLOCK_TERMINAL_INACTIVE_SELECTED_BLOCK_STROKE_COLOR": "ui.border",
+    "BLOCK_TERMINAL_PROMPT_SEPARATOR_COLOR": "ui.border",
+    "BLOCK_TERMINAL_SELECTED_BLOCK_BACKGROUND": "ui.selection",
+    "BLOCK_TERMINAL_SELECTED_BLOCK_STROKE_COLOR": "ui.accent",
+    "Bookmark.Mnemonic.iconBackground": "ui.element",
+    "Bookmark.Mnemonic.iconBorderColor": "status.warning",
+    "Bookmark.Mnemonic.iconForeground": "ui.foreground",
+    "Bookmark.iconBackground": "status.warning",
     "CARET_COLOR": "ui.cursor",
     "CARET_ROW_COLOR": "ui.hover",
     "CONSOLE_BACKGROUND_KEY": "ui.background",
     "DELETED_LINES_COLOR": "status.deleted",
+    "DIFF_SEPARATOR_WAVE": "ui.border",
     "DOCUMENTATION_COLOR": "ui.panel",
+    "DOC_COMMENT_GUIDE": "ui.indent",
+    "DOC_COMMENT_LINK": "syntax.link",
     "FILESTATUS_ADDED": "status.created",
     "FILESTATUS_COPIED": "status.created",
     "FILESTATUS_DELETED": "status.deleted",
+    "FILESTATUS_HIJACKED": "status.modified",
     "FILESTATUS_IDEA_FILESTATUS_DELETED_FROM_FILE_SYSTEM": "status.deleted",
     "FILESTATUS_IDEA_FILESTATUS_IGNORED": "status.ignored",
     "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_BOTH_CONFLICTS": "status.conflict",
     "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_CONFLICTS": "status.conflict",
     "FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_PROPERTY_CONFLICTS": "status.conflict",
+    "FILESTATUS_MERGED": "status.modified",
     "FILESTATUS_MODIFIED": "status.modified",
+    "FILESTATUS_NOT_CHANGED_IMMEDIATE": "status.modified",
+    "FILESTATUS_NOT_CHANGED_RECURSIVE": "status.modified",
+    "FILESTATUS_OBSOLETE": "status.ignored",
     "FILESTATUS_RENAMED": "status.renamed",
+    "FILESTATUS_SWITCHED": "status.renamed",
+    "FILESTATUS_UNKNOWN": "status.created",
+    "FILESTATUS_addedOutside": "status.created",
+    "FILESTATUS_changelistConflict": "status.conflict",
+    "FILESTATUS_modifiedOutside": "status.modified",
+    "FOLDED_TEXT_BORDER_COLOR": "ui.border",
+    "GRID_STRIPE_COLOR": "ui.hover",
     "GUTTER_BACKGROUND": "ui.background",
+    "IGNORED_ADDED_LINES_BORDER_COLOR": "status.created",
+    "IGNORED_DELETED_LINES_BORDER_COLOR": "status.deleted",
+    "IGNORED_MODIFIED_LINES_BORDER_COLOR": "status.modified",
     "INDENT_GUIDE": "ui.indent",
+    "INLINE_REFACTORING_SETTINGS_DEFAULT": "ui.element",
+    "INLINE_REFACTORING_SETTINGS_FOCUSED": "ui.selection",
+    "INLINE_REFACTORING_SETTINGS_HOVERED": "ui.selection",
     "LINE_NUMBERS_COLOR": "ui.quiet",
     "LINE_NUMBER_ON_CARET_ROW_COLOR": "ui.foreground",
     "LOOKUP_COLOR": "ui.panel",
     "METHOD_SEPARATORS_COLOR": "ui.border",
     "MODIFIED_LINES_COLOR": "status.modified",
+    "MODIFIED_TAB_ICON": "status.modified",
     "NOTIFICATION_BACKGROUND": "ui.element",
+    "READONLY_FRAGMENT_BACKGROUND": "ui.highlight",
+    "RECENT_LOCATIONS_SELECTION": "ui.selection",
     "RIGHT_MARGIN_COLOR": "ui.border",
     "SELECTED_INDENT_GUIDE": "ui.indent_active",
+    "SELECTED_TEARLINE_COLOR": "ui.indent_active",
     "SELECTION_BACKGROUND": "ui.selection",
+    "SOFT_WRAP_SIGN_COLOR": "ui.invisible",
+    "STRING_CONTENT_INDENT_GUIDE": "ui.indent",
+    "ScrollBar.background": "ui.background",
+    "TEARLINE_COLOR": "ui.border",
+    "Table.hoverBackground": "ui.hover",
     "VISUAL_INDENT_GUIDE": "ui.indent",
     "WHITESPACES": "ui.invisible",
+    "WHITESPACES_MODIFIED_LINES_COLOR": "status.modified",
 }
 
+# Read by the editor scheme and the UI theme alike; the transparent variants stay hidden at rest.
+JETBRAINS_SCROLLBAR_THUMBS = [
+    "ScrollBar.Mac.thumbBorderColor",
+    "ScrollBar.Mac.thumbColor",
+    "ScrollBar.Transparent.thumbBorderColor",
+    "ScrollBar.Transparent.thumbColor",
+    "ScrollBar.thumbBorderColor",
+    "ScrollBar.thumbColor",
+    "Scrollbar.Tabs.ThumbColor",
+]
+JETBRAINS_SCROLLBAR_HOVER_THUMBS = [
+    "ScrollBar.Mac.Transparent.hoverThumbBorderColor",
+    "ScrollBar.Mac.Transparent.hoverThumbColor",
+    "ScrollBar.Mac.hoverThumbBorderColor",
+    "ScrollBar.Mac.hoverThumbColor",
+    "ScrollBar.Transparent.hoverThumbBorderColor",
+    "ScrollBar.Transparent.hoverThumbColor",
+    "ScrollBar.hoverThumbBorderColor",
+    "ScrollBar.hoverThumbColor",
+    "Scrollbar.Tabs.HoveredThumbColor",
+]
+
 JETBRAINS_FOREGROUNDS = {
+    "ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES": "syntax.variable",
+    "ANNOTATION_NAME_ATTRIBUTES": "syntax.attribute",
+    "BLOCK_TERMINAL_COMMAND": "ui.foreground",
+    "BLOCK_TERMINAL_GENERATE_COMMAND_PROMPT_TEXT": "ui.accent",
+    "BREADCRUMBS_DEFAULT": "ui.muted",
+    "BREADCRUMBS_INACTIVE": "ui.quiet",
+    "CODE_VISION_DEFAULT": "status.hint",
+    "CODE_VISION_HOVERED": "ui.accent",
+    "CONSOLE_ERROR_OUTPUT": "status.error",
     "CONSOLE_NORMAL_OUTPUT": "ui.foreground",
+    "CONSOLE_SYSTEM_OUTPUT": "ui.muted",
+    "CONSOLE_USER_INPUT": "status.success",
+    "CSS.COLOR": "syntax.number",
+    "CSS.IMPORTANT": "syntax.keyword",
+    "CSS.URL": "syntax.link",
+    "CUSTOM_KEYWORD1_ATTRIBUTES": "syntax.keyword",
+    "CUSTOM_KEYWORD2_ATTRIBUTES": "syntax.function",
+    "CUSTOM_KEYWORD3_ATTRIBUTES": "syntax.type",
+    "CUSTOM_KEYWORD4_ATTRIBUTES": "syntax.attribute",
+    "CUSTOM_LINE_COMMENT_ATTRIBUTES": "syntax.comment",
+    "CUSTOM_MULTI_LINE_COMMENT_ATTRIBUTES": "syntax.comment",
+    "CUSTOM_NUMBER_ATTRIBUTES": "syntax.number",
+    "CUSTOM_STRING_ATTRIBUTES": "syntax.string",
+    "CUSTOM_VALID_STRING_ESCAPE_ATTRIBUTES": "syntax.number",
+    "DEBUGGER_INLINED_VALUES": "status.hint",
+    "DEBUGGER_INLINED_VALUES_EXECUTION_LINE": "status.hint",
+    "DEBUGGER_INLINED_VALUES_MODIFIED": "status.warning",
+    "DEBUG_THREAD_LABEL": "ui.muted",
     "DEFAULT_ATTRIBUTE": "syntax.attribute",
     "DEFAULT_BLOCK_COMMENT": "syntax.comment",
     "DEFAULT_BRACES": "syntax.punctuation",
@@ -357,26 +746,127 @@ JETBRAINS_FOREGROUNDS = {
     "DEFAULT_TAG": "syntax.tag",
     "DEFAULT_TEMPLATE_LANGUAGE_COLOR": "syntax.plain",
     "DEFAULT_VALID_STRING_ESCAPE": "syntax.number",
+    "GD_ANNOTATION": "syntax.attribute",
+    "GD_BAD_CHARACTER": "status.error",
+    "GD_BASE_TYPE": "syntax.type_system",
+    "GD_CLASS_TYPE": "syntax.type",
+    "GD_COMMENT": "syntax.comment",
+    "GD_DANGER": "status.error",
+    "GD_DOC_COMMENT": "syntax.comment",
+    "GD_ENGINE_TYPE": "syntax.type_system",
+    "GD_FLOW_KEYWORDS": "syntax.keyword",
+    "GD_GLOBAL_FUNCTION": "syntax.function_system",
+    "GD_GLOBAL_VARIABLE_AUTOLOAD": "syntax.variable",
+    "GD_GLOBAL_VARIABLE_BUILT_IN": "syntax.variable",
+    "GD_KEYWORD": "syntax.keyword",
+    "GD_MEMBER": "syntax.variable",
+    "GD_METHOD_CALL": "syntax.function",
+    "GD_METHOD_DECLARATION": "syntax.function",
+    "GD_NODE_PATH": "syntax.string",
+    "GD_NODE_STRING_PATH": "syntax.string",
+    "GD_NOTE": "status.hint",
+    "GD_NUMBER": "syntax.number",
+    "GD_STATIC_METHOD_CALL": "syntax.function",
+    "GD_STRING": "syntax.string",
+    "GD_STRING_FORMAT": "syntax.number",
+    "GD_STRING_NAME": "syntax.string",
+    "GD_WARNING": "status.warning",
+    "HAML_CLASS": "syntax.attribute",
+    "HAML_COMMENT": "syntax.comment",
+    "HAML_ID": "syntax.attribute",
+    "HAML_TAG": "syntax.tag",
     "HTML_ATTRIBUTE_NAME": "syntax.attribute",
     "HTML_ATTRIBUTE_VALUE": "syntax.string",
     "HTML_CUSTOM_TAG_NAME": "syntax.tag",
     "HTML_ENTITY_REFERENCE": "syntax.number",
     "HTML_TAG": "syntax.punctuation",
     "HTML_TAG_NAME": "syntax.tag",
+    "HTTP_REQUEST_MULTIPART_BOUNDARY": "syntax.comment",
+    "HTTP_REQUEST_PARAMETER_NAME": "syntax.variable",
+    "HTTP_REQUEST_PARAMETER_VALUE": "syntax.string",
+    "IMPLICIT_ANONYMOUS_CLASS_PARAMETER_ATTRIBUTES": "syntax.variable",
+    "INLAY_BUTTON_HINT": "ui.quiet",
+    "INLAY_TEXT_WITHOUT_BACKGROUND": "status.hint",
+    "INLINE_PROMPT": "ui.accent",
+    "INLINE_SUGGESTION": "status.predictive",
+    "INSTANCE_FIELD_ATTRIBUTES": "syntax.variable",
+    "JADE_FILE_PATH": "syntax.string",
+    "JADE_FILTER_NAME": "syntax.function",
+    "JADE_JS_BLOCK": "syntax.plain",
+    "JADE_STATEMENTS": "syntax.keyword",
     "JS.GLOBAL_FUNCTION": "syntax.function",
     "JS.GLOBAL_VARIABLE": "syntax.variable",
     "JS.INSTANCE_MEMBER_FUNCTION": "syntax.function",
     "JS.LOCAL_VARIABLE": "syntax.variable",
     "JS.PARAMETER": "syntax.variable",
     "JS.REGEXP": "syntax.regex",
+    "JSP_DIRECTIVE_NAME": "syntax.keyword",
+    "LESS_VARIABLE": "syntax.variable",
+    "LINE_FULL_COVERAGE": "status.created",
+    "LINE_NONE_COVERAGE": "status.deleted",
+    "LINE_PARTIAL_COVERAGE": "status.warning",
+    "LOG_DEBUG_OUTPUT": "ui.muted",
+    "LOG_ERROR_OUTPUT": "status.error",
+    "LOG_EXPIRED_ENTRY": "status.unreachable",
+    "LOG_INFO_OUTPUT": "status.info",
+    "LOG_VERBOSE_OUTPUT": "ui.quiet",
+    "LOG_WARNING_OUTPUT": "status.warning",
+    "MARKDOWN_HEADER": "syntax.plain",
+    "NG.SIGNAL": "syntax.function",
     "NOT_USED_ELEMENT_ATTRIBUTES": "status.unreachable",
+    "PROPERTIES.KEY": "syntax.keyword",
+    "PROPERTIES.KEY_VALUE_SEPARATOR": "syntax.punctuation",
+    "RAINBOW_COLOR0": "syntax.function",
+    "RAINBOW_COLOR1": "syntax.keyword",
+    "RAINBOW_COLOR2": "syntax.string",
+    "RAINBOW_COLOR3": "syntax.type",
+    "RAINBOW_COLOR4": "syntax.constant",
+    "REGEXP.BRACES": "syntax.punctuation",
+    "REGEXP.BRACKETS": "syntax.punctuation",
+    "REGEXP.CHAR_CLASS": "syntax.constant",
+    "REGEXP.ESC_CHARACTER": "syntax.number",
+    "REGEXP.META": "syntax.keyword",
+    "REGEXP.PARENTHS": "syntax.punctuation",
+    "REGEXP.QUOTE_CHARACTER": "syntax.number",
+    "REGEXP.REDUNDANT_ESCAPE": "syntax.comment",
     "ReSharper.ASP_NET_RAZOR_TAG_HELPER_ATTRIBUTE": "syntax.attribute",
     "ReSharper.ASP_NET_RAZOR_TAG_HELPER_ELEMENT": "syntax.tag",
     "ReSharper.FORMAT_STRING_ITEM": "syntax.number",
     "ReSharper.FORMAT_STRING_ITEM_2": "syntax.number",
+    "ReSharper.ReSharper.ShaderLab_DISABLED_SHADER_KEYWORD": "status.unreachable",
+    "ReSharper.ReSharper.ShaderLab_IMPLICITLY_ENABLED_SHADER_KEYWORD": (
+        "syntax.keyword"
+    ),
     "ReSharper.STRING_ESCAPE_CHARACTER_2": "syntax.number",
+    "ReSharper.ST_METHOD": "syntax.function",
+    "ReSharper.ST_TYPE": "syntax.type",
+    "SASS_ATTRIBUTE": "syntax.variable",
+    "SASS_COMMENT": "syntax.comment",
+    "SASS_CONSTANT": "syntax.constant",
+    "SASS_DIRECTIVE": "syntax.keyword",
+    "SASS_MIXIN": "syntax.function",
+    "SASS_RULE": "syntax.tag",
+    "SASS_VARIABLE": "syntax.variable",
+    "SQL_SYNTHETIC_ENTITY": "syntax.type",
+    "STATIC_FIELD_ATTRIBUTES": "syntax.variable",
+    "STATIC_FINAL_FIELD_ATTRIBUTES": "syntax.constant",
+    "STATIC_METHOD_ATTRIBUTES": "syntax.function",
+    "Scala Type Alias": "syntax.type",
+    "Scala Type parameter": "syntax.type_parameter",
+    "Static method access": "syntax.function",
+    "TEMPLATE_VARIABLE_ATTRIBUTES": "syntax.constant",
     "TS.TYPE_PARAMETER": "syntax.type_parameter",
+    "TSCN_ATTRIBUTES": "syntax.attribute",
+    "TSCN_MEMBER_REF": "syntax.variable",
+    "TSCN_NODE_RESOURCE": "syntax.string",
+    "TSCN_NODE_TYPE": "syntax.type",
+    "TSCN_RES_STRING": "syntax.string",
+    "TSCN_STRING": "syntax.string",
     "TYPE_PARAMETER_NAME_ATTRIBUTES": "syntax.type_parameter",
+    "UNMATCHED_BRACE_ATTRIBUTES": "status.error",
+    "VELOCITY_DIRECTIVE": "syntax.attribute",
+    "VELOCITY_KEYWORD": "syntax.keyword",
+    "VELOCITY_REFERENCE": "syntax.variable",
     "WRONG_REFERENCES_ATTRIBUTES": "status.error",
     "XML_ATTRIBUTE_NAME": "syntax.attribute",
     "XML_CUSTOM_TAG_NAME": "syntax.tag",
@@ -384,9 +874,26 @@ JETBRAINS_FOREGROUNDS = {
     "XML_PROLOGUE": "syntax.attribute",
     "XML_TAG": "syntax.punctuation",
     "XML_TAG_NAME": "syntax.tag",
+    "XPATH.FUNCTION": "syntax.function",
+    "XPATH.KEYWORD": "syntax.keyword",
+    "XPATH.XPATH_NAME": "syntax.tag",
+    "XPATH.XPATH_VARIABLE": "syntax.variable",
+    "YAML_ANCHOR": "syntax.attribute",
+    "com.jetbrains.cmake.COMMAND": "syntax.function",
+    "osmorc.attributeName": "syntax.attribute",
+    "osmorc.directiveName": "syntax.keyword",
+    "osmorc.headerName": "syntax.keyword",
 }
 
+JETBRAINS_BOLD = {"BLOCK_TERMINAL_COMMAND", "MARKDOWN_HEADER"}
+
 JETBRAINS_ITALIC = {
+    "CONSOLE_USER_INPUT",
+    "CUSTOM_LINE_COMMENT_ATTRIBUTES",
+    "CUSTOM_MULTI_LINE_COMMENT_ATTRIBUTES",
+    "DEBUGGER_INLINED_VALUES",
+    "DEBUGGER_INLINED_VALUES_EXECUTION_LINE",
+    "DEBUGGER_INLINED_VALUES_MODIFIED",
     "DEFAULT_BLOCK_COMMENT",
     "DEFAULT_DOC_COMMENT",
     "DEFAULT_DOC_COMMENT_TAG",
@@ -395,14 +902,114 @@ JETBRAINS_ITALIC = {
     "DEFAULT_LINE_COMMENT",
     "DEFAULT_STATIC_FIELD",
     "DEFAULT_STATIC_METHOD",
+    "GD_COMMENT",
+    "GD_DOC_COMMENT",
+    "HAML_COMMENT",
     "JS.GLOBAL_VARIABLE",
+    "SASS_COMMENT",
+    "STATIC_FIELD_ATTRIBUTES",
+    "STATIC_FINAL_FIELD_ATTRIBUTES",
+    "STATIC_METHOD_ATTRIBUTES",
+    "Static method access",
 }
 
-JETBRAINS_DIAGNOSTICS = {
-    "ERRORS_ATTRIBUTES": "status.error",
-    "INFO_ATTRIBUTES": "status.hint",
-    "WARNING_ATTRIBUTES": "status.warning",
+JETBRAINS_BACKGROUNDS = {
+    "DEBUGGER_SMART_STEP_INTO_TARGET": "ui.highlight",
+    "DIFF_ABSENT": "ui.hover",
+    "EVALUATED_EXPRESSION_ATTRIBUTES": "ui.highlight",
+    "EVALUATED_EXPRESSION_EXECUTION_LINE_ATTRIBUTES": "ui.highlight",
+    "INLINE_STACK_FRAMES": "ui.element",
+    "NOT_TOP_FRAME_ATTRIBUTES": "ui.highlight",
+    "REGEXP_MATCHED_GROUPS": "ui.highlight",
+    "TERMINAL_COMMAND_TO_RUN_USING_IDE": "ui.highlight",
 }
+
+# A fill tinted from a palette colour, with that colour as its error stripe.
+JETBRAINS_TINTS = {
+    "BREAKPOINT_ATTRIBUTES": "error",
+    "DEBUGGER_PREDICTED_VALUE_FALSE": "error",
+    "DEBUGGER_PREDICTED_VALUE_FALSE_ALT": "error",
+    "DEBUGGER_PREDICTED_VALUE_TRUE": "success",
+    "DEBUGGER_PREDICTED_VALUE_TRUE_ALT": "success",
+    "DIFF_CONFLICT": "conflict",
+    "DIFF_DELETED": "deleted",
+    "DIFF_INSERTED": "created",
+    "DIFF_MODIFIED": "modified",
+    "EXECUTIONPOINT_ATTRIBUTES": "accent",
+    "ReSharper.UNITY_PERFORMANCE_COSTLY_METHOD_HIGHLIGHTER": "warning",
+}
+
+JETBRAINS_EFFECTS = {
+    "BAD_CHARACTER": ("status.error", JETBRAINS_EFFECT_WAVE),
+    "BLINKING_HIGHLIGHTS_ATTRIBUTES": ("ui.indent_active", JETBRAINS_EFFECT_BOXED),
+    "CODE_LENS_BORDER_COLOR": ("ui.border", JETBRAINS_EFFECT_BOXED),
+    "CONSOLE_RANGE_TO_EXECUTE": ("ui.accent", JETBRAINS_EFFECT_BOXED),
+    "DEBUGGER_PREDICTED_EXCEPTION": ("ui.accent", JETBRAINS_EFFECT_WAVE),
+    "DEBUGGER_PREDICTED_FLOW": ("ui.accent", JETBRAINS_EFFECT_BOXED),
+    "DEBUGGER_PREDICTED_SCOPE": ("ui.accent", JETBRAINS_EFFECT_WAVE),
+    "DEFAULT_HIGHLIGHTED_REFERENCE": ("ui.quiet", JETBRAINS_EFFECT_UNDERSCORE),
+    "DEFAULT_REASSIGNED_LOCAL_VARIABLE": ("ui.quiet", JETBRAINS_EFFECT_UNDERSCORE),
+    "DEFAULT_REASSIGNED_PARAMETER": ("ui.quiet", JETBRAINS_EFFECT_UNDERSCORE),
+    "DEPRECATED_ATTRIBUTES": ("ui.muted", JETBRAINS_EFFECT_STRIKEOUT),
+    "GRAMMAR_ERROR": ("status.error", JETBRAINS_EFFECT_WAVE),
+    "INACTIVE_HYPERLINK_ATTRIBUTES": ("ui.quiet", JETBRAINS_EFFECT_UNDERSCORE),
+    "LIVE_TEMPLATE_ATTRIBUTES": ("ui.accent", JETBRAINS_EFFECT_BOXED),
+    "LIVE_TEMPLATE_INACTIVE_SEGMENT": ("ui.invisible", JETBRAINS_EFFECT_BOXED),
+    "MARKED_FOR_REMOVAL_ATTRIBUTES": ("status.error", JETBRAINS_EFFECT_STRIKEOUT),
+    "ReSharper.UNITY_PERFORMANCE_CAMERA_MAIN": (
+        "status.warning",
+        JETBRAINS_EFFECT_UNDERSCORE,
+    ),
+    "ReSharper.UNITY_PERFORMANCE_COSTLY_METHOD_INVOCATION": (
+        "status.warning",
+        JETBRAINS_EFFECT_UNDERSCORE,
+    ),
+    "ReSharper.UNITY_PERFORMANCE_NULL_COMPARISON": (
+        "status.warning",
+        JETBRAINS_EFFECT_UNDERSCORE,
+    ),
+    "TERMINAL_CLASS_NAME_LOG_REFERENCE": ("ui.quiet", JETBRAINS_EFFECT_BOLD_DOTTED),
+    "TEXT_STYLE_ERROR": ("status.error", JETBRAINS_EFFECT_BOLD_DOTTED),
+    "TEXT_STYLE_SUGGESTION": ("status.info", JETBRAINS_EFFECT_BOLD_DOTTED),
+    "TEXT_STYLE_WARNING": ("status.warning", JETBRAINS_EFFECT_BOLD_DOTTED),
+    "TYPO": ("status.info", JETBRAINS_EFFECT_WAVE),
+}
+
+# Boxed in the given colour around hint text.
+JETBRAINS_INLAY_BUTTONS = {
+    "AI_INLAY_BUTTON_DEFAULT": "ui.accent",
+    "AI_INLAY_BUTTON_FOCUSED": "ui.accent",
+    "AI_INLAY_BUTTON_HOVERED": "ui.accent",
+    "INLAY_BUTTON_DEFAULT": "ui.border",
+    "INLAY_BUTTON_FOCUSED": "ui.indent_active",
+    "INLAY_BUTTON_HOVERED": "ui.indent_active",
+}
+
+# An effect in the severity's colour, which also marks the error stripe.
+JETBRAINS_DIAGNOSTICS = {
+    "ERRORS_ATTRIBUTES": ("status.error", JETBRAINS_EFFECT_WAVE),
+    "FILESTATUS_ERRORS": ("status.error", JETBRAINS_EFFECT_WAVE),
+    "GENERIC_SERVER_ERROR_OR_WARNING": ("status.warning", JETBRAINS_EFFECT_UNDERSCORE),
+    "INFO_ATTRIBUTES": ("status.hint", JETBRAINS_EFFECT_WAVE),
+    "RUNTIME_ERROR": ("status.error", JETBRAINS_EFFECT_BOLD_DOTTED),
+    "SUGGESTION": ("status.info", JETBRAINS_EFFECT_WAVE),
+    "WARNING_ATTRIBUTES": ("status.warning", JETBRAINS_EFFECT_WAVE),
+}
+
+JETBRAINS_STRIPES = {
+    "BOOKMARKS_ATTRIBUTES": "status.warning",
+    "DO_NOT_SHOW": "status.hint",
+    "NO_ANALYSIS": "ui.quiet",
+}
+
+# Empty drops the base scheme's fill, which would sit behind syntax text.
+JETBRAINS_CLEARED = [
+    "CONSOLE_OUTPUT",
+    "HAML_RUBY_CODE",
+    "INJECTED_LANGUAGE_FRAGMENT",
+    "TS.TYPE_GUARD",
+    "VELOCITY_SCRIPTING_BACKGROUND",
+]
 
 JETBRAINS_CONSOLE = {
     "normal": [
@@ -433,8 +1040,9 @@ def slug(palette: Palette) -> str:
 
 
 def palette_colour(palette: Palette, path: str) -> str:
-    group, key = path.split(".")
-    return palette[group][key]
+    group, key, *index = path.split(".")
+    value = palette[group][key]
+    return value[int(index[0])] if index else value
 
 
 def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
@@ -447,6 +1055,8 @@ def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
 
 def zed_style(palette: Palette) -> dict[str, Any]:
     ui, ansi, syntax = palette["ui"], palette["ansi"], palette["syntax"]
+    status, tints = palette["status"], palette["tint"]
+    thumb, hover_thumb = scrollbar_thumbs(palette)
     style = {
         "accents": ui["accents"],
         "background": ui["panel"],
@@ -456,15 +1066,23 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "border.selected": ui["accent"],
         "border.transparent": TRANSPARENT,
         "border.variant": ui["border_variant"],
+        "debugger.accent": status["error"],
+        "drop_target.background": ui["selection_overlay"],
+        "drop_target.border": ui["foreground"],
         "editor.active_line.background": ui["hover"],
         "editor.active_line_number": ui["foreground"],
+        "editor.active_wrap_guide": ui["border"],
         "editor.background": ui["background"],
+        "editor.debugger_active_line.background": tints["accent"],
+        "editor.diff_hunk.added.background": tints["created"],
+        "editor.diff_hunk.deleted.background": tints["deleted"],
         "editor.document_highlight.bracket_background": ui["highlight"],
         "editor.document_highlight.read_background": ui["highlight"],
         "editor.document_highlight.write_background": ui["highlight"],
         "editor.foreground": ui["foreground"],
         "editor.gutter.background": ui["background"],
         "editor.highlighted_line.background": ui["hover"],
+        "editor.hover_line_number": ui["foreground"],
         "editor.indent_guide": ui["indent"],
         "editor.indent_guide_active": ui["indent_active"],
         "editor.invisible": ui["invisible"],
@@ -473,13 +1091,17 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "editor.wrap_guide": ui["border"],
         "element.active": ui["selection"],
         "element.background": ui["element"],
+        "element.disabled": ui["element"],
         "element.hover": ui["hover"],
         "element.selected": ui["selection"],
         "elevated_surface.background": ui["background"],
         "ghost_element.active": ui["selection"],
         "ghost_element.background": TRANSPARENT,
+        "ghost_element.disabled": ui["element"],
         "ghost_element.hover": ui["hover"],
         "ghost_element.selected": ui["element"],
+        # The inlay hint pill, opaque like the other editors' so hint text keeps 4.5:1.
+        "hint.background": ui["element"],
         "icon": ui["foreground"],
         "icon.accent": ui["accent"],
         "icon.disabled": ui["quiet"],
@@ -492,15 +1114,11 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "panel.focused_border": ui["accent"],
         "panel.indent_guide": ui["indent"],
         "panel.indent_guide_active": ui["indent_active"],
-        "players": [
-            {
-                "background": ui["cursor"],
-                "cursor": ui["cursor"],
-                "selection": ui["selection_overlay"],
-            },
-        ],
-        "scrollbar.thumb.background": ui["indent_active"] + SCROLLBAR_ALPHA,
-        "scrollbar.thumb.hover_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "panel.indent_guide_hover": ui["indent_active"],
+        "players": zed_players(palette),
+        "scrollbar.thumb.active_background": hover_thumb,
+        "scrollbar.thumb.background": thumb,
+        "scrollbar.thumb.hover_background": hover_thumb,
         "scrollbar.track.background": TRANSPARENT,
         "scrollbar.track.border": TRANSPARENT,
         "search.active_match_background": ui["find_active"],
@@ -514,8 +1132,11 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "tab.active_background": ui["background"],
         "tab.inactive_background": ui["panel"],
         "tab_bar.background": ui["panel"],
+        "terminal.ansi.background": ui["background"],
+        "terminal.ansi.dim_white": ui["quiet"],
         "terminal.background": ui["background"],
         "terminal.bright_foreground": ansi["bright"][7],
+        "terminal.dim_foreground": ui["quiet"],
         "terminal.foreground": ui["foreground"],
         "text": ui["foreground"],
         "text.accent": ui["accent_strong"],
@@ -525,15 +1146,31 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "title_bar.background": ui["panel"],
         "title_bar.inactive_background": ui["panel"],
         "toolbar.background": ui["background"],
+        "version_control.conflict": status["conflict"],
+        "version_control.conflict_marker.ours": tints["created"],
+        "version_control.conflict_marker.theirs": tints["info"],
+        "version_control.word_added": tints["created"],
+        "version_control.word_deleted": tints["deleted"],
     }
-    for name, colour in palette["status"].items():
+    for name, colour in status.items():
         style[name] = colour
-        style[f"{name}.background"] = colour + "20"
+        style.setdefault(f"{name}.background", tints[name])
         style[f"{name}.border"] = colour
     for index, name in enumerate(ANSI_NAMES):
         style[f"terminal.ansi.{name}"] = ansi["normal"][index]
         style[f"terminal.ansi.bright_{name}"] = ansi["bright"][index]
+        style.setdefault(f"terminal.ansi.dim_{name}", ansi["normal"][index])
     return dict(sorted(style.items()))
+
+
+def zed_players(palette: Palette) -> list[dict[str, str]]:
+    ui = palette["ui"]
+    *others, agent = ui["accents"]
+    collaborators = [others[i % len(others)] for i in range(ZED_COLLABORATORS)]
+    return [
+        {"background": cursor, "cursor": cursor, "selection": ui["selection_overlay"]}
+        for cursor in [ui["cursor"], *collaborators, agent]
+    ]
 
 
 def zed_family(palettes: list[Palette]) -> dict[str, Any]:
@@ -557,6 +1194,11 @@ def ghostty(palette: Palette) -> str:
         f"cursor-text = {ui['background']}",
         f"selection-background = {ui['selection']}",
         f"selection-foreground = {ui['foreground']}",
+        f"search-background = {ui['find']}",
+        f"search-foreground = {ui['foreground']}",
+        f"search-selected-background = {ui['find_active_border']}",
+        f"search-selected-foreground = {ansi['normal'][0]}",
+        f"split-divider-color = {ui['border']}",
         "",
     ]
     colours = ansi["normal"] + ansi["bright"]
@@ -603,12 +1245,17 @@ def herdr(palettes: list[Palette]) -> str:
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 
 
-def oklch(hex_colour: str) -> tuple[float, float, float]:
+def linear_rgb(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
         return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
 
     r, g, b = (linear(hex_colour[i : i + 2]) for i in (1, 3, 5))
+    return r, g, b
+
+
+def oklch(hex_colour: str) -> tuple[float, float, float]:
+    r, g, b = linear_rgb(hex_colour)
     lms = (
         0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b,
         0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b,
@@ -701,7 +1348,15 @@ def netnewswire_info() -> str:
 
 
 def vscode_colours(palette: Palette) -> dict[str, str]:
-    ui, status, ansi = palette["ui"], palette["status"], palette["ansi"]
+    ui, status, syntax = palette["ui"], palette["status"], palette["syntax"]
+    ansi, tints = palette["ansi"], palette["tint"]
+    thumb, hover_thumb = scrollbar_thumbs(palette)
+
+    range_highlight = ui["selection"] + VSCODE_RANGE_ALPHA
+
+    def decoration(colour: str) -> str:
+        return translucent(colour, ui["hover"], VSCODE_DECORATION_ALPHA)
+
     colours = {
         "activityBar.background": ui["panel"],
         "activityBar.border": ui["border"],
@@ -709,30 +1364,90 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "activityBar.inactiveForeground": ui["quiet"],
         "activityBarBadge.background": ui["accent"],
         "activityBarBadge.foreground": ui["background"],
+        "activityBarTop.foreground": ui["foreground"],
+        "activityBarTop.inactiveForeground": ui["quiet"],
+        "activityErrorBadge.background": status["error"],
+        "activityErrorBadge.foreground": ui["background"],
+        "activityWarningBadge.background": status["warning"],
+        "activityWarningBadge.foreground": ui["background"],
         "badge.background": ui["element"],
         "badge.foreground": ui["foreground"],
         "button.background": ui["accent"],
         "button.foreground": ui["background"],
         "button.hoverBackground": ui["accent_strong"],
+        "commandCenter.activeBackground": ui["element"],
         "commandCenter.background": ui["hover"],
+        "debugExceptionWidget.background": tints["error"],
+        "debugExceptionWidget.border": status["error"],
+        "debugIcon.breakpointCurrentStackframeForeground": status["warning"],
+        "debugIcon.breakpointDisabledForeground": ui["quiet"],
+        "debugIcon.breakpointForeground": status["error"],
+        "debugIcon.breakpointStackframeForeground": status["success"],
+        "debugIcon.breakpointUnverifiedForeground": ui["quiet"],
+        "debugIcon.continueForeground": ui["accent"],
+        "debugIcon.disconnectForeground": status["error"],
+        "debugIcon.pauseForeground": ui["accent"],
+        "debugIcon.restartForeground": status["success"],
+        "debugIcon.startForeground": status["success"],
+        "debugIcon.stepBackForeground": ui["accent"],
+        "debugIcon.stepIntoForeground": ui["accent"],
+        "debugIcon.stepOutForeground": ui["accent"],
+        "debugIcon.stepOverForeground": ui["accent"],
+        "debugIcon.stopForeground": status["error"],
+        "debugTokenExpression.boolean": syntax["constant"],
+        "debugTokenExpression.error": status["error"],
+        "debugTokenExpression.name": syntax["variable"],
+        "debugTokenExpression.number": syntax["number"],
+        "debugTokenExpression.string": syntax["string"],
+        "debugTokenExpression.type": syntax["type"],
+        "debugTokenExpression.value": ui["muted"],
+        "debugToolBar.background": ui["element"],
+        "debugView.exceptionLabelBackground": status["error"],
+        "debugView.exceptionLabelForeground": ui["background"],
+        "debugView.stateLabelBackground": ui["element"],
+        "debugView.valueChangedHighlight": ui["accent"],
         "descriptionForeground": ui["muted"],
+        "diffEditor.diagonalFill": ui["border"],
+        "diffEditor.insertedLineBackground": decoration(tints["created"]),
+        "diffEditor.insertedTextBackground": TRANSPARENT,
+        "diffEditor.moveActive.border": status["warning"],
+        "diffEditor.removedLineBackground": decoration(tints["deleted"]),
+        "diffEditor.removedTextBackground": TRANSPARENT,
         "disabledForeground": ui["quiet"],
         "dropdown.background": ui["element"],
         "dropdown.border": ui["border"],
+        "dropdown.foreground": ui["foreground"],
         "editor.background": ui["background"],
         "editor.findMatchBackground": ui["find_active"],
         "editor.findMatchBorder": ui["find_active_border"],
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.findMatchHighlightBorder": ui["find_border"],
+        "editor.findRangeHighlightBackground": range_highlight,
+        "editor.focusedStackFrameHighlightBackground": decoration(tints["accent"]),
+        "editor.foldPlaceholderForeground": ui["quiet"],
         "editor.foreground": ui["foreground"],
+        "editor.hoverHighlightBackground": decoration(ui["highlight"]),
+        "editor.inlineValuesBackground": ui["element"],
+        "editor.inlineValuesForeground": status["hint"],
         "editor.lineHighlightBackground": ui["hover"],
-        "editor.rangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
+        "editor.lineHighlightBorder": ui["hover"],
+        "editor.linkedEditingBackground": decoration(ui["highlight"]),
+        "editor.rangeHighlightBackground": range_highlight,
         "editor.selectionBackground": ui["selection"],
+        "editor.snippetFinalTabstopHighlightBorder": ui["indent_active"],
+        "editor.snippetTabstopHighlightBackground": decoration(ui["highlight"]),
+        "editor.stackFrameHighlightBackground": decoration(ui["highlight"]),
+        "editor.wordHighlightBackground": decoration(ui["highlight"]),
+        "editor.wordHighlightStrongBackground": decoration(tints["keyword"]),
+        "editorBracketHighlight.unexpectedBracket.foreground": syntax["regex"],
         "editorBracketMatch.background": ui["highlight"],
         "editorBracketMatch.border": ui["indent_active"],
+        "editorCodeLens.foreground": status["hint"],
         "editorCursor.foreground": ui["cursor"],
         "editorError.foreground": status["error"],
+        "editorGhostText.foreground": status["predictive"],
         "editorGroup.border": ui["border"],
+        "editorGroup.dropBackground": ui["selection_overlay"],
         "editorGroupHeader.tabsBackground": ui["panel"],
         "editorGutter.addedBackground": status["created"],
         "editorGutter.background": ui["background"],
@@ -742,13 +1457,26 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editorIndentGuide.activeBackground1": ui["indent_active"],
         "editorIndentGuide.background1": ui["indent"],
         "editorInfo.foreground": status["info"],
+        "editorInlayHint.background": ui["element"],
+        "editorInlayHint.foreground": status["hint"],
+        "editorLightBulb.foreground": status["warning"],
+        "editorLightBulbAutoFix.foreground": status["info"],
         "editorLineNumber.activeForeground": ui["foreground"],
         "editorLineNumber.foreground": ui["quiet"],
+        "editorLink.activeForeground": syntax["link"],
+        "editorOverviewRuler.border": ui["border"],
+        "editorOverviewRuler.errorForeground": status["error"],
+        "editorOverviewRuler.findMatchForeground": ui["find_active_border"],
+        "editorOverviewRuler.rangeHighlightForeground": ui["accent"],
+        "editorOverviewRuler.wordHighlightStrongForeground": syntax["keyword"],
         "editorRuler.foreground": ui["border"],
+        "editorStickyScrollHover.background": ui["hover"],
+        "editorSuggestWidgetStatus.foreground": status["hint"],
         "editorWarning.foreground": status["warning"],
         "editorWhitespace.foreground": ui["invisible"],
         "editorWidget.background": ui["panel"],
         "editorWidget.border": ui["border"],
+        "errorForeground": status["error"],
         "focusBorder": ui["accent"],
         "foreground": ui["foreground"],
         "gitDecoration.addedResourceForeground": status["created"],
@@ -757,63 +1485,146 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "gitDecoration.ignoredResourceForeground": status["ignored"],
         "gitDecoration.modifiedResourceForeground": status["modified"],
         "gitDecoration.renamedResourceForeground": status["renamed"],
+        "gitDecoration.stageDeletedResourceForeground": status["deleted"],
+        "gitDecoration.stageModifiedResourceForeground": status["modified"],
+        "gitDecoration.submoduleResourceForeground": ui["accent_strong"],
         "gitDecoration.untrackedResourceForeground": status["created"],
+        "icon.foreground": ui["muted"],
         "input.background": ui["element"],
         "input.border": ui["border"],
         "input.placeholderForeground": ui["quiet"],
+        "inputOption.activeBorder": ui["accent"],
+        "inputOption.activeForeground": ui["foreground"],
+        "inputOption.hoverBackground": ui["selection"],
+        "inputValidation.errorBackground": ui["panel"],
+        "inputValidation.errorBorder": status["error"],
+        "inputValidation.infoBackground": ui["panel"],
+        "inputValidation.infoBorder": status["info"],
+        "inputValidation.warningBackground": ui["panel"],
+        "inputValidation.warningBorder": status["warning"],
+        "keybindingLabel.background": ui["element"],
+        "keybindingLabel.border": ui["border"],
+        "keybindingLabel.bottomBorder": ui["border"],
+        "keybindingLabel.foreground": ui["foreground"],
         "list.activeSelectionBackground": ui["selection"],
         "list.activeSelectionForeground": ui["foreground"],
+        "list.deemphasizedForeground": ui["quiet"],
+        "list.dropBackground": ui["highlight"],
         "list.errorForeground": status["error"],
         "list.focusOutline": ui["accent"],
         "list.highlightForeground": ui["accent_strong"],
         "list.hoverBackground": ui["hover"],
         "list.inactiveSelectionBackground": ui["element"],
+        "list.invalidItemForeground": status["warning"],
         "list.warningForeground": status["warning"],
+        "listFilterWidget.noMatchesOutline": status["error"],
+        "markdownAlert.important.foreground": syntax["keyword"],
+        "markdownAlert.tip.foreground": status["success"],
         "menu.background": ui["panel"],
         "menu.border": ui["border"],
+        "minimap.errorHighlight": status["error"],
+        "multiDiffEditor.border": ui["border"],
+        "multiDiffEditor.headerBackground": ui["panel"],
         "panel.background": ui["panel"],
         "panel.border": ui["border"],
+        "panelInput.border": ui["border"],
+        "panelSectionHeader.background": ui["panel"],
         "panelTitle.activeBorder": ui["accent"],
         "panelTitle.activeForeground": ui["foreground"],
         "panelTitle.inactiveForeground": ui["muted"],
+        "peekViewEditor.background": ui["panel"],
+        "peekViewEditor.matchHighlightBackground": ui["find"],
+        "peekViewResult.background": ui["panel"],
+        "peekViewResult.fileForeground": ui["foreground"],
+        "peekViewResult.lineForeground": ui["muted"],
+        "peekViewResult.matchHighlightBackground": ui["find"],
+        "peekViewResult.selectionBackground": ui["selection"],
+        "peekViewResult.selectionForeground": ui["foreground"],
+        "peekViewTitle.background": ui["panel"],
+        "peekViewTitleDescription.foreground": ui["muted"],
+        "peekViewTitleLabel.foreground": ui["foreground"],
+        "pickerGroup.border": ui["border"],
+        "pickerGroup.foreground": ui["accent"],
         "problemsErrorIcon.foreground": status["error"],
         "problemsInfoIcon.foreground": status["info"],
         "problemsWarningIcon.foreground": status["warning"],
+        "progressBar.background": ui["accent"],
         "quickInput.background": ui["panel"],
-        "scrollbarSlider.activeBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
-        "scrollbarSlider.background": ui["indent_active"] + SCROLLBAR_ALPHA,
-        "scrollbarSlider.hoverBackground": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
+        "quickInputTitle.background": ui["element"],
+        "scrollbarSlider.activeBackground": hover_thumb,
+        "scrollbarSlider.background": thumb,
+        "scrollbarSlider.hoverBackground": hover_thumb,
         "selection.background": ui["selection"],
+        "settings.headerForeground": ui["foreground"],
+        "settings.modifiedItemIndicator": status["modified"],
         "sideBar.background": ui["panel"],
         "sideBar.border": ui["border"],
         "sideBar.foreground": ui["foreground"],
         "sideBarSectionHeader.background": ui["panel"],
+        "simpleFindWidget.sashBorder": ui["border"],
         "statusBar.background": ui["panel"],
         "statusBar.border": ui["border"],
         "statusBar.debuggingBackground": status["warning"],
         "statusBar.debuggingForeground": ui["background"],
         "statusBar.foreground": ui["muted"],
         "statusBar.noFolderBackground": ui["panel"],
+        "statusBarItem.activeBackground": ui["selection"],
+        "statusBarItem.compactHoverBackground": ui["element"],
+        "statusBarItem.errorBackground": status["error"],
+        "statusBarItem.errorForeground": ui["background"],
+        "statusBarItem.hoverBackground": ui["element"],
+        "statusBarItem.offlineBackground": status["error"],
+        "statusBarItem.prominentBackground": ui["element"],
+        "statusBarItem.warningBackground": status["warning"],
+        "statusBarItem.warningForeground": ui["background"],
+        "strongForeground": ui["foreground"],
+        "symbolIcon.classForeground": syntax["type"],
+        "symbolIcon.constructorForeground": syntax["function"],
+        "symbolIcon.enumeratorForeground": syntax["type"],
+        "symbolIcon.enumeratorMemberForeground": syntax["constant"],
+        "symbolIcon.eventForeground": syntax["attribute"],
+        "symbolIcon.fieldForeground": syntax["variable"],
+        "symbolIcon.functionForeground": syntax["function"],
+        "symbolIcon.interfaceForeground": syntax["type"],
+        "symbolIcon.methodForeground": syntax["function"],
+        "symbolIcon.variableForeground": syntax["variable"],
         "tab.activeBackground": ui["background"],
         "tab.activeBorderTop": ui["accent"],
         "tab.activeForeground": ui["foreground"],
+        "tab.activeModifiedBorder": status["modified"],
         "tab.border": ui["border"],
         "tab.inactiveBackground": ui["panel"],
         "tab.inactiveForeground": ui["muted"],
+        "tab.unfocusedInactiveForeground": ui["quiet"],
         "terminal.background": ui["background"],
         "terminal.findMatchBackground": ui["find_terminal_active"],
         "terminal.findMatchBorder": ui["find_active_border"],
         "terminal.findMatchHighlightBackground": ui["find_terminal"],
         "terminal.findMatchHighlightBorder": ui["find_border"],
         "terminal.foreground": ui["foreground"],
+        "terminal.initialHintForeground": status["hint"],
         "terminal.selectionBackground": ui["selection"],
+        "terminalCommandDecoration.defaultBackground": ui["quiet"],
+        "terminalCommandDecoration.errorBackground": status["error"],
+        "terminalCommandDecoration.successBackground": status["info"],
         "terminalCursor.foreground": ui["cursor"],
+        "terminalStickyScrollHover.background": ui["hover"],
+        "textBlockQuote.background": ui["element"],
+        "textBlockQuote.border": ui["indent_active"],
+        "textCodeBlock.background": ui["highlight"],
         "textLink.activeForeground": ui["accent"],
         "textLink.foreground": ui["accent_strong"],
+        "textPreformat.background": ui["element"],
+        "textPreformat.foreground": ui["foreground"],
+        "textSeparator.foreground": ui["border"],
         "titleBar.activeBackground": ui["panel"],
         "titleBar.activeForeground": ui["foreground"],
         "titleBar.border": ui["border"],
         "titleBar.inactiveBackground": ui["panel"],
+        "titleBar.inactiveForeground": ui["quiet"],
+        "toolbar.hoverBackground": ui["element"],
+        "tree.indentGuidesStroke": ui["indent"],
+        "tree.tableColumnsBorder": ui["border"],
     }
     for index, accent in enumerate(ui["accents"], start=1):
         colours[f"editorBracketHighlight.foreground{index}"] = accent
@@ -872,6 +1683,18 @@ def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
     }
 
 
+def translucent(colour: str, ground: str, alpha: str) -> str:
+    weight = int(alpha, 16) / 255
+    channels = []
+    for i in (1, 3, 5):
+        c, g = int(colour[i : i + 2], 16), int(ground[i : i + 2], 16)
+        channel = round(g + (c - g) / weight)
+        if not 0 <= channel <= 255:
+            raise ValueError(f"{colour} isn't reachable over {ground} at alpha {alpha}")
+        channels.append(channel)
+    return "#" + "".join(f"{c:02x}" for c in channels) + alpha
+
+
 def opaque(colour: str, ground: str) -> str:
     if len(colour) == OPAQUE_HEX_LENGTH:
         return colour
@@ -886,22 +1709,99 @@ def opaque(colour: str, ground: str) -> str:
     return "#" + "".join(f"{c:02x}" for c in channels)
 
 
+def tint(palette: Palette, colour: str) -> str:
+    alpha = TINT_ALPHAS[palette["appearance"]]
+    return opaque(colour + alpha, palette["ui"]["background"])
+
+
+def with_tints(palette: Palette) -> Palette:
+    tints = {
+        name: tint(palette, palette_colour(palette, path))
+        for name, path in TINTS.items()
+    }
+    return palette | {"tint": tints}
+
+
+def luminance(hex_colour: str) -> float:
+    r, g, b = linear_rgb(hex_colour)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast(text: str, ground: str) -> float:
+    light, dark = sorted((luminance(text), luminance(ground)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
+
+
+def syntax_grounds(palette: Palette) -> dict[str, str]:
+    grounds = {f"ui.{key}": palette["ui"][key] for key in SYNTAX_GROUNDS}
+    return grounds | {
+        f"tint.{name}": colour for name, colour in palette["tint"].items()
+    }
+
+
+def contrast_failures(palette: Palette) -> list[str]:
+    pairs = [
+        (f"syntax.{role} on {name}", colour, ground)
+        for name, ground in syntax_grounds(palette).items()
+        for role, colour in palette["syntax"].items()
+    ]
+    pairs += [
+        (
+            f"{text} on {ground}",
+            palette_colour(palette, text),
+            palette_colour(palette, ground),
+        )
+        for text, ground in TEXT_PAIRS
+    ]
+    failures = []
+    for label, text, ground in pairs:
+        ratio = contrast(text, ground)
+        if ratio >= MINIMUM_CONTRAST:
+            continue
+        failures.append(f"{palette['name']}: {label} is {ratio:.2f}:1")
+    return failures
+
+
 def xml_text(root: ET.Element) -> str:
     ET.indent(root)
     return ET.tostring(root, encoding="unicode") + "\n"
 
 
 def jetbrains_theme(palette: Palette) -> dict[str, Any]:
+    ui = palette["ui"]
+    colours = {
+        token: palette_colour(palette, path)
+        for token, path in JETBRAINS_THEME_TOKENS.items()
+    }
+    colours["tab-file-color-mask-bg"] = (
+        ui["background"] + JETBRAINS_FILE_COLOUR_MASK_ALPHA
+    )
+    colours["toolbar-selected-bg-hovered"] = tint(palette, ui["accent_strong"])
+    overrides = {
+        key: palette_colour(palette, path) for key, path in JETBRAINS_UI.items()
+    }
+    overrides |= {key: ui["foreground"] for key in JETBRAINS_OFF_ACCENT_FOREGROUNDS}
+    overrides |= jetbrains_scrollbars(palette)
     return {
         "name": palette["name"],
         "dark": palette["appearance"] == "dark",
         "author": AUTHOR,
         "parentTheme": JETBRAINS_PARENT_THEMES[palette["appearance"]],
         "editorScheme": f"/{slug(palette)}.xml",
-        "colors": {
-            token: palette_colour(palette, path)
-            for token, path in JETBRAINS_THEME_TOKENS.items()
-        },
+        "colors": dict(sorted(colours.items())),
+        "ui": dict(sorted(overrides.items())),
+    }
+
+
+def scrollbar_thumbs(palette: Palette) -> tuple[str, str]:
+    ui = palette["ui"]
+    return ui["indent_active"] + SCROLLBAR_ALPHA, ui["muted"] + SCROLLBAR_HOVER_ALPHA
+
+
+def jetbrains_scrollbars(palette: Palette) -> dict[str, str]:
+    thumb, hover = scrollbar_thumbs(palette)
+    return {key: thumb for key in JETBRAINS_SCROLLBAR_THUMBS} | {
+        key: hover for key in JETBRAINS_SCROLLBAR_HOVER_THUMBS
     }
 
 
@@ -914,46 +1814,126 @@ def jetbrains_scheme(palette: Palette) -> str:
     def path_colour(path: str) -> str:
         return colour(palette_colour(palette, path))
 
+    def effect(
+        effect_colour: str, kind: str, foreground: str | None = None
+    ) -> dict[str, str]:
+        attributes = {"EFFECT_COLOR": effect_colour, "EFFECT_TYPE": kind}
+        if foreground is None:
+            return attributes
+        return attributes | {"FOREGROUND": foreground}
+
     link = path_colour("syntax.link")
-    keyword = palette["syntax"]["keyword"]
+    hyperlink = effect(link, JETBRAINS_EFFECT_UNDERSCORE, link)
     find = {
         "BACKGROUND": colour(ui["find"]),
         "ERROR_STRIPE_COLOR": colour(ui["find_active_border"]),
     }
+    terminal_find = {
+        "BACKGROUND": colour(ui["find"]),
+        "FOREGROUND": colour(ui["foreground"]),
+    }
+    hint = path_colour("status.hint")
+    inlay = {"BACKGROUND": colour(ui["element"]), "FOREGROUND": hint}
+    current_hint = {
+        "BACKGROUND": path_colour("tint.accent"),
+        "FOREGROUND": colour(ui["foreground"]),
+    }
+    invalid_escape = effect(
+        path_colour("status.error"), JETBRAINS_EFFECT_WAVE, path_colour("syntax.string")
+    )
+    unreachable = path_colour("status.unreachable")
+    struck_unreachable = effect(unreachable, JETBRAINS_EFFECT_STRIKEOUT, unreachable)
+    keyword = path_colour("syntax.keyword")
     attributes = {
-        "HYPERLINK_ATTRIBUTES": {
-            "EFFECT_COLOR": link,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
-            "FOREGROUND": link,
+        "BLOCK_TERMINAL_CURRENT_SEARCH_ENTRY": terminal_find
+        | {"BACKGROUND": colour(ui["find_active"])}
+        | effect(colour(ui["find_active_border"]), JETBRAINS_EFFECT_BOXED),
+        "BLOCK_TERMINAL_SEARCH_ENTRY": terminal_find,
+        "BREADCRUMBS_CURRENT": {
+            "BACKGROUND": colour(ui["element"]),
+            "FOREGROUND": colour(ui["foreground"]),
         },
+        "BREADCRUMBS_HOVERED": {
+            "BACKGROUND": colour(ui["hover"]),
+            "FOREGROUND": colour(ui["foreground"]),
+        },
+        "CTRL_CLICKABLE": hyperlink,
+        "CUSTOM_INVALID_STRING_ESCAPE_ATTRIBUTES": invalid_escape,
+        "DEBUGGER_SMART_STEP_INTO_SELECTION": {"BACKGROUND": colour(ui["selection"])}
+        | effect(colour(ui["accent"]), JETBRAINS_EFFECT_BOXED),
+        "DEBUGGER_UNREACHABLE_DECORATION": struck_unreachable,
+        "DEFAULT_INVALID_STRING_ESCAPE": invalid_escape,
+        "DELETED_TEXT_ATTRIBUTES": {"BACKGROUND": path_colour("tint.deleted")}
+        | effect(colour(ui["muted"]), JETBRAINS_EFFECT_STRIKEOUT, colour(ui["muted"])),
+        "DOC_TIPS_SHORTCUT": effect(
+            colour(ui["border"]), JETBRAINS_EFFECT_BOXED, colour(ui["muted"])
+        ),
+        "FOLDED_TEXT_ATTRIBUTES": {
+            "BACKGROUND": colour(ui["element"]),
+            "FOREGROUND": colour(ui["muted"]),
+        },
+        "FOLLOWED_HYPERLINK_ATTRIBUTES": hyperlink,
+        "HYPERLINK_ATTRIBUTES": hyperlink,
         "IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
             "BACKGROUND": colour(ui["element"]),
             "ERROR_STRIPE_COLOR": colour(ui["accent"]),
         },
+        "INLAY_DEFAULT": inlay,
+        "INLINE_PARAMETER_HINT": inlay,
+        "INLINE_PARAMETER_HINT_CURRENT": current_hint,
+        "INLINE_PARAMETER_HINT_HIGHLIGHTED": current_hint,
+        "MATCHED_BRACE_ATTRIBUTES": {"BACKGROUND": colour(ui["highlight"])}
+        | effect(colour(ui["indent_active"]), JETBRAINS_EFFECT_BOXED),
+        "PROPERTIES.INVALID_STRING_ESCAPE": invalid_escape,
+        "ReSharper.ReSharper.ShaderLab_ENABLED_SHADER_KEYWORD": effect(
+            keyword, JETBRAINS_EFFECT_UNDERSCORE, keyword
+        ),
+        "ReSharper.ReSharper.ShaderLab_SUPPRESSED_SHADER_KEYWORD": struck_unreachable,
         "SEARCH_RESULT_ATTRIBUTES": find,
+        "SQL_OUTER_QUERY_COLUMN": effect(
+            colour(ui["quiet"]),
+            JETBRAINS_EFFECT_UNDERSCORE,
+            path_colour("syntax.variable"),
+        ),
         "TEXT": {
             "BACKGROUND": colour(ui["background"]),
             "FOREGROUND": colour(ui["foreground"]),
         },
         "TEXT_SEARCH_RESULT_ATTRIBUTES": find,
-        # Empty drops the JavaScript plugin's green type-guard background.
-        "TS.TYPE_GUARD": {},
-        "WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
-            "BACKGROUND": colour(keyword + JETBRAINS_TINT_ALPHA),
-            "ERROR_STRIPE_COLOR": colour(keyword),
+        "TODO_DEFAULT_ATTRIBUTES": {
+            "ERROR_STRIPE_COLOR": colour(ui["accent"]),
+            "FONT_TYPE": JETBRAINS_FONT_ITALIC,
+            "FOREGROUND": path_colour("syntax.comment_emphasized"),
         },
+        "WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES": {
+            "BACKGROUND": path_colour("tint.keyword"),
+            "ERROR_STRIPE_COLOR": keyword,
+        },
+        "WRITE_SEARCH_RESULT_ATTRIBUTES": find,
     }
     for key, path in JETBRAINS_FOREGROUNDS.items():
         attributes[key] = {"FOREGROUND": path_colour(path)}
+        if key in JETBRAINS_BOLD:
+            attributes[key]["FONT_TYPE"] = JETBRAINS_FONT_BOLD
         if key in JETBRAINS_ITALIC:
             attributes[key]["FONT_TYPE"] = JETBRAINS_FONT_ITALIC
-    for key, path in JETBRAINS_DIAGNOSTICS.items():
-        severity = path_colour(path)
+    for key, path in JETBRAINS_BACKGROUNDS.items():
+        attributes[key] = {"BACKGROUND": path_colour(path)}
+    for key, name in JETBRAINS_TINTS.items():
         attributes[key] = {
-            "EFFECT_COLOR": severity,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_WAVE,
-            "ERROR_STRIPE_COLOR": severity,
+            "BACKGROUND": path_colour(f"tint.{name}"),
+            "ERROR_STRIPE_COLOR": path_colour(TINTS[name]),
         }
+    for key, (path, kind) in JETBRAINS_EFFECTS.items():
+        attributes[key] = effect(path_colour(path), kind)
+    for key, path in JETBRAINS_INLAY_BUTTONS.items():
+        attributes[key] = effect(path_colour(path), JETBRAINS_EFFECT_BOXED, hint)
+    for key, (path, kind) in JETBRAINS_DIAGNOSTICS.items():
+        severity = path_colour(path)
+        attributes[key] = effect(severity, kind) | {"ERROR_STRIPE_COLOR": severity}
+    for key, path in JETBRAINS_STRIPES.items():
+        attributes[key] = {"ERROR_STRIPE_COLOR": path_colour(path)}
+    attributes |= {key: {} for key in JETBRAINS_CLEARED}
     for shade, keys in JETBRAINS_CONSOLE.items():
         for key, value in zip(keys, palette["ansi"][shade], strict=True):
             attributes[key] = {"FOREGROUND": colour(value)}
@@ -972,6 +1952,13 @@ def jetbrains_scheme(palette: Palette) -> str:
     colours = ET.SubElement(scheme, "colors")
     for key, path in JETBRAINS_COLOURS.items():
         ET.SubElement(colours, "option", name=key, value=path_colour(path))
+    # The editor's scrollbar overlays text, so its thumbs keep their alpha.
+    for key, value in jetbrains_scrollbars(palette).items():
+        ET.SubElement(colours, "option", name=key, value=value[1:])
+    shades = ui["accents"][:JETBRAINS_VCS_ANNOTATION_SHADES]
+    for index, accent in enumerate(shades, start=1):
+        name = f"VCS_ANNOTATIONS_COLOR_{index}"
+        ET.SubElement(colours, "option", name=name, value=colour(tint(palette, accent)))
     # Empty keeps syntax colours in a selection, where the Default parent paints it white.
     ET.SubElement(colours, "option", name="SELECTION_FOREGROUND", value="")
     options = ET.SubElement(scheme, "attributes")
@@ -1084,8 +2071,11 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 def main() -> None:
     palettes = [
-        tomllib.loads(p.read_text()) for p in sorted((ROOT / "palettes").glob("*.toml"))
+        with_tints(tomllib.loads(p.read_text()))
+        for p in sorted((ROOT / "palettes").glob("*.toml"))
     ]
+    if failures := [f for p in palettes for f in contrast_failures(p)]:
+        raise SystemExit("\n".join(failures))
     write(ROOT / "herdr" / "geist.toml", herdr(palettes))
     write(ROOT / "jetbrains" / "META-INF" / "plugin.xml", jetbrains_plugin(palettes))
     bundle = ROOT / "netnewswire" / f"{FAMILY}.nnwtheme"

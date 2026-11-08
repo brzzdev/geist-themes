@@ -38,6 +38,38 @@
     "palette": {
       "colorGranularity": "expanded",
       "colorOverrides": [
+        "codeFoldingRibbon",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.0
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 0.0
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.177638
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
         "comment",
         {
           "color": {
@@ -102,6 +134,38 @@
             }
           }
         },
+        "consoleBackground",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.0
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 0.0
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.0
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
         "currentLineHighlight",
         {
           "color": {
@@ -125,6 +189,102 @@
                     "kind": {
                       "exact": {
                         "_0": 0.177638
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
+        "debugger",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.151316
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 4.372147
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.7195
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
+        "diffAddition",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.142254
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 2.58325
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.733882
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
+        "diffDeletion",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.19334
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 0.401881
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.625565
                       }
                     }
                   },
@@ -317,6 +477,38 @@
                     "kind": {
                       "exact": {
                         "_0": 0.705757
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
+        "markdownEmphasized",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.0
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 0.0
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.946105
                       }
                     }
                   },
@@ -989,6 +1181,38 @@
                     "kind": {
                       "exact": {
                         "_0": 0.740031
+                      }
+                    }
+                  },
+                  "opacity": 1
+                }
+              }
+            }
+          }
+        },
+        "scopeGuides",
+        {
+          "color": {
+            "_0": {
+              "wrapped": {
+                "oklch": {
+                  "chroma": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.0
+                      }
+                    }
+                  },
+                  "gamut": {
+                    "P3": {}
+                  },
+                  "hue": {
+                    "radiansValue": 0.0
+                  },
+                  "lightness": {
+                    "kind": {
+                      "exact": {
+                        "_0": 0.390421
                       }
                     }
                   },
