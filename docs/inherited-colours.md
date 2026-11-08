@@ -297,7 +297,7 @@ Audited against Xcode 27.2. A recipe accepts 41 override tokens, and Geist sets 
 | **Not targeted**: Geist ships one recipe per appearance | `darkPalette`, `lightPalette`, `showsInAllColorSchemes` |
 | **Not targeted**: presets in the editor's hue picker, not surfaces | `tintHueOverrides` `accent`, `blue`, `brown`, `cyan`, `darkBlue`, `golden`, `green`, `indigo`, `magenta`, `mint`, `orange`, `pink`, `red`, `steel`, `swift`, `systemPurple`, `teal`, `xcodePurple`, `yellow` |
 | **Fixed**: below 4.5:1, see ADR 0004 | line numbers (`sourceTextSidebarNumbersColor`) |
-| **Fixed**: behind syntax text, not yet measured, see ADR 0004 | inactive selection and symbol highlight (`sourceTextInactiveSelectionColor`) |
+| **Fixed**: behind syntax text, which in Geist Light falls below 4.5:1 for comments and types, see ADR 0004 | inactive selection and symbol highlight (`sourceTextInactiveSelectionColor`) |
 | **Fixed**: they measure as `ui.background` and `ui.foreground` | caret-row line number, gutter (`sourceTextSidebarBackgroundColor`) |
 | **Fixed**: not yet measured, see ADR 0004 | accent, dividers, gutter edge, inline code in Markdown, quaternary and quinary fills |
 
