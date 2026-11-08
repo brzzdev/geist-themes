@@ -16,7 +16,7 @@ FAMILY = "Geist"
 REPOSITORY_URL = "https://github.com/brzzdev/geist-themes"
 SCROLLBAR_ALPHA = "50"
 SCROLLBAR_HOVER_ALPHA = "80"
-# The strongest tint of a status colour behind which every syntax role keeps 4.5:1.
+# Fills behind syntax text: see docs/adr/0003-tinted-fills-behind-syntax.md.
 TINT_ALPHAS = {"dark": "33", "light": "1a"}
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
@@ -330,6 +330,7 @@ JETBRAINS_THEME_TOKENS = {
     "container-popup-bg-inline": "ui.panel",
     "container-popup-border": "ui.border",
     "container-popup-border-inline": "ui.border",
+    "container-popup-border-windows": "ui.border",
     "container-tool-window-bg": "ui.panel",
     "container-tool-window-bg-alt": "ui.panel",
     "container-tool-window-bg-inline": "ui.hover",

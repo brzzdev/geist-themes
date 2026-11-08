@@ -37,6 +37,7 @@
     "container-popup-bg-inline": "#ffffff",
     "container-popup-border": "#ebebeb",
     "container-popup-border-inline": "#ebebeb",
+    "container-popup-border-windows": "#ebebeb",
     "container-tool-window-bg": "#ffffff",
     "container-tool-window-bg-alt": "#ffffff",
     "container-tool-window-bg-inline": "#f2f2f2",

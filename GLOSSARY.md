@@ -20,3 +20,6 @@ _Avoid_: Indent line
 
 **Syntax role**:
 A kind of source text that the palette gives its own colour, such as a comment, keyword or string.
+
+**Tint**:
+A status, accent or keyword colour composited over the background at the appearance's tint alpha, used for a fill behind syntax text.
