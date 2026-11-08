@@ -20,7 +20,7 @@ SCROLLBAR_HOVER_ALPHA = "80"
 TINT_ALPHAS = {"dark": "33", "light": "1a"}
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
-# The players between yours and the agent's, which Zed keeps last; it fills any omitted with its own.
+# The players between yours and the agent's, which Zed keeps last.
 ZED_COLLABORATORS = 6
 OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
@@ -37,8 +37,20 @@ CARD_ROLE_BASELINE = 13
 CARD_ROW_HEIGHT = 44
 CARD_SWATCH = 32
 
-# Every syntax role reaches 4.5:1 on these, as do hint and inactive text on their grounds.
+# Every syntax role reaches 4.5:1 on these grounds, and each text colour here on its own.
 MINIMUM_CONTRAST = 4.5
+TEXT_PAIRS = [
+    ("ansi.normal.0", "ui.find_active_border"),
+    ("status.hint", "ui.background"),
+    ("status.hint", "ui.element"),
+    ("status.hint", "ui.hover"),
+    ("status.predictive", "ui.background"),
+    ("status.predictive", "ui.hover"),
+    ("ui.foreground", "tint.accent"),
+    ("ui.quiet", "ui.background"),
+    ("ui.quiet", "ui.element"),
+    ("ui.quiet", "ui.panel"),
+]
 SYNTAX_GROUNDS = [
     "background",
     "element",
@@ -68,17 +80,6 @@ TINTS = {
     "unreachable": "status.unreachable",
     "warning": "status.warning",
 }
-HINT_PAIRS = [
-    ("status.hint", "ui.background"),
-    ("status.hint", "ui.element"),
-    ("status.hint", "ui.hover"),
-    ("status.predictive", "ui.background"),
-    ("status.predictive", "ui.hover"),
-    ("ui.foreground", "tint.accent"),
-    ("ui.quiet", "ui.background"),
-    ("ui.quiet", "ui.element"),
-    ("ui.quiet", "ui.panel"),
-]
 
 type Palette = dict[str, Any]
 
@@ -196,7 +197,8 @@ XCODE_OVERRIDES = {
 
 # The selection colour at this alpha keeps syntax at or above its contrast on the selection.
 VSCODE_RANGE_ALPHA = "60"
-# VS Code draws decorations over the selection, so their fills stay translucent.
+# VS Code draws decorations over the selection and the cursor line, so their fills stay
+# translucent and land on their checked colour over the cursor line, fainter elsewhere.
 VSCODE_DECORATION_ALPHA = "80"
 VSCODE_UI_THEMES = {"dark": "vs-dark", "light": "vs"}
 
@@ -518,8 +520,6 @@ JETBRAINS_UI = {
     "Review.State.Background": "ui.element",
     "Review.State.Foreground": "ui.muted",
     "RunWidget.foreground": "ui.foreground",
-    "RunWidget.hoverBackground": "ui.hover",
-    "RunWidget.pressedBackground": "ui.selection",
     "Slider.buttonBorderColor": "ui.border",
     "Slider.buttonColor": "ui.muted",
     "Slider.tickColor": "ui.quiet",
@@ -566,7 +566,6 @@ JETBRAINS_OFF_ACCENT_FOREGROUNDS = [
     "PresentationAssistant.Bright.Popup.foreground",
     "PresentationAssistant.Pale.Popup.foreground",
     "SearchEverywhere.Tab.selectedForeground",
-    "ToolWindow.Button.selectedForeground",
     "Tooltip.Learning.iconBorderColor",
 ]
 
@@ -1038,8 +1037,9 @@ def slug(palette: Palette) -> str:
 
 
 def palette_colour(palette: Palette, path: str) -> str:
-    group, key = path.split(".")
-    return palette[group][key]
+    group, key, *index = path.split(".")
+    value = palette[group][key]
+    return value[int(index[0])] if index else value
 
 
 def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
@@ -1350,7 +1350,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
     thumb, hover_thumb = scrollbar_thumbs(palette)
 
     def decoration(colour: str) -> str:
-        return translucent(colour, ui["background"], VSCODE_DECORATION_ALPHA)
+        return translucent(colour, ui["hover"], VSCODE_DECORATION_ALPHA)
 
     colours = {
         "activityBar.background": ui["panel"],
@@ -1682,12 +1682,13 @@ def vscode_manifest(palettes: list[Palette]) -> dict[str, Any]:
 
 def translucent(colour: str, ground: str, alpha: str) -> str:
     weight = int(alpha, 16) / 255
-    channels = (
-        min(255, max(0, round(g + (c - g) / weight)))
-        for c, g in (
-            (int(colour[i : i + 2], 16), int(ground[i : i + 2], 16)) for i in (1, 3, 5)
-        )
-    )
+    channels = []
+    for i in (1, 3, 5):
+        c, g = int(colour[i : i + 2], 16), int(ground[i : i + 2], 16)
+        channel = round(g + (c - g) / weight)
+        if not 0 <= channel <= 255:
+            raise ValueError(f"{colour} isn't reachable over {ground} at alpha {alpha}")
+        channels.append(channel)
     return "#" + "".join(f"{c:02x}" for c in channels) + alpha
 
 
@@ -1747,7 +1748,7 @@ def contrast_failures(palette: Palette) -> list[str]:
             palette_colour(palette, text),
             palette_colour(palette, ground),
         )
-        for text, ground in HINT_PAIRS
+        for text, ground in TEXT_PAIRS
     ]
     failures = []
     for label, text, ground in pairs:
@@ -1973,6 +1974,7 @@ def jetbrains_scheme(palette: Palette) -> str:
     colours = ET.SubElement(scheme, "colors")
     for key, path in JETBRAINS_COLOURS.items():
         ET.SubElement(colours, "option", name=key, value=path_colour(path))
+    # The editor's scrollbar overlays text, so its thumbs keep their alpha.
     for key, value in jetbrains_scrollbars(palette).items():
         ET.SubElement(colours, "option", name=key, value=value[1:])
     shades = ui["accents"][:JETBRAINS_VCS_ANNOTATION_SHADES]
