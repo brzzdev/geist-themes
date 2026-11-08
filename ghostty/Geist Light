@@ -4,6 +4,11 @@ cursor-color = #24292f
 cursor-text = #fbfbfa
 selection-background = #e6ebf1
 selection-foreground = #24292f
+search-background = #fce9bb
+search-foreground = #24292f
+search-selected-background = #ffb200
+search-selected-foreground = #24292f
+split-divider-color = #ebebeb
 
 palette = 0=#24292f
 palette = 1=#cf2f36

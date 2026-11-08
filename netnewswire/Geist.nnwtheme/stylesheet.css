@@ -5,6 +5,7 @@
 	--border: #2e2e2e;
 	--border-variant: #1a1a1a;
 	--code-background: #1a1a1a;
+	--find: #1d1301;
 	--foreground: #ededed;
 	--link: #97c9fe;
 	--muted: #a0a0a0;
@@ -21,6 +22,7 @@
 		--border: #ebebeb;
 		--border-variant: #f2f2f2;
 		--code-background: #ebebeb;
+		--find: #fce9bb;
 		--foreground: #24292f;
 		--link: #124a8c;
 		--muted: #4f5359;
@@ -221,6 +223,10 @@ a code {
 	margin-bottom: 0;
 }
 
+.nnw-overflow :is(table, td, th) {
+	border-color: var(--border);
+}
+
 .nnw-overflow td,
 .nnw-overflow th {
 	padding: 8px 11px;
@@ -287,6 +293,11 @@ figcaption {
 hr {
 	border: none;
 	border-top: 1px solid var(--border);
+}
+
+mark {
+	background: var(--find);
+	color: var(--foreground);
 }
 
 sup {
