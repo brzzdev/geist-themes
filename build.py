@@ -20,6 +20,8 @@ SCROLLBAR_HOVER_ALPHA = "80"
 TINT_ALPHAS = {"dark": "33", "light": "1a"}
 TRANSPARENT = "#00000000"
 ZED_SCHEMA = "https://zed.dev/schema/themes/v0.2.0.json"
+# Zed keeps its own players past the ones a theme gives; the last is the agent.
+ZED_PLAYERS = 8
 OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
@@ -76,23 +78,32 @@ ZED_SYNTAX = {
     "boolean": ("constant", None),
     "comment": ("comment", "italic"),
     "comment.doc": ("comment", "italic"),
+    "concept": ("type", None),
     "constant": ("constant", None),
     "constructor": ("type", None),
+    "diff.delta": ("function", None),
+    "diff.minus": ("tag", None),
+    "diff.plus": ("string", None),
     "emphasis": ("plain", "italic"),
     "emphasis.strong": ("plain", "bold"),
     "enum": ("type", None),
     "function": ("function", None),
+    "function.builtin": ("function_system", None),
     "function.macro": ("attribute", None),
     "keyword": ("keyword", None),
     "label": ("attribute", None),
+    "lifetime": ("type_parameter", None),
     "link_text": ("link", None),
     "link_uri": ("link", None),
+    "markup.heading": ("plain", "bold"),
+    "module": ("namespace", None),
     "namespace": ("namespace", None),
     "number": ("number", None),
     "operator": ("punctuation", None),
     "preproc": ("attribute", None),
     "property": ("variable", None),
     "punctuation": ("punctuation", None),
+    "selector": ("attribute", None),
     "string": ("string", None),
     "string.escape": ("number", None),
     "string.regex": ("regex", None),
@@ -102,9 +113,12 @@ ZED_SYNTAX = {
     "text.literal": ("literal", None),
     "title": ("plain", "bold"),
     "type": ("type", None),
+    "type.builtin": ("type_system", None),
     "type.parameter": ("type_parameter", None),
     "variable": ("variable", None),
+    "variable.builtin": ("keyword", None),
     "variable.parameter": ("variable", None),
+    "variable.special": ("keyword", None),
     "variant": ("constant", None),
 }
 
@@ -997,6 +1011,7 @@ def zed_syntax_style(colour: str, style: str | None) -> dict[str, Any]:
 
 def zed_style(palette: Palette) -> dict[str, Any]:
     ui, ansi, syntax = palette["ui"], palette["ansi"], palette["syntax"]
+    status = palette["status"]
     style = {
         "accents": ui["accents"],
         "background": ui["panel"],
@@ -1008,7 +1023,10 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "border.variant": ui["border_variant"],
         "editor.active_line.background": ui["hover"],
         "editor.active_line_number": ui["foreground"],
+        "editor.active_wrap_guide": ui["border"],
         "editor.background": ui["background"],
+        "editor.diff_hunk.added.background": tint(palette, status["created"]),
+        "editor.diff_hunk.deleted.background": tint(palette, status["deleted"]),
         "editor.document_highlight.bracket_background": ui["highlight"],
         "editor.document_highlight.read_background": ui["highlight"],
         "editor.document_highlight.write_background": ui["highlight"],
@@ -1042,13 +1060,9 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "panel.focused_border": ui["accent"],
         "panel.indent_guide": ui["indent"],
         "panel.indent_guide_active": ui["indent_active"],
-        "players": [
-            {
-                "background": ui["cursor"],
-                "cursor": ui["cursor"],
-                "selection": ui["selection_overlay"],
-            },
-        ],
+        "panel.indent_guide_hover": ui["indent_active"],
+        "players": zed_players(palette),
+        "scrollbar.thumb.active_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
         "scrollbar.thumb.background": ui["indent_active"] + SCROLLBAR_ALPHA,
         "scrollbar.thumb.hover_background": ui["muted"] + SCROLLBAR_HOVER_ALPHA,
         "scrollbar.track.background": TRANSPARENT,
@@ -1064,8 +1078,10 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "tab.active_background": ui["background"],
         "tab.inactive_background": ui["panel"],
         "tab_bar.background": ui["panel"],
+        "terminal.ansi.background": ui["background"],
         "terminal.background": ui["background"],
         "terminal.bright_foreground": ansi["bright"][7],
+        "terminal.dim_foreground": ui["quiet"],
         "terminal.foreground": ui["foreground"],
         "text": ui["foreground"],
         "text.accent": ui["accent_strong"],
@@ -1075,15 +1091,34 @@ def zed_style(palette: Palette) -> dict[str, Any]:
         "title_bar.background": ui["panel"],
         "title_bar.inactive_background": ui["panel"],
         "toolbar.background": ui["background"],
+        "version_control.conflict": status["conflict"],
+        "version_control.conflict_marker.ours": tint(palette, status["created"]),
+        "version_control.conflict_marker.theirs": tint(palette, status["info"]),
+        "version_control.word_added": tint(palette, status["created"]),
+        "version_control.word_deleted": tint(palette, status["deleted"]),
     }
     for name, colour in palette["status"].items():
         style[name] = colour
-        style[f"{name}.background"] = colour + "20"
+        style[f"{name}.background"] = tint(palette, colour)
         style[f"{name}.border"] = colour
+    # The inlay hint pill, opaque like the other editors' so hint text keeps 4.5:1.
+    style["hint.background"] = ui["element"]
     for index, name in enumerate(ANSI_NAMES):
         style[f"terminal.ansi.{name}"] = ansi["normal"][index]
         style[f"terminal.ansi.bright_{name}"] = ansi["bright"][index]
+        style[f"terminal.ansi.dim_{name}"] = ansi["normal"][index]
+    style["terminal.ansi.dim_white"] = ui["quiet"]
     return dict(sorted(style.items()))
+
+
+def zed_players(palette: Palette) -> list[dict[str, str]]:
+    ui = palette["ui"]
+    *others, agent = ui["accents"]
+    collaborators = [others[i % len(others)] for i in range(ZED_PLAYERS - 2)]
+    return [
+        {"background": cursor, "cursor": cursor, "selection": ui["selection_overlay"]}
+        for cursor in [ui["cursor"], *collaborators, agent]
+    ]
 
 
 def zed_family(palettes: list[Palette]) -> dict[str, Any]:
