@@ -71,12 +71,12 @@
     <option name="READONLY_FRAGMENT_BACKGROUND" value="1f1f1f" />
     <option name="RECENT_LOCATIONS_SELECTION" value="262626" />
     <option name="RIGHT_MARGIN_COLOR" value="2e2e2e" />
-    <option name="ScrollBar.background" value="000000" />
     <option name="SELECTED_INDENT_GUIDE" value="8f8f8f" />
     <option name="SELECTED_TEARLINE_COLOR" value="8f8f8f" />
     <option name="SELECTION_BACKGROUND" value="262626" />
     <option name="SOFT_WRAP_SIGN_COLOR" value="454545" />
     <option name="STRING_CONTENT_INDENT_GUIDE" value="454545" />
+    <option name="ScrollBar.background" value="000000" />
     <option name="TEARLINE_COLOR" value="2e2e2e" />
     <option name="Table.hoverBackground" value="111111" />
     <option name="VISUAL_INDENT_GUIDE" value="454545" />

@@ -100,6 +100,7 @@
     "popup-bg-inline": "#0a0a0a",
     "popup-border": "#2e2e2e",
     "popup-border-inline": "#2e2e2e",
+    "popup-border-windows": "#2e2e2e",
     "popup-completion-match-text": "#97c9fe",
     "presentation-assistant-bg": "#1a1a1a",
     "search-match-bg": "#f1a10d",

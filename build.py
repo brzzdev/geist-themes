@@ -37,8 +37,8 @@ CARD_ROLE_BASELINE = 13
 CARD_ROW_HEIGHT = 44
 CARD_SWATCH = 32
 
-# Every syntax role reaches 4.5:1 on these grounds, and each text colour here on its own.
 MINIMUM_CONTRAST = 4.5
+# Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
     ("ansi.normal.0", "ui.find_active_border"),
     ("status.hint", "ui.background"),
@@ -51,6 +51,7 @@ TEXT_PAIRS = [
     ("ui.quiet", "ui.element"),
     ("ui.quiet", "ui.panel"),
 ]
+# Every syntax role reaches the minimum on these, and on every tint.
 SYNTAX_GROUNDS = [
     "background",
     "element",
@@ -61,7 +62,7 @@ SYNTAX_GROUNDS = [
     "panel",
     "selection",
 ]
-# The colours a palette's `tint` group composites behind syntax text.
+# The colours a palette's `tint` group composites over its background.
 TINTS = {
     "accent": "ui.accent",
     "conflict": "status.conflict",
@@ -414,6 +415,7 @@ JETBRAINS_THEME_TOKENS = {
     "popup-bg-inline": "ui.panel",
     "popup-border": "ui.border",
     "popup-border-inline": "ui.border",
+    "popup-border-windows": "ui.border",
     "popup-completion-match-text": "ui.accent_strong",
     "presentation-assistant-bg": "ui.element",
     "search-match-bg": "ui.find_active_border",
@@ -641,12 +643,12 @@ JETBRAINS_COLOURS = {
     "READONLY_FRAGMENT_BACKGROUND": "ui.highlight",
     "RECENT_LOCATIONS_SELECTION": "ui.selection",
     "RIGHT_MARGIN_COLOR": "ui.border",
-    "ScrollBar.background": "ui.background",
     "SELECTED_INDENT_GUIDE": "ui.indent_active",
     "SELECTED_TEARLINE_COLOR": "ui.indent_active",
     "SELECTION_BACKGROUND": "ui.selection",
     "SOFT_WRAP_SIGN_COLOR": "ui.invisible",
     "STRING_CONTENT_INDENT_GUIDE": "ui.indent",
+    "ScrollBar.background": "ui.background",
     "TEARLINE_COLOR": "ui.border",
     "Table.hoverBackground": "ui.hover",
     "VISUAL_INDENT_GUIDE": "ui.indent",
@@ -834,9 +836,9 @@ JETBRAINS_FOREGROUNDS = {
     "ReSharper.ReSharper.ShaderLab_IMPLICITLY_ENABLED_SHADER_KEYWORD": (
         "syntax.keyword"
     ),
+    "ReSharper.STRING_ESCAPE_CHARACTER_2": "syntax.number",
     "ReSharper.ST_METHOD": "syntax.function",
     "ReSharper.ST_TYPE": "syntax.type",
-    "ReSharper.STRING_ESCAPE_CHARACTER_2": "syntax.number",
     "SASS_ATTRIBUTE": "syntax.variable",
     "SASS_COMMENT": "syntax.comment",
     "SASS_CONSTANT": "syntax.constant",
@@ -1349,6 +1351,8 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
     ansi, tints = palette["ansi"], palette["tint"]
     thumb, hover_thumb = scrollbar_thumbs(palette)
 
+    range_highlight = ui["selection"] + VSCODE_RANGE_ALPHA
+
     def decoration(colour: str) -> str:
         return translucent(colour, ui["hover"], VSCODE_DECORATION_ALPHA)
 
@@ -1419,7 +1423,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.findMatchBorder": ui["find_active_border"],
         "editor.findMatchHighlightBackground": ui["find"],
         "editor.findMatchHighlightBorder": ui["find_border"],
-        "editor.findRangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
+        "editor.findRangeHighlightBackground": range_highlight,
         "editor.focusedStackFrameHighlightBackground": decoration(tints["accent"]),
         "editor.foldPlaceholderForeground": ui["quiet"],
         "editor.foreground": ui["foreground"],
@@ -1429,7 +1433,7 @@ def vscode_colours(palette: Palette) -> dict[str, str]:
         "editor.lineHighlightBackground": ui["hover"],
         "editor.lineHighlightBorder": ui["hover"],
         "editor.linkedEditingBackground": decoration(ui["highlight"]),
-        "editor.rangeHighlightBackground": ui["selection"] + VSCODE_RANGE_ALPHA,
+        "editor.rangeHighlightBackground": range_highlight,
         "editor.selectionBackground": ui["selection"],
         "editor.snippetFinalTabstopHighlightBorder": ui["indent_active"],
         "editor.snippetTabstopHighlightBackground": decoration(ui["highlight"]),
@@ -1811,14 +1815,14 @@ def jetbrains_scheme(palette: Palette) -> str:
     def path_colour(path: str) -> str:
         return colour(palette_colour(palette, path))
 
-    def underlined(value: str) -> dict[str, str]:
-        return {
-            "EFFECT_COLOR": value,
-            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
-            "FOREGROUND": value,
-        }
+    def effect(value: str, kind: str, foreground: str | None = None) -> dict[str, str]:
+        attributes = {"EFFECT_COLOR": value, "EFFECT_TYPE": kind}
+        if foreground is None:
+            return attributes
+        return attributes | {"FOREGROUND": foreground}
 
-    hyperlink = underlined(path_colour("syntax.link"))
+    link = path_colour("syntax.link")
+    hyperlink = effect(link, JETBRAINS_EFFECT_UNDERSCORE, link)
     find = {
         "BACKGROUND": colour(ui["find"]),
         "ERROR_STRIPE_COLOR": colour(ui["find_active_border"]),
@@ -1833,25 +1837,16 @@ def jetbrains_scheme(palette: Palette) -> str:
         "BACKGROUND": path_colour("tint.accent"),
         "FOREGROUND": colour(ui["foreground"]),
     }
-    invalid_escape = {
-        "EFFECT_COLOR": path_colour("status.error"),
-        "EFFECT_TYPE": JETBRAINS_EFFECT_WAVE,
-        "FOREGROUND": path_colour("syntax.string"),
-    }
+    invalid_escape = effect(
+        path_colour("status.error"), JETBRAINS_EFFECT_WAVE, path_colour("syntax.string")
+    )
     unreachable = path_colour("status.unreachable")
-    struck_unreachable = {
-        "EFFECT_COLOR": unreachable,
-        "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
-        "FOREGROUND": unreachable,
-    }
+    struck_unreachable = effect(unreachable, JETBRAINS_EFFECT_STRIKEOUT, unreachable)
     keyword = path_colour("syntax.keyword")
     attributes = {
         "BLOCK_TERMINAL_CURRENT_SEARCH_ENTRY": terminal_find
-        | {
-            "BACKGROUND": colour(ui["find_active"]),
-            "EFFECT_COLOR": colour(ui["find_active_border"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
-        },
+        | {"BACKGROUND": colour(ui["find_active"])}
+        | effect(colour(ui["find_active_border"]), JETBRAINS_EFFECT_BOXED),
         "BLOCK_TERMINAL_SEARCH_ENTRY": terminal_find,
         "BREADCRUMBS_CURRENT": {
             "BACKGROUND": colour(ui["element"]),
@@ -1863,24 +1858,15 @@ def jetbrains_scheme(palette: Palette) -> str:
         },
         "CTRL_CLICKABLE": hyperlink,
         "CUSTOM_INVALID_STRING_ESCAPE_ATTRIBUTES": invalid_escape,
-        "DEBUGGER_SMART_STEP_INTO_SELECTION": {
-            "BACKGROUND": colour(ui["selection"]),
-            "EFFECT_COLOR": colour(ui["accent"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
-        },
+        "DEBUGGER_SMART_STEP_INTO_SELECTION": {"BACKGROUND": colour(ui["selection"])}
+        | effect(colour(ui["accent"]), JETBRAINS_EFFECT_BOXED),
         "DEBUGGER_UNREACHABLE_DECORATION": struck_unreachable,
         "DEFAULT_INVALID_STRING_ESCAPE": invalid_escape,
-        "DELETED_TEXT_ATTRIBUTES": {
-            "BACKGROUND": path_colour("tint.deleted"),
-            "EFFECT_COLOR": colour(ui["muted"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_STRIKEOUT,
-            "FOREGROUND": colour(ui["muted"]),
-        },
-        "DOC_TIPS_SHORTCUT": {
-            "EFFECT_COLOR": colour(ui["border"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
-            "FOREGROUND": colour(ui["muted"]),
-        },
+        "DELETED_TEXT_ATTRIBUTES": {"BACKGROUND": path_colour("tint.deleted")}
+        | effect(colour(ui["muted"]), JETBRAINS_EFFECT_STRIKEOUT, colour(ui["muted"])),
+        "DOC_TIPS_SHORTCUT": effect(
+            colour(ui["border"]), JETBRAINS_EFFECT_BOXED, colour(ui["muted"])
+        ),
         "FOLDED_TEXT_ATTRIBUTES": {
             "BACKGROUND": colour(ui["element"]),
             "FOREGROUND": colour(ui["muted"]),
@@ -1895,20 +1881,19 @@ def jetbrains_scheme(palette: Palette) -> str:
         "INLINE_PARAMETER_HINT": inlay,
         "INLINE_PARAMETER_HINT_CURRENT": current_hint,
         "INLINE_PARAMETER_HINT_HIGHLIGHTED": current_hint,
-        "MATCHED_BRACE_ATTRIBUTES": {
-            "BACKGROUND": colour(ui["highlight"]),
-            "EFFECT_COLOR": colour(ui["indent_active"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
-        },
+        "MATCHED_BRACE_ATTRIBUTES": {"BACKGROUND": colour(ui["highlight"])}
+        | effect(colour(ui["indent_active"]), JETBRAINS_EFFECT_BOXED),
         "PROPERTIES.INVALID_STRING_ESCAPE": invalid_escape,
-        "ReSharper.ReSharper.ShaderLab_ENABLED_SHADER_KEYWORD": underlined(keyword),
+        "ReSharper.ReSharper.ShaderLab_ENABLED_SHADER_KEYWORD": effect(
+            keyword, JETBRAINS_EFFECT_UNDERSCORE, keyword
+        ),
         "ReSharper.ReSharper.ShaderLab_SUPPRESSED_SHADER_KEYWORD": struck_unreachable,
         "SEARCH_RESULT_ATTRIBUTES": find,
-        "SQL_OUTER_QUERY_COLUMN": {
-            "EFFECT_COLOR": colour(ui["quiet"]),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_UNDERSCORE,
-            "FOREGROUND": path_colour("syntax.variable"),
-        },
+        "SQL_OUTER_QUERY_COLUMN": effect(
+            colour(ui["quiet"]),
+            JETBRAINS_EFFECT_UNDERSCORE,
+            path_colour("syntax.variable"),
+        ),
         "TEXT": {
             "BACKGROUND": colour(ui["background"]),
             "FOREGROUND": colour(ui["foreground"]),
@@ -1938,21 +1923,13 @@ def jetbrains_scheme(palette: Palette) -> str:
             "BACKGROUND": path_colour(f"tint.{name}"),
             "ERROR_STRIPE_COLOR": path_colour(TINTS[name]),
         }
-    for key, (path, effect) in JETBRAINS_EFFECTS.items():
-        attributes[key] = {"EFFECT_COLOR": path_colour(path), "EFFECT_TYPE": effect}
+    for key, (path, kind) in JETBRAINS_EFFECTS.items():
+        attributes[key] = effect(path_colour(path), kind)
     for key, path in JETBRAINS_INLAY_BUTTONS.items():
-        attributes[key] = {
-            "EFFECT_COLOR": path_colour(path),
-            "EFFECT_TYPE": JETBRAINS_EFFECT_BOXED,
-            "FOREGROUND": hint,
-        }
-    for key, (path, effect) in JETBRAINS_DIAGNOSTICS.items():
+        attributes[key] = effect(path_colour(path), JETBRAINS_EFFECT_BOXED, hint)
+    for key, (path, kind) in JETBRAINS_DIAGNOSTICS.items():
         severity = path_colour(path)
-        attributes[key] = {
-            "EFFECT_COLOR": severity,
-            "EFFECT_TYPE": effect,
-            "ERROR_STRIPE_COLOR": severity,
-        }
+        attributes[key] = effect(severity, kind) | {"ERROR_STRIPE_COLOR": severity}
     for key, path in JETBRAINS_STRIPES.items():
         attributes[key] = {"ERROR_STRIPE_COLOR": path_colour(path)}
     attributes |= {key: {} for key in JETBRAINS_CLEARED}

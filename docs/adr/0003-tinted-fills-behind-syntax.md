@@ -6,14 +6,13 @@ JetBrains' write-usage highlight used a fixed `33` keyword tint, which left Geis
 
 The headroom rules out a second, brighter fill for the changed words inside a changed line. VS Code paints `diffEditor.insertedTextBackground` over `insertedLineBackground`, and two Light tints stacked drop comments to about 3.97:1, so VS Code's changed text gets no fill of its own and is bordered in the status colour instead. Zed has no border for word diffs, so its word fills equal its hunk fills, and changed words inside a hunk aren't singled out. We accept losing that emphasis rather than put text below the bar.
 
-VS Code draws decorations over the selection, and asks for translucent fills so they don't hide it. Its diff lines, stack frames, word and hover highlights, linked edits and snippet tabstops therefore take the translucent colour at alpha `80` that composites to the same opaque tint or highlight, which is what `build.py` checks, over the current-line highlight (`ui.hover`), since the cursor always sits on a stopped debugger line. Over the plain background the same fill lands further from every syntax colour, so text gains contrast there. Over a selection, the blend of the two isn't held to 4.5:1, the same exception ADR 0001 makes for Zed's selection over a highlight. Find matches stay opaque, as ADR 0002 decided.
+VS Code draws decorations over the selection, and asks for translucent fills so they don't hide it. Its diff lines, stack frames, word and hover highlights, linked edits and snippet tabstops therefore take a translucent colour at alpha `80`. Over the current-line highlight (`ui.hover`), where the cursor sits on a stopped debugger line, it composites to the opaque tint or highlight that `build.py` checks. Over the plain background it lands further from every syntax colour, because Geist Dark's background is darker than its current line and Geist Light's lighter, so text gains contrast there; a palette that reversed that order would need this rechecked. Over a selection, the blend of the two isn't held to 4.5:1, the same exception ADR 0001 makes for Zed's selection over a highlight. Find matches stay opaque, as ADR 0002 decided.
 
 | Tint | Dark (`33`), weakest role | Light (`1a`), weakest role |
 | --- | --- | --- |
-| accent | `#102233` (comment 5.00) | `#e4ebf3` (comment 4.54) |
+| accent, info, modified, renamed | `#102233` (comment 5.00) | `#e4ebf3` (comment 4.54) |
 | conflict, warning | `#302003` (comment 4.87) | `#efeae1` (comment 4.55) |
 | created, success | `#142717` (comment 4.87) | `#e4ede6` (comment 4.56) |
 | deleted, error | `#2e0e0f` (comment 5.48) | `#f7e6e6` (comment 4.52) |
 | hidden, hint, ignored, predictive, unreachable | `#1d1d1d` (comment 5.21) | `#ececec` (comment 4.62) |
 | keyword | `#261830` (comment 5.17) | `#eee7f3` (comment 4.51) |
-| modified, info, renamed | `#102233` (comment 5.00) | `#e4ebf3` (comment 4.54) |
