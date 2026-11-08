@@ -22,6 +22,16 @@ OPAQUE_HEX_LENGTH = len("#rrggbb")
 ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
 # libm differs by an ulp between macOS and Linux, so unrounded output drifts across platforms.
 OKLCH_DECIMALS = 6
+CARD_CELL_WIDTH = 210
+CARD_COLUMNS = 4
+CARD_FONT = "ui-monospace, SFMono-Regular, Menlo, monospace"
+CARD_HEADING_BASELINE = 20
+CARD_HEX_BASELINE = 29
+CARD_LABEL_GAP = 10
+CARD_PADDING = 24
+CARD_ROLE_BASELINE = 13
+CARD_ROW_HEIGHT = 44
+CARD_SWATCH = 32
 
 type Palette = dict[str, Any]
 
@@ -994,6 +1004,74 @@ def jetbrains_plugin(palettes: list[Palette]) -> str:
     return xml_text(plugin)
 
 
+def palette_card(palette: Palette) -> str:
+    ui, ansi = palette["ui"], palette["ansi"]
+    sections = [
+        ("UI", [(key, ui[key]) for key in ("background", "foreground", "accent")]),
+        ("Syntax", sorted(palette["syntax"].items())),
+        (
+            "ANSI",
+            [
+                (f"{prefix}{name}", colour)
+                for shade, prefix in (("normal", ""), ("bright", "bright "))
+                for name, colour in zip(ANSI_NAMES, ansi[shade], strict=True)
+            ],
+        ),
+    ]
+    svg = ET.Element("svg", xmlns="http://www.w3.org/2000/svg")
+
+    def element(tag: str, text: str | None = None, **attributes: object) -> None:
+        ET.SubElement(svg, tag, {k: str(v) for k, v in attributes.items()}).text = text
+
+    element("title", f"{palette['name']} palette")
+    element("rect", width="100%", height="100%", rx=12, fill=ui["background"])
+    y = CARD_PADDING
+    for heading, swatches in sections:
+        element(
+            "text",
+            heading,
+            x=CARD_PADDING,
+            y=y + CARD_HEADING_BASELINE,
+            fill=ui["muted"],
+        )
+        y += CARD_ROW_HEIGHT
+        for index, (role, colour) in enumerate(swatches):
+            row, column = divmod(index, CARD_COLUMNS)
+            x = CARD_PADDING + column * CARD_CELL_WIDTH
+            top = y + row * CARD_ROW_HEIGHT
+            label_x = x + CARD_SWATCH + CARD_LABEL_GAP
+            element(
+                "rect",
+                x=x,
+                y=top,
+                width=CARD_SWATCH,
+                height=CARD_SWATCH,
+                rx=6,
+                fill=colour,
+                stroke=ui["border"],
+            )
+            element(
+                "text",
+                role,
+                x=label_x,
+                y=top + CARD_ROLE_BASELINE,
+                fill=ui["foreground"],
+            )
+            element(
+                "text", colour, x=label_x, y=top + CARD_HEX_BASELINE, fill=ui["muted"]
+            )
+        y += math.ceil(len(swatches) / CARD_COLUMNS) * CARD_ROW_HEIGHT
+    width = 2 * CARD_PADDING + CARD_COLUMNS * CARD_CELL_WIDTH
+    height = y + CARD_PADDING
+    svg.attrib |= {
+        "width": str(width),
+        "height": str(height),
+        "viewBox": f"0 0 {width} {height}",
+        "style": f"font-family: {CARD_FONT}; font-size: 13px",
+    }
+    return xml_text(svg)
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
@@ -1023,6 +1101,10 @@ def main() -> None:
         write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
         write_json(ROOT / "vscode" / "themes" / f"{name}.json", vscode_theme(palette))
         write_json(ROOT / "xcode" / f"{name}.json", xcode_recipe(palette))
+        write(
+            ROOT / "docs" / f"palette-{palette['appearance']}.svg",
+            palette_card(palette),
+        )
 
 
 if __name__ == "__main__":
