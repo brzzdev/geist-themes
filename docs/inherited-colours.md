@@ -89,10 +89,10 @@ Audited against NetNewsWire 7.2.1. A theme's stylesheet replaces the default one
 
 | Reason | Keys |
 | --- | --- |
-| **Derived**: `currentColor` or inherited text, so they follow `--foreground` or `--link` | `::marker`, `summary`, `abbr`, `ins`, `del`, `u`, `s`, `kbd`, `samp`, `tt`, `var`, `cite`, `q`, `dfn`, `small`, `caption`, `dt`, `dd`, `iframe` border, `.twemoji svg`, `a:active`, `a:visited`, iOS `sup a` |
+| **Derived**: `currentColor` or inherited text, so they follow `--foreground` or `--link` | `.twemoji svg`, `::marker`, `a:active`, `a:visited`, `abbr`, `caption`, `cite`, `dd`, `del`, `dfn`, `dt`, `iframe` border, `ins`, iOS `sup a`, `kbd`, `q`, `s`, `samp`, `small`, `summary`, `tt`, `u`, `var` |
 | **Not targeted**: the default theme's filled link hover and Feedbin wrapper border, left out on purpose | `.articleBody a:hover` background, `.feedbin--article-wrap` border |
-| **Not targeted**: system controls, which follow `color-scheme` | form controls, scrollbars, `video` and `audio` controls, the focus ring, iOS tap highlight, WebKit's find highlight |
-| **Not targeted**: colours a feed sets in its own markup | `bgcolor`, `<font color>`, inline `border-color` |
+| **Not targeted**: system controls, which follow `color-scheme` | `audio` and `video` controls, the focus ring, form controls, iOS tap highlight, scrollbars, WebKit's find highlight |
+| **Not targeted**: colours a feed sets in its own markup | `<font color>`, `bgcolor`, inline `border-color` |
 
 ## VS Code
 
@@ -291,15 +291,15 @@ Audited against Xcode 27.2. A recipe accepts 41 override tokens, and Geist sets 
 | Reason | Keys |
 | --- | --- |
 | **Derived**: they scale the chroma of colours computed from `primary` and `secondary`, and every text colour and editor fill is overridden | `palette.primaryIntensity`, `palette.secondaryIntensity` |
-| **Derived**: hue-only tints mirroring override tokens Geist sets, or neutrals from `palette.secondary` | `tintHueOverrides` for the 20 mirrored tokens, `background`, `foreground`, `secondaryBackground`, `secondaryForeground`, `tertiaryBackground`, `tertiaryForeground` |
-| **Matches**: system hues from the same families as Geist's status colours | `tintHueOverrides` `error`, `warning`, `success`, `analyzer`, `runtimeIssue` |
+| **Derived**: hue-only tints mirroring override tokens Geist sets, or neutrals from `palette.secondary` | `tintHueOverrides` `background`, `foreground`, `secondaryBackground`, `secondaryForeground`, `tertiaryBackground`, `tertiaryForeground`, and the 20 mirrored tokens |
+| **Matches**: system hues from the same families as Geist's status colours | `tintHueOverrides` `analyzer`, `error`, `runtimeIssue`, `success`, `warning` |
 | **No reader**: no binary in Xcode 27.2 contains the key | `palette.colorGranularity` |
-| **Not targeted**: Geist ships one recipe per appearance | `lightPalette`, `darkPalette`, `showsInAllColorSchemes` |
-| **Not targeted**: presets in the editor's hue picker, not surfaces | `tintHueOverrides` `red`, `blue`, `cyan`, `mint`, `pink`, `teal`, `brown`, `green`, `steel`, `swift`, `golden`, `indigo`, `orange`, `yellow`, `magenta`, `darkBlue`, `xcodePurple`, `systemPurple`, `accent` |
+| **Not targeted**: Geist ships one recipe per appearance | `darkPalette`, `lightPalette`, `showsInAllColorSchemes` |
+| **Not targeted**: presets in the editor's hue picker, not surfaces | `tintHueOverrides` `accent`, `blue`, `brown`, `cyan`, `darkBlue`, `golden`, `green`, `indigo`, `magenta`, `mint`, `orange`, `pink`, `red`, `steel`, `swift`, `systemPurple`, `teal`, `xcodePurple`, `yellow` |
 | **Fixed**: below 4.5:1, see ADR 0004 | line numbers (`sourceTextSidebarNumbersColor`) |
 | **Fixed**: behind syntax text, not yet measured, see ADR 0004 | inactive selection and symbol highlight (`sourceTextInactiveSelectionColor`) |
-| **Fixed**: they measure as `ui.background` and `ui.foreground` | gutter (`sourceTextSidebarBackgroundColor`), caret-row line number |
-| **Fixed**: not yet measured, see ADR 0004 | gutter edge, dividers, quaternary and quinary fills, inline code in Markdown, accent |
+| **Fixed**: they measure as `ui.background` and `ui.foreground` | caret-row line number, gutter (`sourceTextSidebarBackgroundColor`) |
+| **Fixed**: not yet measured, see ADR 0004 | accent, dividers, gutter edge, inline code in Markdown, quaternary and quinary fills |
 
 ## Zed
 

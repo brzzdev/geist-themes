@@ -506,6 +506,7 @@ JETBRAINS_UI = {
     "PresentationAssistant.Pale.Popup.border": "ui.border",
     "PresentationAssistant.Pale.PopupBackground": "ui.element",
     "PresentationAssistant.Pale.keymapLabel": "ui.quiet",
+    # Islands sets these progress keys in two spellings, so both are set here.
     "ProgressBar.failedColor": "status.error",
     "ProgressBar.failedEndColor": "status.error",
     "ProgressBar.failedendcolor": "status.error",
@@ -923,7 +924,7 @@ JETBRAINS_BACKGROUNDS = {
     "TERMINAL_COMMAND_TO_RUN_USING_IDE": "ui.highlight",
 }
 
-# A diff or debugger fill keyed to a status colour, with that colour as its stripe.
+# A fill tinted from a palette colour, with that colour as its error stripe.
 JETBRAINS_TINTS = {
     "BREAKPOINT_ATTRIBUTES": "error",
     "DEBUGGER_PREDICTED_VALUE_FALSE": "error",
@@ -1815,8 +1816,10 @@ def jetbrains_scheme(palette: Palette) -> str:
     def path_colour(path: str) -> str:
         return colour(palette_colour(palette, path))
 
-    def effect(value: str, kind: str, foreground: str | None = None) -> dict[str, str]:
-        attributes = {"EFFECT_COLOR": value, "EFFECT_TYPE": kind}
+    def effect(
+        effect_colour: str, kind: str, foreground: str | None = None
+    ) -> dict[str, str]:
+        attributes = {"EFFECT_COLOR": effect_colour, "EFFECT_TYPE": kind}
         if foreground is None:
             return attributes
         return attributes | {"FOREGROUND": foreground}
