@@ -20,7 +20,14 @@ This is an unofficial project, not made or endorsed by Vercel. The colours belon
 
 ### Ghostty
 
-Copy `ghostty/geist-dark` and `ghostty/geist-light` into `~/.config/ghostty/themes/`, then set `theme = geist-dark` or `theme = geist-light` in your Ghostty config. To follow the system appearance, set `theme = light:geist-light,dark:geist-dark`.
+Copy the Ghostty themes into `~/.config/ghostty/themes/`:
+
+```sh
+mkdir -p ~/.config/ghostty/themes
+cp "ghostty/Geist Dark" "ghostty/Geist Light" ~/.config/ghostty/themes/
+```
+
+Then set `theme = Geist Dark` or `theme = Geist Light` in your Ghostty config. To follow the system appearance, set `theme = light:Geist Light,dark:Geist Dark`.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/ghostty-dark.webp">
@@ -35,7 +42,7 @@ herdr can't load a separate theme file, so paste the contents of `herdr/geist.to
 herdr server reload-config
 ```
 
-The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. Ghostty reports dark only with a conditional theme, so a fixed `theme = geist-dark` still reports light and herdr picks Geist Light. In Ghostty, use the conditional `theme = light:geist-light,dark:geist-dark` from the [Ghostty](#ghostty) section instead. To keep herdr on Geist Dark instead, pick a theme in herdr's settings, which turns `auto_switch` off and leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
+The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to match the colour scheme your terminal reports. Ghostty reports dark only with a conditional theme, so a fixed `theme = Geist Dark` still reports light and herdr picks Geist Light. In Ghostty, use the conditional `theme = light:Geist Light,dark:Geist Dark` from the [Ghostty](#ghostty) section instead. To keep herdr on Geist Dark instead, pick a theme in herdr's settings, which turns `auto_switch` off and leaves Geist Dark. The snippet sets every colour herdr themes, so it looks the same whichever base theme `theme.name` picks.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/herdr-dark.webp">
@@ -68,7 +75,7 @@ With NetNewsWire running, open `netnewswire/Geist.nnwtheme` and accept the insta
 
 ### Rex
 
-Rex imports the Ghostty files. In its Settings → Themes → Import Theme, click **Import** and pick `ghostty/geist-dark`, then do the same for `ghostty/geist-light`. Rex files each theme under the appearance it matches and selects it there, so Dark Mode uses **geist-dark** and Light Mode uses **geist-light**. To return to them after picking another theme, select them again on the same page.
+Rex imports the Ghostty files. In its Settings → Themes → Import Theme, click **Import** and pick `ghostty/Geist Dark`, then do the same for `ghostty/Geist Light`. Rex files each theme under the appearance it matches and selects it there, so Dark Mode uses **Geist Dark** and Light Mode uses **Geist Light**. To return to them after picking another theme, select them again on the same page.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/rex-dark.webp">
