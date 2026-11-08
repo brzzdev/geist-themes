@@ -601,6 +601,7 @@ JETBRAINS_COLOURS = {
     "MODIFIED_LINES_COLOR": "status.modified",
     "MODIFIED_TAB_ICON": "status.modified",
     "NOTIFICATION_BACKGROUND": "ui.element",
+    "READONLY_FRAGMENT_BACKGROUND": "ui.highlight",
     "RECENT_LOCATIONS_SELECTION": "ui.selection",
     "RIGHT_MARGIN_COLOR": "ui.border",
     "ScrollBar.background": "ui.background",
