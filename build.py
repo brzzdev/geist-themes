@@ -1096,7 +1096,7 @@ def main() -> None:
     write_json(ROOT / "zed" / "geist.json", zed_family(palettes))
     for palette in palettes:
         name = slug(palette)
-        write(ROOT / "ghostty" / name, ghostty(palette))
+        write(ROOT / "ghostty" / palette["name"], ghostty(palette))
         write_json(ROOT / "jetbrains" / f"{name}.theme.json", jetbrains_theme(palette))
         write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
         write_json(ROOT / "vscode" / "themes" / f"{name}.json", vscode_theme(palette))
