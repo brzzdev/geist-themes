@@ -102,6 +102,7 @@ Audited against Rex 0.1.0 (build 1925). Rex imports the Ghostty files and keeps 
 | --- | --- |
 | **Derived**: with **Tint with theme** on, Rex shades it from the theme | the sidebar |
 | **Fixed**: with **Tint with theme** off, Rex uses macOS's own shade | the sidebar |
+| **Fixed**: a Rex theme has no key for them | search matches, split dividers |
 | **Not targeted**: the extended palette, which Rex fills with xterm's defaults on import | `palette` 16–255 |
 
 ## Slack
