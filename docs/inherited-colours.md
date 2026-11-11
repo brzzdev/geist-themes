@@ -96,11 +96,11 @@ Audited against NetNewsWire 7.2.1. A theme's stylesheet replaces the default one
 
 ## Rex
 
-Audited against Rex in November 2026. Rex imports the Ghostty files, so the Ghostty record covers its terminal. A Rex theme holds only terminal colours.
+Audited against Rex 0.1.0 (build 1925). Rex imports the Ghostty files and keeps only their terminal colours: background, text, cursor, selection, and the ANSI palette.
 
 | Reason | Keys |
 | --- | --- |
-| **Fixed**: Rex derives them, shading them from the theme when **Tint with theme** is on | the sidebar and the rest of the interface outside the panes |
+| **Derived**: Rex computes them, shading them from the theme when **Tint with theme** is on | the sidebar and the rest of the interface outside the panes |
 
 ## Slack
 
