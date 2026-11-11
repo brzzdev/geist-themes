@@ -96,11 +96,13 @@ Audited against NetNewsWire 7.2.1. A theme's stylesheet replaces the default one
 
 ## Rex
 
-Audited against Rex 0.1.0 (build 1925). Rex imports the Ghostty files and keeps only their terminal colours: background, text, cursor, selection, and the ANSI palette.
+Audited against Rex 0.1.0 (build 1925). Rex imports the Ghostty files and keeps the background, text, cursor, cursor text, selection, selected text, and the 16 ANSI colours. It drops the search and split-divider colours.
 
 | Reason | Keys |
 | --- | --- |
-| **Derived**: Rex computes them, shading them from the theme when **Tint with theme** is on | the sidebar and the rest of the interface outside the panes |
+| **Derived**: with **Tint with theme** on, Rex shades it from the theme | the sidebar |
+| **Fixed**: with **Tint with theme** off, Rex uses macOS's own shade | the sidebar |
+| **Not targeted**: the extended palette, which Rex fills with xterm's defaults on import | `palette` 16–255 |
 
 ## Slack
 
