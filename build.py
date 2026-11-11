@@ -42,11 +42,14 @@ SLACK_BADGE_TEXT = "#ffffff"
 # Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
     ("ansi.normal.0", "ui.find_active_border"),
+    ("status.error", "ui.panel"),
     ("status.hint", "ui.background"),
     ("status.hint", "ui.element"),
     ("status.hint", "ui.hover"),
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
+    ("status.success", "ui.panel"),
+    ("status.warning", "ui.panel"),
     (SLACK_BADGE_TEXT, "ui.error_fill"),
     ("ui.background", "ui.accent"),
     ("ui.foreground", "tint.accent"),

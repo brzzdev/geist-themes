@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr and its desktop app, JetBrains IDEs, NetNewsWire, Rex, Slack, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, the Herdr desktop app, JetBrains IDEs, NetNewsWire, Rex, Slack, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
