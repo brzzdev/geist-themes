@@ -112,7 +112,7 @@ HERDR_APP_COLOURS = {
     "unknown": "ui.quiet",
     "working": "status.warning",
 }
-# Herdr text colours checked on a ground Herdr draws them on, by Herdr's colour names.
+# Herdr text colours and a ground Herdr draws each on, by Herdr's colour names.
 HERDR_APP_TEXT_PAIRS = [
     ("accent_foreground", "accent"),
     ("blocked", "chrome"),

@@ -58,7 +58,7 @@ mkdir -p ~/.config/herdr-app/themes
 cp herdr-app/geist-dark.json herdr-app/geist-light.json ~/.config/herdr-app/themes/
 ```
 
-Then pick `geist-dark` as the dark theme and `geist-light` as the light one in Settings → Look. Each layout keeps its own pair, so pick them in every layout you use. Herdr follows the system appearance between the two.
+Then pick **geist dark** as the dark theme and **geist light** as the light one in Settings → Look. Each layout keeps its own pair, so pick them in every layout you use. Herdr follows the system appearance between the two.
 
 ### JetBrains IDEs
 
