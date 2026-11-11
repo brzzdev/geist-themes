@@ -77,7 +77,7 @@ With NetNewsWire running, open `netnewswire/Geist.nnwtheme` and accept the insta
 
 Rex imports the Ghostty files. In its Settings → Themes → Import Theme, click **Import** and pick `ghostty/Geist Dark`, then do the same for `ghostty/Geist Light`. Rex files each theme under the appearance it matches and selects it there, so Dark Mode uses **Geist Dark** and Light Mode uses **Geist Light**. To return to them after picking another theme, select them again on the same page.
 
-Rex draws its sidebar from the theme's background, and no theme colour reaches it. With the Classic interface style, the selected tab barely shows against Geist Dark's black, so pick **Glass** under Settings → Interface → Appearance → Interface style.
+Rex works out its sidebar colours itself, so no theme colour sets them. In Classic, the selected tab barely shows against Geist Dark's black, so pick **Glass** under Settings → Interface → Appearance → Interface style.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/rex-dark.webp">
