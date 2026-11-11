@@ -86,7 +86,7 @@ TINTS = {
 
 type Palette = dict[str, Any]
 
-# The alpha of the `blocked` fill behind Herdr's "Needs you" badge text.
+# Herdr's own alpha for the `blocked` fill behind its "Needs you" badge; no theme key sets it.
 HERDR_APP_BADGE_ALPHA = "26"
 HERDR_APP_COLOURS = {
     "accent": "ui.accent",
@@ -112,7 +112,7 @@ HERDR_APP_COLOURS = {
     "unknown": "ui.quiet",
     "working": "status.warning",
 }
-# Text colours and the grounds Herdr draws them on, by Herdr's colour names.
+# Herdr text colours checked on a ground Herdr draws them on, by Herdr's colour names.
 HERDR_APP_TEXT_PAIRS = [
     ("accent_foreground", "accent"),
     ("blocked", "chrome"),
@@ -1300,7 +1300,7 @@ def herdr_app_theme(palette: Palette) -> dict[str, Any]:
     }
 
 
-def herdr_app_pairs(palette: Palette) -> list[tuple[str, str, str]]:
+def herdr_app_contrast_pairs(palette: Palette) -> list[tuple[str, str, str]]:
     theme = herdr_app_theme(palette)
     colours = theme["colors"]
     pairs = [
@@ -1831,7 +1831,7 @@ def contrast_failures(palette: Palette) -> list[str]:
         )
         for text, ground in TEXT_PAIRS
     ]
-    pairs += herdr_app_pairs(palette)
+    pairs += herdr_app_contrast_pairs(palette)
     failures = []
     for label, text, ground in pairs:
         ratio = contrast(text, ground)
