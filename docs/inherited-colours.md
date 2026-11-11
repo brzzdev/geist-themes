@@ -94,6 +94,14 @@ Audited against NetNewsWire 7.2.1. A theme's stylesheet replaces the default one
 | **Not targeted**: system controls, which follow `color-scheme` | `audio` and `video` controls, the focus ring, form controls, iOS tap highlight, scrollbars, WebKit's find highlight |
 | **Not targeted**: colours a feed sets in its own markup | `<font color>`, `bgcolor`, inline `border-color` |
 
+## Rex
+
+Audited against Rex in November 2026. Rex imports the Ghostty files, so the Ghostty record covers its terminal. A Rex theme holds only terminal colours.
+
+| Reason | Keys |
+| --- | --- |
+| **Fixed**: Rex derives them, shading them from the theme when **Tint with theme** is on | the sidebar and the rest of the interface outside the panes |
+
 ## Slack
 
 Audited against Slack's desktop app in November 2026. A custom theme takes four colours, and Geist sets all of them: system navigation, selected items, presence indication, and notifications.
