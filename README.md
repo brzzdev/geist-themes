@@ -51,7 +51,7 @@ The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to m
 
 ### Herdr desktop app
 
-Copy the Herdr desktop themes into `~/.config/herdr-app/themes/`:
+For Herdr 0.1.15 or later. Copy the Herdr desktop themes into `~/.config/herdr-app/themes/`:
 
 ```sh
 mkdir -p ~/.config/herdr-app/themes

@@ -48,7 +48,6 @@ TEXT_PAIRS = [
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
     (SLACK_BADGE_TEXT, "ui.error_fill"),
-    ("ui.background", "ui.accent"),
     ("ui.foreground", "tint.accent"),
     ("ui.quiet", "ui.background"),
     ("ui.quiet", "ui.element"),
@@ -87,9 +86,8 @@ TINTS = {
 
 type Palette = dict[str, Any]
 
-# Herdr's pane header fills its "Needs you" badge with `blocked` at this alpha.
+# The alpha of the `blocked` fill behind Herdr's "Needs you" badge text.
 HERDR_APP_BADGE_ALPHA = "26"
-HERDR_APP_STATUSES = ("blocked", "done", "working")
 HERDR_APP_COLOURS = {
     "accent": "ui.accent",
     "accent_foreground": "ui.background",
@@ -114,6 +112,15 @@ HERDR_APP_COLOURS = {
     "unknown": "ui.quiet",
     "working": "status.warning",
 }
+# Text colours and the grounds Herdr draws them on, by Herdr's colour names.
+HERDR_APP_TEXT_PAIRS = [
+    ("accent_foreground", "accent"),
+    ("blocked", "chrome"),
+    ("done", "chrome"),
+    ("idle", "chrome"),
+    ("unknown", "chrome"),
+    ("working", "chrome"),
+]
 
 # Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
 HERDR_TABLES = {"dark": "theme.custom", "light": "theme.custom.light"}
@@ -1297,8 +1304,8 @@ def herdr_app_pairs(palette: Palette) -> list[tuple[str, str, str]]:
     theme = herdr_app_theme(palette)
     colours = theme["colors"]
     pairs = [
-        (f"Herdr's {status} on chrome", colours[status], colours["chrome"])
-        for status in HERDR_APP_STATUSES
+        (f"Herdr's {text} on {ground}", colours[text], colours[ground])
+        for text, ground in HERDR_APP_TEXT_PAIRS
     ]
     blocked = colours["blocked"]
     badge = opaque(blocked + HERDR_APP_BADGE_ALPHA, theme["background"])

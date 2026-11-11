@@ -30,7 +30,7 @@ Audited against herdr 0.9.5. A `[theme.custom]` table accepts 19 tokens, and Gei
 
 ## Herdr desktop app
 
-Audited against Herdr 0.1.15's `themes()`, declared in `~/.config/herdr-app/herdr.d.ts`. A theme file sets the terminal colours, and its `colors` table overrides the panel colours Herdr derives from them. Geist sets every colour `themes()` reports, `terminal_foreground` through the top-level `foreground`.
+Audited against Herdr 0.1.15's `themes()`, declared in `~/.config/herdr-app/herdr.d.ts`. A theme file sets the terminal colours, and its `colors` table overrides the panel colours Herdr derives from them. Geist sets every colour `themes()` reports, including `terminal_foreground`, which Herdr takes from the top-level `foreground`.
 
 ## JetBrains IDEs
 
