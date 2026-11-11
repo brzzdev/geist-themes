@@ -48,6 +48,7 @@ TEXT_PAIRS = [
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
     (SLACK_BADGE_TEXT, "ui.error_fill"),
+    ("ui.background", "ui.accent"),
     ("ui.foreground", "tint.accent"),
     ("ui.quiet", "ui.background"),
     ("ui.quiet", "ui.element"),
@@ -85,6 +86,31 @@ TINTS = {
 }
 
 type Palette = dict[str, Any]
+
+HERDR_APP_COLOURS = {
+    "accent": "ui.accent",
+    "accent_foreground": "ui.background",
+    "blocked": "status.error",
+    "border": "ui.border",
+    "canvas": "ui.panel",
+    "chrome": "ui.panel",
+    "dim": "ui.quiet",
+    "done": "status.success",
+    "foreground": "ui.foreground",
+    "hover": "ui.hover",
+    "idle": "ui.quiet",
+    "input": "ui.border_strong",
+    "muted": "ui.muted",
+    "popover": "ui.panel",
+    "raised": "ui.element",
+    "ring": "ui.accent",
+    "selected": "ui.selection",
+    "solid": "ui.foreground",
+    "solid_foreground": "ui.background",
+    "surface": "ui.panel",
+    "unknown": "ui.quiet",
+    "working": "status.warning",
+}
 
 # Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
 HERDR_TABLES = {"dark": "theme.custom", "light": "theme.custom.light"}
@@ -1249,6 +1275,21 @@ def herdr(palettes: list[Palette]) -> str:
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 
 
+def herdr_app_theme(palette: Palette) -> dict[str, Any]:
+    ui, ansi = palette["ui"], palette["ansi"]
+    return {
+        "background": ui["background"],
+        "foreground": ui["foreground"],
+        "selection": ui["selection"],
+        "cursor": ui["cursor"],
+        "ansi": ansi["normal"] + ansi["bright"],
+        "colors": {
+            name: palette_colour(palette, path)
+            for name, path in HERDR_APP_COLOURS.items()
+        },
+    }
+
+
 def linear_rgb(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
@@ -2102,6 +2143,7 @@ def main() -> None:
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / palette["name"], ghostty(palette))
+        write_json(ROOT / "herdr-app" / f"{name}.json", herdr_app_theme(palette))
         write_json(ROOT / "jetbrains" / f"{name}.theme.json", jetbrains_theme(palette))
         write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
         write(ROOT / "slack" / f"{palette['name']}.txt", slack(palette))

@@ -28,6 +28,10 @@ Audited against Ghostty 1.4.0's `+show-config --default --docs`. Ghostty fills u
 
 Audited against herdr 0.9.5. A `[theme.custom]` table accepts 19 tokens, and Geist sets all of them. Pane contents take the host terminal's colours.
 
+## Herdr desktop app
+
+Audited against Herdr 0.1.15's `themes()`. A theme file sets the terminal colours and overrides the panel colours Herdr derives from them, and Geist sets every colour `themes()` reports.
+
 ## JetBrains IDEs
 
 Audited against Rider 2026.1.5 and its bundled plugins. Geist's editor schemes inherit from Darcula and Default, together with the colour schemes each plugin adds for them. The UI themes inherit from Islands Dark and Islands Light, which inherit from the platform's Experimental themes.
