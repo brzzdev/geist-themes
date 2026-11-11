@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, Rex, Slack, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, the Herdr desktop app, JetBrains IDEs, NetNewsWire, Rex, Slack, VS Code, Xcode 27, and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
@@ -48,6 +48,17 @@ The snippet turns on `auto_switch`, so herdr uses Geist Dark or Geist Light to m
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/herdr-dark.webp">
   <img alt="herdr in Geist, with git log, ls and a diff in two panes" src="docs/screenshots/herdr-light.webp">
 </picture>
+
+### Herdr desktop app
+
+For Herdr 0.1.15 or later. Copy the Herdr desktop themes into `~/.config/herdr-app/themes/`:
+
+```sh
+mkdir -p ~/.config/herdr-app/themes
+cp herdr-app/geist-dark.json herdr-app/geist-light.json ~/.config/herdr-app/themes/
+```
+
+Then pick **geist dark** as the dark theme and **geist light** as the light one in Settings → Look. Each layout keeps its own pair, so pick them in every layout you use. Herdr follows the system appearance between the two.
 
 ### JetBrains IDEs
 

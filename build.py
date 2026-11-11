@@ -86,6 +86,42 @@ TINTS = {
 
 type Palette = dict[str, Any]
 
+# Herdr's own alpha for the `blocked` fill behind its "Needs you" badge; no theme key sets it.
+HERDR_APP_BADGE_ALPHA = "26"
+HERDR_APP_COLOURS = {
+    "accent": "ui.accent",
+    "accent_foreground": "ui.background",
+    "blocked": "ansi.bright.1",
+    "border": "ui.border",
+    "canvas": "ui.panel",
+    "chrome": "ui.panel",
+    "dim": "ui.quiet",
+    "done": "status.success",
+    "foreground": "ui.foreground",
+    "hover": "ui.hover",
+    "idle": "ui.quiet",
+    "input": "ui.border_strong",
+    "muted": "ui.muted",
+    "popover": "ui.panel",
+    "raised": "ui.element",
+    "ring": "ui.accent",
+    "selected": "ui.selection",
+    "solid": "ui.foreground",
+    "solid_foreground": "ui.background",
+    "surface": "ui.panel",
+    "unknown": "ui.quiet",
+    "working": "status.warning",
+}
+# Herdr text colours and a ground Herdr draws each on, by Herdr's colour names.
+HERDR_APP_TEXT_PAIRS = [
+    ("accent_foreground", "accent"),
+    ("blocked", "chrome"),
+    ("done", "chrome"),
+    ("idle", "chrome"),
+    ("unknown", "chrome"),
+    ("working", "chrome"),
+]
+
 # Dark takes the unsuffixed table, the one herdr keeps when auto_switch is off.
 HERDR_TABLES = {"dark": "theme.custom", "light": "theme.custom.light"}
 
@@ -1249,6 +1285,33 @@ def herdr(palettes: list[Palette]) -> str:
     return "[theme]\nauto_switch = true\n\n" + "\n".join(tables)
 
 
+def herdr_app_theme(palette: Palette) -> dict[str, Any]:
+    ui, ansi = palette["ui"], palette["ansi"]
+    return {
+        "background": ui["background"],
+        "foreground": ui["foreground"],
+        "selection": ui["selection"],
+        "cursor": ui["cursor"],
+        "ansi": ansi["normal"] + ansi["bright"],
+        "colors": {
+            name: palette_colour(palette, path)
+            for name, path in HERDR_APP_COLOURS.items()
+        },
+    }
+
+
+def herdr_app_contrast_pairs(palette: Palette) -> list[tuple[str, str, str]]:
+    theme = herdr_app_theme(palette)
+    colours = theme["colors"]
+    pairs = [
+        (f"Herdr's {text} on {ground}", colours[text], colours[ground])
+        for text, ground in HERDR_APP_TEXT_PAIRS
+    ]
+    blocked = colours["blocked"]
+    badge = opaque(blocked + HERDR_APP_BADGE_ALPHA, theme["background"])
+    return [*pairs, ("Herdr's blocked on its Needs you badge", blocked, badge)]
+
+
 def linear_rgb(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
@@ -1768,6 +1831,7 @@ def contrast_failures(palette: Palette) -> list[str]:
         )
         for text, ground in TEXT_PAIRS
     ]
+    pairs += herdr_app_contrast_pairs(palette)
     failures = []
     for label, text, ground in pairs:
         ratio = contrast(text, ground)
@@ -2102,6 +2166,7 @@ def main() -> None:
     for palette in palettes:
         name = slug(palette)
         write(ROOT / "ghostty" / palette["name"], ghostty(palette))
+        write_json(ROOT / "herdr-app" / f"{name}.json", herdr_app_theme(palette))
         write_json(ROOT / "jetbrains" / f"{name}.theme.json", jetbrains_theme(palette))
         write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
         write(ROOT / "slack" / f"{palette['name']}.txt", slack(palette))
