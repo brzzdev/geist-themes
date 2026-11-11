@@ -1,6 +1,6 @@
 # Geist Themes
 
-Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, Rex, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
+Editor and terminal themes built from the colours of Vercel's [Geist terminal themes](https://vercel.com/geist/terminal), for Ghostty, herdr, JetBrains IDEs, NetNewsWire, Rex, Slack, VS Code, Xcode 27 and Zed. Each comes in Geist Dark and Geist Light.
 
 This is an unofficial project, not made or endorsed by Vercel. The colours belong to Vercel's Geist design system.
 
@@ -81,6 +81,10 @@ Rex imports the Ghostty files. In its Settings → Themes → Import Theme, clic
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/rex-dark.webp">
   <img alt="Rex in Geist, showing the 16 ANSI colours, git log, ls and a diff" src="docs/screenshots/rex-light.webp">
 </picture>
+
+### Slack
+
+Slack's custom themes set only four colours: the sidebar, selected items, presence and the unread badge. Slack picks the rest, so its message pane keeps Slack's own grey in dark mode. In Slack → Preferences → Appearance, pick **Dark** under Colour mode, then under Custom theme click **Import** and paste the line from `slack/Geist Dark.txt`. For light mode, pick **Light** and paste `slack/Geist Light.txt` instead. Leave **Window gradient** off.
 
 ### VS Code
 
