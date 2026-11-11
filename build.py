@@ -41,8 +41,8 @@ MINIMUM_CONTRAST = 4.5
 SLACK_BADGE_TEXT = "#ffffff"
 # Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
+    ("ansi.bright.1", "ui.panel"),
     ("ansi.normal.0", "ui.find_active_border"),
-    ("status.error", "ui.panel"),
     ("status.hint", "ui.background"),
     ("status.hint", "ui.element"),
     ("status.hint", "ui.hover"),
@@ -90,10 +90,12 @@ TINTS = {
 
 type Palette = dict[str, Any]
 
+# Herdr's pane header fills its "Needs you" badge with `blocked` at this alpha.
+HERDR_APP_BADGE_ALPHA = "26"
 HERDR_APP_COLOURS = {
     "accent": "ui.accent",
     "accent_foreground": "ui.background",
-    "blocked": "status.error",
+    "blocked": "ansi.bright.1",
     "border": "ui.border",
     "canvas": "ui.panel",
     "chrome": "ui.panel",
@@ -1812,6 +1814,9 @@ def contrast_failures(palette: Palette) -> list[str]:
         )
         for text, ground in TEXT_PAIRS
     ]
+    blocked = palette_colour(palette, HERDR_APP_COLOURS["blocked"])
+    badge = opaque(blocked + HERDR_APP_BADGE_ALPHA, palette["ui"]["background"])
+    pairs.append(("Herdr's blocked badge", blocked, badge))
     failures = []
     for label, text, ground in pairs:
         ratio = contrast(text, ground)

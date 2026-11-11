@@ -24,7 +24,7 @@
   "colors": {
     "accent": "#1a5fb4",
     "accent_foreground": "#fbfbfa",
-    "blocked": "#cf2f36",
+    "blocked": "#a8242b",
     "border": "#ebebeb",
     "canvas": "#ffffff",
     "chrome": "#ffffff",
