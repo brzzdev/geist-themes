@@ -94,6 +94,15 @@ Audited against NetNewsWire 7.2.1. A theme's stylesheet replaces the default one
 | **Not targeted**: system controls, which follow `color-scheme` | `audio` and `video` controls, the focus ring, form controls, iOS tap highlight, scrollbars, WebKit's find highlight |
 | **Not targeted**: colours a feed sets in its own markup | `<font color>`, `bgcolor`, inline `border-color` |
 
+## Slack
+
+Audited against Slack's desktop app in November 2026. A custom theme takes four colours, and Geist sets all of them: system navigation, selected items, presence indication, and notifications.
+
+| Reason | Keys |
+| --- | --- |
+| **Fixed**: Slack computes them from the system navigation colour and the colour mode, and nudges the sidebar off pure black and white | the message pane, text, and borders |
+| **Not targeted**: blends the background with the selected items colour | Window gradient |
+
 ## VS Code
 
 Audited against VS Code 1.144.1: every colour registered with `registerColor`, plus the colours the bundled Git extension contributes, 998 keys in all, of which Geist sets 291. VS Code fills unset keys from the defaults for `vs-dark` and `vs`, many of which are expressions over other keys.

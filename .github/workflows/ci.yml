@@ -48,7 +48,7 @@ jobs:
             echo "$GITHUB_REF_NAME has moved on to $tip, whose run releases this change too"
             exit 0
           fi
-          shipped=(ghostty herdr install-xcode.py jetbrains netnewswire vscode xcode zed)
+          shipped=(ghostty herdr install-xcode.py jetbrains netnewswire slack vscode xcode zed)
           last="$(git tag --list 'v*' --merged HEAD --sort=-v:refname | head -n 1)"
           if [ -z "$last" ]; then
             tag=v1.0.0

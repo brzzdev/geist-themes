@@ -38,6 +38,7 @@ CARD_ROW_HEIGHT = 44
 CARD_SWATCH = 32
 
 MINIMUM_CONTRAST = 4.5
+SLACK_BADGE_TEXT = "#ffffff"
 # Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
     ("ansi.normal.0", "ui.find_active_border"),
@@ -46,6 +47,7 @@ TEXT_PAIRS = [
     ("status.hint", "ui.hover"),
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
+    (SLACK_BADGE_TEXT, "ui.error_fill"),
     ("ui.foreground", "tint.accent"),
     ("ui.quiet", "ui.background"),
     ("ui.quiet", "ui.element"),
@@ -1040,6 +1042,8 @@ def slug(palette: Palette) -> str:
 
 
 def palette_colour(palette: Palette, path: str) -> str:
+    if path.startswith("#"):
+        return path
     group, key, *index = path.split(".")
     value = palette[group][key]
     return value[int(index[0])] if index else value
@@ -1345,6 +1349,17 @@ def netnewswire_info() -> str:
         "Version": 1,
     }
     return plistlib.dumps(info).decode()
+
+
+def slack(palette: Palette) -> str:
+    ui = palette["ui"]
+    colours = [
+        ui["background"],
+        ui["selection"],
+        palette["status"]["success"],
+        ui["error_fill"],
+    ]
+    return ",".join(colours).upper() + "\n"
 
 
 def vscode_colours(palette: Palette) -> dict[str, str]:
@@ -2089,6 +2104,7 @@ def main() -> None:
         write(ROOT / "ghostty" / palette["name"], ghostty(palette))
         write_json(ROOT / "jetbrains" / f"{name}.theme.json", jetbrains_theme(palette))
         write(ROOT / "jetbrains" / f"{name}.xml", jetbrains_scheme(palette))
+        write(ROOT / "slack" / f"{palette['name']}.txt", slack(palette))
         write_json(ROOT / "vscode" / "themes" / f"{name}.json", vscode_theme(palette))
         write_json(ROOT / "xcode" / f"{name}.json", xcode_recipe(palette))
         write(
