@@ -41,15 +41,12 @@ MINIMUM_CONTRAST = 4.5
 SLACK_BADGE_TEXT = "#ffffff"
 # Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
-    ("ansi.bright.1", "ui.panel"),
     ("ansi.normal.0", "ui.find_active_border"),
     ("status.hint", "ui.background"),
     ("status.hint", "ui.element"),
     ("status.hint", "ui.hover"),
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
-    ("status.success", "ui.panel"),
-    ("status.warning", "ui.panel"),
     (SLACK_BADGE_TEXT, "ui.error_fill"),
     ("ui.background", "ui.accent"),
     ("ui.foreground", "tint.accent"),
@@ -92,6 +89,7 @@ type Palette = dict[str, Any]
 
 # Herdr's pane header fills its "Needs you" badge with `blocked` at this alpha.
 HERDR_APP_BADGE_ALPHA = "26"
+HERDR_APP_STATUSES = ("blocked", "done", "working")
 HERDR_APP_COLOURS = {
     "accent": "ui.accent",
     "accent_foreground": "ui.background",
@@ -1295,6 +1293,18 @@ def herdr_app_theme(palette: Palette) -> dict[str, Any]:
     }
 
 
+def herdr_app_pairs(palette: Palette) -> list[tuple[str, str, str]]:
+    theme = herdr_app_theme(palette)
+    colours = theme["colors"]
+    pairs = [
+        (f"Herdr's {status} on chrome", colours[status], colours["chrome"])
+        for status in HERDR_APP_STATUSES
+    ]
+    blocked = colours["blocked"]
+    badge = opaque(blocked + HERDR_APP_BADGE_ALPHA, theme["background"])
+    return [*pairs, ("Herdr's blocked on its Needs you badge", blocked, badge)]
+
+
 def linear_rgb(hex_colour: str) -> tuple[float, float, float]:
     def linear(channel: str) -> float:
         c = int(channel, 16) / 255
@@ -1814,9 +1824,7 @@ def contrast_failures(palette: Palette) -> list[str]:
         )
         for text, ground in TEXT_PAIRS
     ]
-    blocked = palette_colour(palette, HERDR_APP_COLOURS["blocked"])
-    badge = opaque(blocked + HERDR_APP_BADGE_ALPHA, palette["ui"]["background"])
-    pairs.append(("Herdr's blocked badge", blocked, badge))
+    pairs += herdr_app_pairs(palette)
     failures = []
     for label, text, ground in pairs:
         ratio = contrast(text, ground)
