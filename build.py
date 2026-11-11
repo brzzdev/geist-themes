@@ -38,15 +38,16 @@ CARD_ROW_HEIGHT = 44
 CARD_SWATCH = 32
 
 MINIMUM_CONTRAST = 4.5
+SLACK_BADGE_TEXT = "#ffffff"
 # Each text colour reaches the minimum on the ground it's paired with.
 TEXT_PAIRS = [
-    ("#ffffff", "ui.error_fill"),
     ("ansi.normal.0", "ui.find_active_border"),
     ("status.hint", "ui.background"),
     ("status.hint", "ui.element"),
     ("status.hint", "ui.hover"),
     ("status.predictive", "ui.background"),
     ("status.predictive", "ui.hover"),
+    (SLACK_BADGE_TEXT, "ui.error_fill"),
     ("ui.foreground", "tint.accent"),
     ("ui.quiet", "ui.background"),
     ("ui.quiet", "ui.element"),

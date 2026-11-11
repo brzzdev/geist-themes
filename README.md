@@ -84,7 +84,7 @@ Rex imports the Ghostty files. In its Settings → Themes → Import Theme, clic
 
 ### Slack
 
-Slack's custom themes set only four colours: the sidebar, selected items, presence and the unread badge. Slack picks the rest, so its message pane keeps Slack's own grey in dark mode. In Slack → Preferences → Appearance, pick **Dark** under Colour mode, then under Custom theme click **Import** and paste the line from `slack/Geist Dark.txt`. For light mode, pick **Light** and paste `slack/Geist Light.txt` instead. Leave **Window gradient** off.
+Slack's custom themes set only four colours: the sidebar, selected items, presence, and the unread badge. Slack picks the rest, so its message pane keeps Slack's own grey in dark mode. In Slack → Preferences → Appearance, pick **Dark** under Colour mode, then under Custom theme click **Import** and paste the line from `slack/Geist Dark.txt`. For light mode, pick **Light** and paste `slack/Geist Light.txt` instead. Leave **Window gradient** off.
 
 ### VS Code
 
